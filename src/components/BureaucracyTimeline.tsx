@@ -187,9 +187,9 @@ const BureaucracyTimeline = () => {
               >
                 <div className="flex items-start gap-3 sm:gap-4">
                   {/* Step number & icon */}
-                  <div className="flex flex-col items-center gap-1 sm:gap-2 flex-shrink-0">
+                  <div className="flex flex-col items-center gap-1 sm:gap-2 flex-shrink-0 min-w-[44px]">
                     <div className={cn(
-                      "w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all duration-300",
+                      "w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all duration-300 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0",
                       isCompleted ? "bg-success text-success-foreground" : "bg-muted"
                     )}>
                       {isCompleted ? (
