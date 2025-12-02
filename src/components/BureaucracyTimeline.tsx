@@ -12,6 +12,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import BureaucracyDetail from "./BureaucracyDetail";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import jsPDF from 'jspdf';
 
 const steps = [
   {
@@ -136,31 +138,25 @@ const steps = [
 
 const BureaucracyTimeline = () => {
   const [selectedStep, setSelectedStep] = useState<string | null>(null);
-  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
+  const { progress, toggleProgress, getCompletionPercentage, loading } = useUserProgress('phase-2');
 
-  const toggleComplete = (stepId: string) => {
-    setCompletedSteps(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(stepId)) {
-        newSet.delete(stepId);
-      } else {
-        newSet.add(stepId);
-      }
-      return newSet;
-    });
-  };
+  const completionPercentage = getCompletionPercentage(steps.length);
+
+  if (loading) {
+    return <div className="text-center py-8">Loading your progress...</div>;
+  }
 
   return (
     <div className="space-y-3 sm:space-y-4">
       {/* Progress indicator */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-muted/50 rounded-lg">
         <div className="text-xs sm:text-sm font-medium text-foreground whitespace-nowrap">
-          Progress: {completedSteps.size}/{steps.length}
+          Progress: {Object.values(progress).filter(Boolean).length}/{steps.length}
         </div>
         <div className="flex-1 w-full h-2 bg-muted rounded-full overflow-hidden">
           <div 
             className="h-full bg-success transition-all duration-500"
-            style={{ width: `${(completedSteps.size / steps.length) * 100}%` }}
+            style={{ width: `${completionPercentage}%` }}
           />
         </div>
       </div>
@@ -169,7 +165,7 @@ const BureaucracyTimeline = () => {
       <div className="space-y-3">
         {steps.map((step, index) => {
           const Icon = step.icon;
-          const isCompleted = completedSteps.has(step.id);
+          const isCompleted = progress[step.id] || false;
           const isSelected = selectedStep === step.id;
 
           return (
@@ -226,7 +222,7 @@ const BureaucracyTimeline = () => {
                       <BureaucracyDetail 
                         step={step} 
                         isCompleted={isCompleted}
-                        onToggleComplete={() => toggleComplete(step.id)}
+                        onToggleComplete={() => toggleProgress(step.id)}
                       />
                     )}
                   </div>
@@ -238,7 +234,16 @@ const BureaucracyTimeline = () => {
       </div>
 
       <div className="pt-3 sm:pt-4">
-        <Button className="w-full text-sm sm:text-base" size="lg">
+        <Button className="w-full text-sm sm:text-base" size="lg" onClick={() => {
+          const doc = new jsPDF();
+          doc.setFontSize(20);
+          doc.text('Phase 2: Arrival Checklist', 20, 20);
+          steps.forEach((step, i) => {
+            doc.setFontSize(14);
+            doc.text(`${i + 1}. ${step.title}`, 20, 40 + (i * 20));
+          });
+          doc.save('phase2-checklist.pdf');
+        }}>
           Download Complete Checklist
         </Button>
       </div>
