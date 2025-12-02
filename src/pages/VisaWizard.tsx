@@ -146,41 +146,41 @@ const VisaWizard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-primary py-6 px-4 shadow-elevated">
+      <header className="bg-primary py-4 sm:py-6 px-4 shadow-elevated">
         <div className="container mx-auto max-w-4xl">
           <Link to="/">
             <Button
               variant="ghost"
-              className="mb-4 text-primary-foreground hover:bg-primary-foreground/10"
+              className="mb-3 sm:mb-4 text-primary-foreground hover:bg-primary-foreground/10 text-sm sm:text-base"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-foreground">
             Italian Student Visa Wizard
           </h1>
-          <p className="text-primary-foreground/90 mt-2">
+          <p className="text-sm sm:text-base text-primary-foreground/90 mt-1 sm:mt-2">
             Step-by-step guidance for your D-Visa application
           </p>
         </div>
       </header>
 
       {/* Progress Bar */}
-      <div className="bg-muted/50 py-6 px-4">
+      <div className="bg-muted/50 py-4 sm:py-6 px-4">
         <div className="container mx-auto max-w-4xl">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-foreground">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
+            <span className="text-xs sm:text-sm font-medium text-foreground">
               Step {currentStep} of {totalSteps}
             </span>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-xs sm:text-sm text-muted-foreground">
               {Math.round(progressPercentage)}% Complete
             </span>
           </div>
-          <Progress value={progressPercentage} className="h-2" />
+          <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
           {/* Step indicators */}
-          <div className="grid grid-cols-4 gap-2 mt-6">
+          <div className="grid grid-cols-4 gap-1 sm:gap-2 mt-4 sm:mt-6">
             {[
               { num: 1, label: "Personal Info" },
               { num: 2, label: "Country" },
@@ -190,22 +190,22 @@ const VisaWizard = () => {
               <div
                 key={step.num}
                 className={cn(
-                  "flex flex-col items-center gap-2 p-2 rounded-lg transition-all",
+                  "flex flex-col items-center gap-1 sm:gap-2 p-1 sm:p-2 rounded-lg transition-all",
                   currentStep === step.num && "bg-primary/10",
                   currentStep > step.num && "opacity-60"
                 )}
               >
                 <div
                   className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all",
+                    "w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all",
                     currentStep === step.num && "bg-primary text-primary-foreground",
                     currentStep > step.num && "bg-success text-success-foreground",
                     currentStep < step.num && "bg-muted text-muted-foreground"
                   )}
                 >
-                  {currentStep > step.num ? <CheckCircle2 className="w-4 h-4" /> : step.num}
+                  {currentStep > step.num ? <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4" /> : step.num}
                 </div>
-                <span className="text-xs text-center font-medium">{step.label}</span>
+                <span className="text-[10px] sm:text-xs text-center font-medium leading-tight">{step.label}</span>
               </div>
             ))}
           </div>
@@ -213,15 +213,15 @@ const VisaWizard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="py-12 px-4">
+      <div className="py-6 sm:py-8 md:py-12 px-4">
         <div className="container mx-auto max-w-4xl">
-          <Card className="p-8 shadow-elevated">
+          <Card className="p-4 sm:p-6 md:p-8 shadow-elevated">
             {/* Step 1: Personal Information */}
             {currentStep === 1 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Personal Information</h2>
-                  <p className="text-muted-foreground">Let's start with your basic details</p>
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">Personal Information</h2>
+                  <p className="text-sm sm:text-base text-muted-foreground">Let's start with your basic details</p>
                 </div>
 
                 <div className="space-y-4">
@@ -491,29 +491,33 @@ const VisaWizard = () => {
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex items-center justify-between mt-8 pt-8 border-t">
+            <div className="flex items-center justify-between mt-6 sm:mt-8 pt-6 sm:pt-8 border-t gap-3">
               <Button
                 variant="outline"
                 onClick={handlePrev}
                 disabled={currentStep === 1}
+                className="text-sm sm:text-base"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Previous
+                <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                <span className="hidden sm:inline">Previous</span>
+                <span className="sm:hidden">Back</span>
               </Button>
 
               {currentStep < totalSteps ? (
                 <Button
                   onClick={handleNext}
                   disabled={!canProceed()}
+                  className="text-sm sm:text-base"
                 >
-                  Next Step
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <span className="hidden sm:inline">Next Step</span>
+                  <span className="sm:hidden">Next</span>
+                  <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
                 </Button>
               ) : (
                 <Link to="/">
-                  <Button>
+                  <Button className="text-sm sm:text-base">
                     Finish
-                    <CheckCircle2 className="w-4 h-4 ml-2" />
+                    <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
                   </Button>
                 </Link>
               )}

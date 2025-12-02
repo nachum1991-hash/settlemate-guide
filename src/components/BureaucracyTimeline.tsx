@@ -151,13 +151,13 @@ const BureaucracyTimeline = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {/* Progress indicator */}
-      <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-        <div className="text-sm font-medium text-foreground">
-          Progress: {completedSteps.size}/{steps.length} completed
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-muted/50 rounded-lg">
+        <div className="text-xs sm:text-sm font-medium text-foreground whitespace-nowrap">
+          Progress: {completedSteps.size}/{steps.length}
         </div>
-        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+        <div className="flex-1 w-full h-2 bg-muted rounded-full overflow-hidden">
           <div 
             className="h-full bg-success transition-all duration-500"
             style={{ width: `${(completedSteps.size / steps.length) * 100}%` }}
@@ -183,41 +183,41 @@ const BureaucracyTimeline = () => {
             >
               <div
                 onClick={() => setSelectedStep(isSelected ? null : step.id)}
-                className="p-6"
+                className="p-3 sm:p-4 md:p-6"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3 sm:gap-4">
                   {/* Step number & icon */}
-                  <div className="flex flex-col items-center gap-2 flex-shrink-0">
+                  <div className="flex flex-col items-center gap-1 sm:gap-2 flex-shrink-0">
                     <div className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300",
+                      "w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all duration-300",
                       isCompleted ? "bg-success text-success-foreground" : "bg-muted"
                     )}>
                       {isCompleted ? (
-                        <CheckCircle2 className="w-6 h-6" />
+                        <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
                       ) : (
-                        <Icon className="w-6 h-6 text-foreground" />
+                        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-foreground" />
                       )}
                     </div>
-                    <span className="text-xs font-medium text-muted-foreground">
+                    <span className="text-[10px] sm:text-xs font-medium text-muted-foreground whitespace-nowrap">
                       Step {index + 1}
                     </span>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-4 mb-2">
-                      <h4 className="text-lg font-bold text-foreground">{step.title}</h4>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                    <div className="flex items-start justify-between gap-2 sm:gap-4 mb-1 sm:mb-2">
+                      <h4 className="text-base sm:text-lg font-bold text-foreground">{step.title}</h4>
+                      <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                        <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-primary/10 text-primary font-medium whitespace-nowrap">
                           {step.duration}
                         </span>
                         <ChevronRight className={cn(
-                          "w-5 h-5 text-muted-foreground transition-transform duration-300",
+                          "w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground transition-transform duration-300",
                           isSelected && "rotate-90"
                         )} />
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
                       {step.description}
                     </p>
 
@@ -237,8 +237,8 @@ const BureaucracyTimeline = () => {
         })}
       </div>
 
-      <div className="pt-4">
-        <Button className="w-full" size="lg">
+      <div className="pt-3 sm:pt-4">
+        <Button className="w-full text-sm sm:text-base" size="lg">
           Download Complete Checklist
         </Button>
       </div>
