@@ -77,30 +77,30 @@ interface BureaucracyDetailProps {
 
 const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyDetailProps) => {
   return (
-    <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
+    <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
       <Separator />
       
       {/* Location */}
-      <div className="flex items-start gap-3">
-        <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+      <div className="flex items-start gap-2 sm:gap-3">
+        <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
         <div>
-          <h5 className="font-semibold text-sm text-foreground mb-1">Location</h5>
-          <p className="text-sm text-muted-foreground">{step.details.location}</p>
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-1">Location</h5>
+          <p className="text-xs sm:text-sm text-muted-foreground">{step.details.location}</p>
         </div>
       </div>
 
       {/* Documents needed */}
-      <div className="flex items-start gap-3">
-        <FileText className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
-        <div className="flex-1">
-          <h5 className="font-semibold text-sm text-foreground mb-3">Documents Needed</h5>
-          <ul className="space-y-2">
+      <div className="flex items-start gap-2 sm:gap-3">
+        <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0 mt-0.5" />
+        <div className="flex-1 min-w-0">
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">Documents Needed</h5>
+          <ul className="space-y-1.5 sm:space-y-2">
             {step.details.documents.map((doc, idx) => {
               const docImage = getDocumentImage(doc);
               return (
-                <li key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                <li key={idx} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                   {docImage ? (
-                    <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-background">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden flex-shrink-0 bg-background">
                       <img 
                         src={docImage} 
                         alt={doc}
@@ -108,11 +108,11 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
                       />
                     </div>
                   ) : (
-                    <div className="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <FileText className="w-6 h-6 text-secondary" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-secondary" />
                     </div>
                   )}
-                  <span className="text-sm text-foreground font-medium">{doc}</span>
+                  <span className="text-xs sm:text-sm text-foreground font-medium break-words">{doc}</span>
                 </li>
               );
             })}
@@ -121,15 +121,15 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
       </div>
 
       {/* Process */}
-      <div className="flex items-start gap-3">
-        <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-        <div className="flex-1">
-          <h5 className="font-semibold text-sm text-foreground mb-2">Step-by-Step Process</h5>
-          <ol className="space-y-2">
+      <div className="flex items-start gap-2 sm:gap-3">
+        <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0 mt-0.5" />
+        <div className="flex-1 min-w-0">
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-1.5 sm:mb-2">Step-by-Step Process</h5>
+          <ol className="space-y-1.5 sm:space-y-2">
             {step.details.process.map((processStep, idx) => (
-              <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                <span className="font-medium text-accent flex-shrink-0">{idx + 1}.</span>
-                <span>{processStep}</span>
+              <li key={idx} className="text-xs sm:text-sm text-muted-foreground flex items-start gap-2">
+                <span className="font-medium text-accent flex-shrink-0 text-xs sm:text-sm">{idx + 1}.</span>
+                <span className="break-words">{processStep}</span>
               </li>
             ))}
           </ol>
@@ -137,21 +137,21 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
       </div>
 
       {/* Cost */}
-      <div className="flex items-start gap-3">
-        <DollarSign className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+      <div className="flex items-start gap-2 sm:gap-3">
+        <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-warning flex-shrink-0 mt-0.5" />
         <div>
-          <h5 className="font-semibold text-sm text-foreground mb-1">Cost</h5>
-          <p className="text-sm font-medium text-warning">{step.details.cost}</p>
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-1">Cost</h5>
+          <p className="text-xs sm:text-sm font-medium text-warning">{step.details.cost}</p>
         </div>
       </div>
 
       {/* Tips */}
-      <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
-        <div className="flex items-start gap-3">
-          <Lightbulb className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+      <div className="p-3 sm:p-4 bg-primary/5 border border-primary/20 rounded-lg">
+        <div className="flex items-start gap-2 sm:gap-3">
+          <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
           <div>
-            <h5 className="font-semibold text-sm text-foreground mb-1">Pro Tips</h5>
-            <p className="text-sm text-muted-foreground">{step.details.tips}</p>
+            <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-1">Pro Tips</h5>
+            <p className="text-xs sm:text-sm text-muted-foreground break-words">{step.details.tips}</p>
           </div>
         </div>
       </div>
@@ -160,7 +160,7 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
       <Button 
         onClick={onToggleComplete}
         variant={isCompleted ? "outline" : "default"}
-        className="w-full"
+        className="w-full text-sm sm:text-base"
       >
         {isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
       </Button>
