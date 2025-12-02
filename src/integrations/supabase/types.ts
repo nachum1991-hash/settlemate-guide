@@ -139,7 +139,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_profile_display_info: {
+        Args: { profile_user_id: string }
+        Returns: {
+          avatar_url: string
+          full_name: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

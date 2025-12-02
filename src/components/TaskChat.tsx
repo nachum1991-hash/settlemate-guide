@@ -16,7 +16,6 @@ interface Message {
   user_id: string;
   profiles: {
     full_name: string | null;
-    email: string;
   };
 }
 
@@ -83,24 +82,27 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
       return;
     }
 
-    // Fetch profile data separately
+    // Fetch profile display info securely using the SECURITY DEFINER function
     const userIds = [...new Set(data.map(m => m.user_id))];
-    const { data: profiles, error: profileError } = await supabase
-      .from('profiles')
-      .select('id, full_name, email')
-      .in('id', userIds);
-
-    if (profileError) {
-      console.error('Error fetching profiles:', profileError);
-      setMessages([]);
-      return;
-    }
-
-    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const profileMap = new Map<string, { full_name: string | null }>();
+    
+    // Fetch profile info for each user using the secure function
+    await Promise.all(
+      userIds.map(async (userId) => {
+        const { data: profileData } = await supabase
+          .rpc('get_profile_display_info', { profile_user_id: userId });
+        
+        if (profileData && profileData.length > 0) {
+          profileMap.set(userId, { full_name: profileData[0].full_name });
+        } else {
+          profileMap.set(userId, { full_name: null });
+        }
+      })
+    );
     
     const messagesWithProfiles = data.map(msg => ({
       ...msg,
-      profiles: profileMap.get(msg.user_id) || { full_name: null, email: 'Unknown' }
+      profiles: profileMap.get(msg.user_id) || { full_name: null }
     }));
 
     setMessages(messagesWithProfiles as Message[]);
@@ -167,14 +169,13 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
               <div key={message.id} className="flex gap-3">
                 <Avatar className="w-8 h-8">
                   <AvatarFallback className="text-xs">
-                    {message.profiles.full_name?.[0]?.toUpperCase() || 
-                     message.profiles.email[0].toUpperCase()}
+                    {message.profiles.full_name?.[0]?.toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 space-y-1">
                   <div className="flex items-baseline gap-2">
                     <span className="font-medium text-sm">
-                      {message.profiles.full_name || message.profiles.email.split('@')[0]}
+                      {message.profiles.full_name || 'Anonymous User'}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}
