@@ -98,7 +98,7 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
             {step.details.documents.map((doc, idx) => {
               const docImage = getDocumentImage(doc);
               return (
-                <li key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                <li key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                   {docImage ? (
                     <div className="w-full sm:w-12 h-32 sm:h-12 rounded-lg overflow-hidden flex-shrink-0 bg-background">
                       <img 
@@ -112,7 +112,7 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
                       <FileText className="w-8 h-8 sm:w-6 sm:h-6 text-secondary" />
                     </div>
                   )}
-                  <span className="text-sm sm:text-sm text-foreground font-medium break-words w-full">{doc}</span>
+                  <span className="text-sm sm:text-sm text-foreground font-medium break-words w-full pl-0 sm:pl-0">{doc}</span>
                 </li>
               );
             })}

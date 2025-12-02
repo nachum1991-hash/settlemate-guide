@@ -31,7 +31,7 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
     <Card
       onClick={onClick}
       className={cn(
-        "p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 hover:scale-105 animate-in fade-in slide-in-from-bottom-4",
+        "p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 hover:scale-105 animate-in fade-in slide-in-from-bottom-4 min-h-[44px]",
         isActive ? "shadow-elevated border-2" : "shadow-soft hover:shadow-elevated border",
         isActive ? colorClasses[phase.color as keyof typeof colorClasses] : "border-border bg-card"
       )}
@@ -39,7 +39,7 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
     >
       <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
         <div className={cn(
-          "p-3 sm:p-4 rounded-2xl transition-all duration-300",
+          "p-3 sm:p-4 rounded-2xl transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center",
           isActive ? colorClasses[phase.color as keyof typeof colorClasses] : "bg-muted/50"
         )}>
           <Icon className={cn(

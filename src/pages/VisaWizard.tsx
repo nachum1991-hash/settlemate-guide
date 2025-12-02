@@ -190,20 +190,20 @@ const VisaWizard = () => {
               <div
                 key={step.num}
                 className={cn(
-                  "flex flex-col items-center gap-1 sm:gap-2 p-1 sm:p-2 rounded-lg transition-all",
+                  "flex flex-col items-center gap-1 sm:gap-2 p-1 sm:p-2 rounded-lg transition-all min-h-[44px]",
                   currentStep === step.num && "bg-primary/10",
                   currentStep > step.num && "opacity-60"
                 )}
               >
                 <div
                   className={cn(
-                    "w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all",
+                    "w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0",
                     currentStep === step.num && "bg-primary text-primary-foreground",
                     currentStep > step.num && "bg-success text-success-foreground",
                     currentStep < step.num && "bg-muted text-muted-foreground"
                   )}
                 >
-                  {currentStep > step.num ? <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4" /> : step.num}
+                  {currentStep > step.num ? <CheckCircle2 className="w-4 h-4 sm:w-4 sm:h-4" /> : step.num}
                 </div>
                 <span className="text-[10px] sm:text-xs text-center font-medium leading-tight">{step.label}</span>
               </div>
@@ -359,11 +359,13 @@ const VisaWizard = () => {
                         </div>
 
                         <div className="flex items-start gap-3 w-full">
-                          <Checkbox
-                            checked={documentStatus[doc.id] || false}
-                            onCheckedChange={() => toggleDocument(doc.id)}
-                            className="mt-1 flex-shrink-0"
-                          />
+                          <div className="flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0">
+                            <Checkbox
+                              checked={documentStatus[doc.id] || false}
+                              onCheckedChange={() => toggleDocument(doc.id)}
+                              className="flex-shrink-0"
+                            />
+                          </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1 flex-wrap">
                               <h4 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h4>
@@ -375,11 +377,11 @@ const VisaWizard = () => {
                             </div>
                             <p className="text-xs sm:text-sm text-muted-foreground">{doc.description}</p>
                           </div>
-                          <div className="flex-shrink-0">
+                          <div className="flex-shrink-0 flex items-center justify-center min-w-[44px] min-h-[44px]">
                             {documentStatus[doc.id] ? (
-                              <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-success" />
+                              <CheckCircle2 className="w-6 h-6 sm:w-6 sm:h-6 text-success" />
                             ) : (
-                              <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground" />
+                              <Circle className="w-6 h-6 sm:w-6 sm:h-6 text-muted-foreground" />
                             )}
                           </div>
                         </div>

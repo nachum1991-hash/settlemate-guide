@@ -188,12 +188,14 @@ const ChecklistItem = ({
   description: string; 
   completed?: boolean;
 }) => (
-  <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
-    {completed ? (
-      <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-success flex-shrink-0 mt-0.5" />
-    ) : (
-      <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground flex-shrink-0 mt-0.5" />
-    )}
+  <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer min-h-[44px]">
+    <div className="flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0">
+      {completed ? (
+        <CheckCircle2 className="w-6 h-6 sm:w-6 sm:h-6 text-success flex-shrink-0" />
+      ) : (
+        <Circle className="w-6 h-6 sm:w-6 sm:h-6 text-muted-foreground flex-shrink-0" />
+      )}
+    </div>
     <div className="flex-1 min-w-0">
       <h4 className="font-semibold text-sm sm:text-base text-foreground mb-1">{title}</h4>
       <p className="text-xs sm:text-sm text-muted-foreground">{description}</p>
