@@ -32,11 +32,14 @@ const getDocumentImage = (docName: string): string | null => {
   if (lowerDoc.includes("codice fiscale")) {
     return codiceFiscaleImg;
   }
-  if (lowerDoc.includes("admission") || lowerDoc.includes("certificate") || lowerDoc.includes("polimi")) {
+  if (lowerDoc.includes("admission") || lowerDoc.includes("certificate") || lowerDoc.includes("polimi") || lowerDoc.includes("enrollment")) {
     return admissionImg;
   }
   if (lowerDoc.includes("insurance")) {
     return insuranceImg;
+  }
+  if (lowerDoc.includes("financial") || lowerDoc.includes("bank statement") || lowerDoc.includes("scholarship")) {
+    return null; // Will use default FileText icon
   }
   if (lowerDoc.includes("rental") || lowerDoc.includes("contract") || lowerDoc.includes("cessione") || lowerDoc.includes("fabbricato")) {
     return accommodationImg;

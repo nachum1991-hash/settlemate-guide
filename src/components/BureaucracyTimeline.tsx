@@ -5,6 +5,7 @@ import {
   Fingerprint, 
   CreditCard, 
   Building2,
+  Home,
   ChevronRight,
   CheckCircle2
 } from "lucide-react";
@@ -132,6 +133,34 @@ const steps = [
       ],
       cost: "€0-5/month depending on bank",
       tips: "N26 and Revolut are fastest. Traditional banks may require your residence permit receipt."
+    }
+  },
+  {
+    id: "housing",
+    title: "Find Accommodation",
+    icon: Home,
+    color: "accent",
+    duration: "1-2 weeks",
+    description: "Secure permanent housing and get your rental contract",
+    details: {
+      location: "Online platforms (Spotahome, HousingAnywhere, Immobiliare.it) + Real estate agencies",
+      documents: [
+        "Passport with visa",
+        "University enrollment proof",
+        "Codice Fiscale",
+        "Proof of financial means (bank statement or scholarship letter)"
+      ],
+      process: [
+        "Start searching using Spotahome, HousingAnywhere, or Immobiliare.it",
+        "Join Facebook groups for student housing in your city",
+        "Schedule viewings for your first weeks in Italy",
+        "ALWAYS visit in person before signing or paying anything",
+        "Sign rental contract (contratto transitorio is common for students)",
+        "Pay deposit (usually 1-3 months rent)",
+        "Request Cessione di fabbricato from landlord (needed for residence permit)"
+      ],
+      cost: "€400-800/month (shared room), €800-1500/month (studio in Milan)",
+      tips: "Never pay before visiting! Beware of scams - if it seems too good to be true, it probably is. Always get a proper contract and Cessione di fabbricato for your residence permit."
     }
   }
 ];
