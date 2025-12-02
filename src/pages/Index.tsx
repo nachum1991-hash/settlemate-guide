@@ -1,14 +1,199 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Plane, MapPin, Users, CheckCircle2, Circle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import PhaseCard from "@/components/PhaseCard";
+import BureaucracyTimeline from "@/components/BureaucracyTimeline";
 
 const Index = () => {
+  const [currentPhase, setCurrentPhase] = useState<number>(1);
+
+  const phases = [
+    {
+      id: 1,
+      title: "From Home Country",
+      icon: Plane,
+      description: "Prepare your visa and documents before departure",
+      color: "primary",
+      status: "active"
+    },
+    {
+      id: 2,
+      title: "Arrival in Italy",
+      icon: MapPin,
+      description: "Complete essential bureaucracy within 1-4 weeks",
+      color: "secondary",
+      status: "locked"
+    },
+    {
+      id: 3,
+      title: "Social Integration",
+      icon: Users,
+      description: "Build your community and settle into Italian life",
+      color: "accent",
+      status: "locked"
+    }
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary to-accent py-20 px-4">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <div className="text-center space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <h1 className="text-5xl md:text-6xl font-bold text-primary-foreground tracking-tight">
+              Welcome to SettleMate
+            </h1>
+            <p className="text-xl md:text-2xl text-primary-foreground/90 max-w-3xl mx-auto leading-relaxed">
+              Your personal guide through every step of relocating to Italy as an international student
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+              <Button size="lg" variant="secondary" className="text-lg px-8 shadow-elevated hover:scale-105 transition-transform">
+                Start Your Journey
+              </Button>
+              <Button size="lg" variant="outline" className="text-lg px-8 bg-white/10 border-white/30 text-white hover:bg-white/20">
+                Watch Introduction
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Phase Navigation */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Your Relocation Journey
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Follow this roadmap to navigate your move to Italy with confidence
+            </p>
+          </div>
+
+          {/* Phase Cards Grid */}
+          <div className="grid md:grid-cols-3 gap-6 mb-16">
+            {phases.map((phase, index) => (
+              <PhaseCard
+                key={phase.id}
+                phase={phase}
+                isActive={currentPhase === phase.id}
+                onClick={() => setCurrentPhase(phase.id)}
+                delay={index * 100}
+              />
+            ))}
+          </div>
+
+          {/* Phase Content */}
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+            {currentPhase === 1 && (
+              <Card className="p-8 shadow-elevated border-2 border-primary/20">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="p-3 bg-primary/10 rounded-xl">
+                    <Plane className="w-8 h-8 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground mb-2">Phase 1: From Home Country</h3>
+                    <p className="text-muted-foreground">Complete these steps before you leave</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <ChecklistItem completed title="Visa Application Wizard" description="Step-by-step guidance for Italian D-Visa process" />
+                  <ChecklistItem title="Pre-Departure Checklist" description="Book flights, translate documents, prepare essentials" />
+                  <ChecklistItem title="Watch Orientation Video" description="Learn what to expect when you arrive in Italy" />
+                </div>
+
+                <Button className="w-full mt-6" size="lg">
+                  Start Visa Application
+                </Button>
+              </Card>
+            )}
+
+            {currentPhase === 2 && (
+              <div className="space-y-6">
+                <Card className="p-8 shadow-elevated border-2 border-secondary/20">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="p-3 bg-secondary/10 rounded-xl">
+                      <MapPin className="w-8 h-8 text-secondary" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-foreground mb-2">Phase 2: Arrival in Italy</h3>
+                      <p className="text-muted-foreground">Essential bureaucracy steps - complete within 1-4 weeks</p>
+                    </div>
+                  </div>
+                  
+                  <BureaucracyTimeline />
+                </Card>
+              </div>
+            )}
+
+            {currentPhase === 3 && (
+              <Card className="p-8 shadow-elevated border-2 border-accent/20">
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="p-3 bg-accent/10 rounded-xl">
+                    <Users className="w-8 h-8 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground mb-2">Phase 3: Social Integration</h3>
+                    <p className="text-muted-foreground">Build your community and feel at home</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <ChecklistItem title="Join Telegram/WhatsApp Groups" description="Connect with students from your university and country" />
+                  <ChecklistItem title="Find a Buddy" description="Match with someone who shares your interests" />
+                  <ChecklistItem title="Explore Local Events" description="Discover ESN activities, student clubs, and cultural events" />
+                </div>
+
+                <Button className="w-full mt-6" size="lg">
+                  Explore Community
+                </Button>
+              </Card>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 px-4 bg-muted/50">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold text-foreground mb-4">
+            Ready to Start Your Journey?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-8">
+            Create your personalized timeline and never miss a deadline
+          </p>
+          <Button size="lg" className="shadow-elevated hover:scale-105 transition-transform">
+            Create Free Account
+          </Button>
+        </div>
+      </section>
     </div>
   );
 };
+
+const ChecklistItem = ({ 
+  title, 
+  description, 
+  completed = false 
+}: { 
+  title: string; 
+  description: string; 
+  completed?: boolean;
+}) => (
+  <div className="flex items-start gap-4 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
+    {completed ? (
+      <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0 mt-0.5" />
+    ) : (
+      <Circle className="w-6 h-6 text-muted-foreground flex-shrink-0 mt-0.5" />
+    )}
+    <div className="flex-1">
+      <h4 className="font-semibold text-foreground mb-1">{title}</h4>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </div>
+  </div>
+);
 
 export default Index;
