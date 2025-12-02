@@ -9,6 +9,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TaskChat } from "@/components/TaskChat";
+import { TaskFAQ } from "@/components/TaskFAQ";
 
 // Import document images
 import passportImg from "@/assets/documents/passport.png";
@@ -483,7 +486,22 @@ const VisaWizard = () => {
                         You now have a complete understanding of the visa process. Remember to start early and
                         keep copies of everything you submit.
                       </p>
-                      <Link to="/">
+                      
+                      {/* FAQ and Chat Tabs */}
+                      <Tabs defaultValue="faq" className="w-full mt-6">
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="faq">FAQs</TabsTrigger>
+                          <TabsTrigger value="chat">Community Chat</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="faq" className="mt-4">
+                          <TaskFAQ taskId="visa" phase="phase-1" />
+                        </TabsContent>
+                        <TabsContent value="chat" className="mt-4">
+                          <TaskChat taskId="visa" phase="phase-1" />
+                        </TabsContent>
+                      </Tabs>
+                      
+                      <Link to="/" className="block mt-6">
                         <Button className="w-full">
                           Return to Dashboard
                         </Button>

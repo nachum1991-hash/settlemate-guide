@@ -1,13 +1,22 @@
 import { useState } from "react";
-import { Plane, MapPin, Users, CheckCircle2, Circle } from "lucide-react";
+import { Plane, MapPin, Users, CheckCircle2, Circle, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import PhaseCard from "@/components/PhaseCard";
 import BureaucracyTimeline from "@/components/BureaucracyTimeline";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const [currentPhase, setCurrentPhase] = useState<number>(1);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/auth');
+  };
 
   const phases = [
     {
@@ -42,6 +51,19 @@ const Index = () => {
       <section className="relative overflow-hidden bg-gradient-to-br from-primary to-accent py-12 sm:py-16 md:py-20 px-4">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         <div className="container mx-auto max-w-6xl relative z-10">
+          <div className="flex justify-end mb-4">
+            {user ? (
+              <Button onClick={handleSignOut} variant="outline" size="sm" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            ) : (
+              <Button onClick={() => navigate('/auth')} variant="outline" size="sm" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                <LogIn className="w-4 h-4 mr-2" />
+                Sign In
+              </Button>
+            )}
+          </div>
           <div className="text-center space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground tracking-tight px-2">
               Welcome to SettleMate

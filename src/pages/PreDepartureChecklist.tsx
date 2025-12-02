@@ -7,6 +7,9 @@ import { Progress } from "@/components/ui/progress";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TaskChat } from "@/components/TaskChat";
+import { TaskFAQ } from "@/components/TaskFAQ";
 
 interface ChecklistItem {
   id: string;
@@ -445,6 +448,24 @@ const PreDepartureChecklist = () => {
                                       ))}
                                     </ul>
                                   )}
+                                </div>
+                              )}
+                              
+                              {/* FAQ and Chat for individual tasks */}
+                              {isExpanded && (
+                                <div className="mt-4 pt-4 border-t">
+                                  <Tabs defaultValue="faq" className="w-full">
+                                    <TabsList className="grid w-full grid-cols-2">
+                                      <TabsTrigger value="faq">FAQs</TabsTrigger>
+                                      <TabsTrigger value="chat">Chat</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="faq" className="mt-3">
+                                      <TaskFAQ taskId={item.id} phase="phase-1" />
+                                    </TabsContent>
+                                    <TabsContent value="chat" className="mt-3">
+                                      <TaskChat taskId={item.id} phase="phase-1" />
+                                    </TabsContent>
+                                  </Tabs>
                                 </div>
                               )}
                             </div>

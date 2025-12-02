@@ -14,7 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      task_faqs: {
+        Row: {
+          answer: string
+          created_at: string
+          helpful_count: number
+          id: string
+          phase: string
+          question: string
+          task_id: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          phase: string
+          question: string
+          task_id: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string
+          helpful_count?: number
+          id?: string
+          phase?: string
+          question?: string
+          task_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      task_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          phase: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          phase: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          phase?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
