@@ -7,6 +7,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TaskChat } from "./TaskChat";
+import { TaskFAQ } from "./TaskFAQ";
 
 // Import document images
 import passportImg from "@/assets/documents/passport.png";
@@ -164,6 +167,20 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
       >
         {isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
       </Button>
+
+      {/* FAQ and Chat Tabs */}
+      <Tabs defaultValue="faq" className="w-full mt-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="faq">FAQs</TabsTrigger>
+          <TabsTrigger value="chat">Community Chat</TabsTrigger>
+        </TabsList>
+        <TabsContent value="faq" className="mt-4">
+          <TaskFAQ taskId={step.id} phase="phase-2" />
+        </TabsContent>
+        <TabsContent value="chat" className="mt-4">
+          <TaskChat taskId={step.id} phase="phase-2" />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
