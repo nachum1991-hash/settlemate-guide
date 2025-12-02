@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import PhaseCard from "@/components/PhaseCard";
 import BureaucracyTimeline from "@/components/BureaucracyTimeline";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [currentPhase, setCurrentPhase] = useState<number>(1);
@@ -100,14 +101,18 @@ const Index = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  <ChecklistItem completed title="Visa Application Wizard" description="Step-by-step guidance for Italian D-Visa process" />
+                  <Link to="/visa-wizard">
+                    <ChecklistItem completed title="Visa Application Wizard" description="Step-by-step guidance for Italian D-Visa process" />
+                  </Link>
                   <ChecklistItem title="Pre-Departure Checklist" description="Book flights, translate documents, prepare essentials" />
                   <ChecklistItem title="Watch Orientation Video" description="Learn what to expect when you arrive in Italy" />
                 </div>
 
-                <Button className="w-full mt-6" size="lg">
-                  Start Visa Application
-                </Button>
+                <Link to="/visa-wizard">
+                  <Button className="w-full mt-6" size="lg">
+                    Start Visa Application
+                  </Button>
+                </Link>
               </Card>
             )}
 
