@@ -3,62 +3,56 @@ import {
   FileText, 
   CheckCircle2, 
   DollarSign, 
-  Lightbulb,
-  IdCard,
-  GraduationCap,
-  Hash,
-  FileEdit,
-  Copy,
-  Heart,
-  Home,
-  Camera,
-  Receipt,
-  Shield,
-  FileCheck
+  Lightbulb
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-// Helper function to get appropriate icon for each document type
-const getDocumentIcon = (docName: string) => {
+// Import document images
+import passportImg from "@/assets/documents/passport.png";
+import codiceFiscaleImg from "@/assets/documents/codice-fiscale.png";
+import admissionImg from "@/assets/documents/admission-letter.png";
+import insuranceImg from "@/assets/documents/insurance.png";
+import accommodationImg from "@/assets/documents/accommodation.png";
+import photosImg from "@/assets/documents/photos.png";
+import yellowKitImg from "@/assets/documents/yellow-kit.png";
+import marcaBolloImg from "@/assets/documents/marca-bollo.png";
+import permessoImg from "@/assets/documents/permesso.png";
+
+// Helper function to get appropriate image for each document type
+const getDocumentImage = (docName: string): string | null => {
   const lowerDoc = docName.toLowerCase();
   
   if (lowerDoc.includes("passport") && !lowerDoc.includes("photo")) {
-    return IdCard;
-  }
-  if (lowerDoc.includes("admission") || lowerDoc.includes("enrollment") || lowerDoc.includes("certificate")) {
-    return GraduationCap;
+    return passportImg;
   }
   if (lowerDoc.includes("codice fiscale")) {
-    return Hash;
+    return codiceFiscaleImg;
   }
-  if (lowerDoc.includes("modulo") || lowerDoc.includes("form")) {
-    return FileEdit;
-  }
-  if (lowerDoc.includes("copies") || lowerDoc.includes("copy")) {
-    return Copy;
+  if (lowerDoc.includes("admission") || lowerDoc.includes("certificate") || lowerDoc.includes("polimi")) {
+    return admissionImg;
   }
   if (lowerDoc.includes("insurance")) {
-    return Heart;
+    return insuranceImg;
   }
-  if (lowerDoc.includes("rental") || lowerDoc.includes("contract") || lowerDoc.includes("cessione") || lowerDoc.includes("residence")) {
-    return Home;
+  if (lowerDoc.includes("rental") || lowerDoc.includes("contract") || lowerDoc.includes("cessione") || lowerDoc.includes("fabbricato")) {
+    return accommodationImg;
   }
   if (lowerDoc.includes("photo")) {
-    return Camera;
+    return photosImg;
   }
-  if (lowerDoc.includes("marca") || lowerDoc.includes("stamp") || lowerDoc.includes("receipt")) {
-    return Receipt;
+  if (lowerDoc.includes("kit") || lowerDoc.includes("modulo")) {
+    return yellowKitImg;
   }
-  if (lowerDoc.includes("permit")) {
-    return FileCheck;
+  if (lowerDoc.includes("marca") || lowerDoc.includes("stamp") || lowerDoc.includes("bollo")) {
+    return marcaBolloImg;
   }
-  if (lowerDoc.includes("proof")) {
-    return Shield;
+  if (lowerDoc.includes("permit") || lowerDoc.includes("permesso")) {
+    return permessoImg;
   }
   
-  // Default icon
-  return FileText;
+  // Default: no image
+  return null;
 };
 
 interface StepDetails {
@@ -102,12 +96,22 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
           <h5 className="font-semibold text-sm text-foreground mb-3">Documents Needed</h5>
           <ul className="space-y-2">
             {step.details.documents.map((doc, idx) => {
-              const DocIcon = getDocumentIcon(doc);
+              const docImage = getDocumentImage(doc);
               return (
-                <li key={idx} className="flex items-center gap-3 p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                  <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                    <DocIcon className="w-4 h-4 text-secondary" />
-                  </div>
+                <li key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                  {docImage ? (
+                    <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-background">
+                      <img 
+                        src={docImage} 
+                        alt={doc}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <FileText className="w-6 h-6 text-secondary" />
+                    </div>
+                  )}
                   <span className="text-sm text-foreground font-medium">{doc}</span>
                 </li>
               );
