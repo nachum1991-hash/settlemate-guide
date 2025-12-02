@@ -94,25 +94,25 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
         <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
           <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">Documents Needed</h5>
-          <ul className="space-y-1.5 sm:space-y-2">
+          <ul className="space-y-2 sm:space-y-3">
             {step.details.documents.map((doc, idx) => {
               const docImage = getDocumentImage(doc);
               return (
-                <li key={idx} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                <li key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                   {docImage ? (
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden flex-shrink-0 bg-background">
+                    <div className="w-full sm:w-12 h-32 sm:h-12 rounded-lg overflow-hidden flex-shrink-0 bg-background">
                       <img 
                         src={docImage} 
                         alt={doc}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain sm:object-cover"
                       />
                     </div>
                   ) : (
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-secondary" />
+                    <div className="w-full sm:w-12 h-32 sm:h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <FileText className="w-8 h-8 sm:w-6 sm:h-6 text-secondary" />
                     </div>
                   )}
-                  <span className="text-xs sm:text-sm text-foreground font-medium break-words">{doc}</span>
+                  <span className="text-sm sm:text-sm text-foreground font-medium break-words w-full">{doc}</span>
                 </li>
               );
             })}
