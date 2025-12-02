@@ -4,10 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import PhaseCard from "@/components/PhaseCard";
 import BureaucracyTimeline from "@/components/BureaucracyTimeline";
-import { useNavigate } from "react-router-dom";
 
 const Index = () => {
-  const navigate = useNavigate();
   const [currentPhase, setCurrentPhase] = useState<number>(1);
 
   const phases = [
@@ -102,21 +100,12 @@ const Index = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  <div 
-                    onClick={() => navigate("/visa-wizard")}
-                    className="cursor-pointer"
-                  >
-                    <ChecklistItem completed title="Visa Application Wizard" description="Step-by-step guidance for Italian D-Visa process" />
-                  </div>
+                  <ChecklistItem completed title="Visa Application Wizard" description="Step-by-step guidance for Italian D-Visa process" />
                   <ChecklistItem title="Pre-Departure Checklist" description="Book flights, translate documents, prepare essentials" />
                   <ChecklistItem title="Watch Orientation Video" description="Learn what to expect when you arrive in Italy" />
                 </div>
 
-                <Button 
-                  className="w-full mt-6" 
-                  size="lg"
-                  onClick={() => navigate("/visa-wizard")}
-                >
+                <Button className="w-full mt-6" size="lg">
                   Start Visa Application
                 </Button>
               </Card>
