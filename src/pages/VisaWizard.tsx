@@ -343,43 +343,45 @@ const VisaWizard = () => {
                     <Card
                       key={doc.id}
                       className={cn(
-                        "p-4 cursor-pointer transition-all hover:shadow-md",
+                        "p-3 sm:p-4 cursor-pointer transition-all hover:shadow-md",
                         documentStatus[doc.id] && "bg-success/5 border-success/30"
                       )}
                       onClick={() => toggleDocument(doc.id)}
                     >
-                      <div className="flex items-start gap-4">
+                      <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                         {/* Document Image */}
-                        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-muted/30">
+                        <div className="w-full sm:w-16 h-40 sm:h-16 rounded-lg overflow-hidden flex-shrink-0 bg-muted/30">
                           <img 
                             src={doc.image} 
                             alt={doc.name}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain sm:object-cover"
                           />
                         </div>
 
-                        <Checkbox
-                          checked={documentStatus[doc.id] || false}
-                          onCheckedChange={() => toggleDocument(doc.id)}
-                          className="mt-1"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-semibold text-foreground">{doc.name}</h4>
-                            {doc.required && (
-                              <span className="text-xs px-2 py-0.5 bg-destructive/10 text-destructive rounded-full font-medium">
-                                Required
-                              </span>
+                        <div className="flex items-start gap-3 w-full">
+                          <Checkbox
+                            checked={documentStatus[doc.id] || false}
+                            onCheckedChange={() => toggleDocument(doc.id)}
+                            className="mt-1 flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <h4 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h4>
+                              {doc.required && (
+                                <span className="text-xs px-2 py-0.5 bg-destructive/10 text-destructive rounded-full font-medium whitespace-nowrap">
+                                  Required
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs sm:text-sm text-muted-foreground">{doc.description}</p>
+                          </div>
+                          <div className="flex-shrink-0">
+                            {documentStatus[doc.id] ? (
+                              <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-success" />
+                            ) : (
+                              <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground" />
                             )}
                           </div>
-                          <p className="text-sm text-muted-foreground">{doc.description}</p>
-                        </div>
-                        <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0">
-                          {documentStatus[doc.id] ? (
-                            <CheckCircle2 className="w-6 h-6 text-success" />
-                          ) : (
-                            <Circle className="w-6 h-6 text-muted-foreground" />
-                          )}
                         </div>
                       </div>
                     </Card>
