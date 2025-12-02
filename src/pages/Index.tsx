@@ -1,21 +1,83 @@
 import { useState } from "react";
-import { Plane, MapPin, Users, CheckCircle2, Circle, LogIn, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Plane, MapPin, Users, CheckCircle2, Circle } from "lucide-react";
 import PhaseCard from "@/components/PhaseCard";
 import BureaucracyTimeline from "@/components/BureaucracyTimeline";
-import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { Navbar } from "@/components/Navbar";
+import { IntroVideoModal } from "@/components/IntroVideoModal";
+import jsPDF from 'jspdf';
+import { toast } from "sonner";
 
 const Index = () => {
   const [currentPhase, setCurrentPhase] = useState<number>(1);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/auth');
+  const handleStartJourney = () => {
+    if (user) {
+      navigate('/visa-wizard');
+    } else {
+      navigate('/auth');
+    }
+  };
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    
+    // Title
+    doc.setFontSize(20);
+    doc.text('SettleMate - Complete Relocation Checklist', 20, 20);
+    
+    // Phase 1
+    doc.setFontSize(16);
+    doc.text('Phase 1: From Home Country', 20, 40);
+    doc.setFontSize(12);
+    const phase1Items = [
+      '[] Complete visa application',
+      '[] Book flights',
+      '[] Translate documents',
+      '[] Arrange airport pickup',
+      '[] Prepare emergency contacts'
+    ];
+    phase1Items.forEach((item, i) => {
+      doc.text(item, 25, 50 + (i * 7));
+    });
+
+    // Phase 2
+    doc.setFontSize(16);
+    doc.text('Phase 2: Arrival in Italy', 20, 100);
+    doc.setFontSize(12);
+    const phase2Items = [
+      '[] Get Codice Fiscale',
+      '[] Purchase SIM card',
+      '[] Apply for Residence Permit',
+      '[] Get ATM Metro card',
+      '[] Open bank account'
+    ];
+    phase2Items.forEach((item, i) => {
+      doc.text(item, 25, 110 + (i * 7));
+    });
+
+    // Phase 3
+    doc.setFontSize(16);
+    doc.text('Phase 3: Social Integration', 20, 160);
+    doc.setFontSize(12);
+    const phase3Items = [
+      '[] Join student groups',
+      '[] Find a buddy',
+      '[] Attend orientation events',
+      '[] Explore local community'
+    ];
+    phase3Items.forEach((item, i) => {
+      doc.text(item, 25, 170 + (i * 7));
+    });
+
+    doc.save('settlemate-checklist.pdf');
+    toast.success('Checklist downloaded successfully!');
   };
 
   const phases = [
@@ -33,7 +95,7 @@ const Index = () => {
       icon: MapPin,
       description: "Complete essential bureaucracy within 1-4 weeks",
       color: "secondary",
-      status: "locked"
+      status: "active"
     },
     {
       id: 3,
@@ -47,23 +109,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navbar />
+      
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary to-accent py-12 sm:py-16 md:py-20 px-4">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
         <div className="container mx-auto max-w-6xl relative z-10">
-          <div className="flex justify-end mb-4">
-            {user ? (
-              <Button onClick={handleSignOut} variant="outline" size="sm" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
-            ) : (
-              <Button onClick={() => navigate('/auth')} variant="outline" size="sm" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-                <LogIn className="w-4 h-4 mr-2" />
-                Sign In
-              </Button>
-            )}
-          </div>
           <div className="text-center space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground tracking-tight px-2">
               Welcome to SettleMate
@@ -72,10 +123,10 @@ const Index = () => {
               Your personal guide through every step of relocating to Italy as an international student
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-6 sm:mt-8 px-4">
-              <Button size="lg" variant="secondary" className="text-base sm:text-lg px-6 sm:px-8 shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto">
+              <Button size="lg" variant="secondary" className="text-base sm:text-lg px-6 sm:px-8 shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto" onClick={handleStartJourney}>
                 Start Your Journey
               </Button>
-              <Button size="lg" variant="outline" className="text-base sm:text-lg px-6 sm:px-8 bg-white/10 border-white/30 text-white hover:bg-white/20 w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="text-base sm:text-lg px-6 sm:px-8 bg-white/10 border-white/30 text-white hover:bg-white/20 w-full sm:w-auto" onClick={() => setVideoModalOpen(true)}>
                 Watch Introduction
               </Button>
             </div>
@@ -129,7 +180,9 @@ const Index = () => {
                   <Link to="/pre-departure">
                     <ChecklistItem title="Pre-Departure Checklist" description="Book flights, translate documents, prepare essentials" />
                   </Link>
-                  <ChecklistItem title="Watch Orientation Video" description="Learn what to expect when you arrive in Italy" />
+                  <div onClick={() => setVideoModalOpen(true)} className="cursor-pointer">
+                    <ChecklistItem title="Watch Orientation Video" description="Learn what to expect when you arrive in Italy" />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
@@ -201,11 +254,24 @@ const Index = () => {
           <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8 px-4">
             Create your personalized timeline and never miss a deadline
           </p>
-          <Button size="lg" className="shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto px-8">
-            Create Free Account
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {user ? (
+              <Button size="lg" className="shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto px-8" onClick={handleStartJourney}>
+                Continue Your Journey
+              </Button>
+            ) : (
+              <Button size="lg" asChild className="shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto px-8">
+                <Link to="/auth">Create Free Account</Link>
+              </Button>
+            )}
+            <Button size="lg" variant="outline" className="w-full sm:w-auto px-8" onClick={generatePDF}>
+              Download PDF Checklist
+            </Button>
+          </div>
         </div>
       </section>
+
+      <IntroVideoModal open={videoModalOpen} onOpenChange={setVideoModalOpen} />
     </div>
   );
 };
