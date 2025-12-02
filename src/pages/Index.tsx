@@ -104,15 +104,24 @@ const Index = () => {
                   <Link to="/visa-wizard">
                     <ChecklistItem completed title="Visa Application Wizard" description="Step-by-step guidance for Italian D-Visa process" />
                   </Link>
-                  <ChecklistItem title="Pre-Departure Checklist" description="Book flights, translate documents, prepare essentials" />
+                  <Link to="/pre-departure">
+                    <ChecklistItem title="Pre-Departure Checklist" description="Book flights, translate documents, prepare essentials" />
+                  </Link>
                   <ChecklistItem title="Watch Orientation Video" description="Learn what to expect when you arrive in Italy" />
                 </div>
 
-                <Link to="/visa-wizard">
-                  <Button className="w-full mt-6" size="lg">
-                    Start Visa Application
-                  </Button>
-                </Link>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
+                  <Link to="/visa-wizard" className="w-full">
+                    <Button className="w-full" size="lg" variant="default">
+                      Start Visa Application
+                    </Button>
+                  </Link>
+                  <Link to="/pre-departure" className="w-full">
+                    <Button className="w-full" size="lg" variant="outline">
+                      View Checklist
+                    </Button>
+                  </Link>
+                </div>
               </Card>
             )}
 
