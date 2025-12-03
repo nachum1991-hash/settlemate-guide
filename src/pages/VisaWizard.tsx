@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle, ExternalLink, Info, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -24,14 +24,14 @@ import applicationImg from "@/assets/documents/application-form.png";
 import paymentImg from "@/assets/documents/payment.png";
 
 const countries = [
-  { value: "israel", label: "Israel", processingWeeks: "4-6" },
-  { value: "india", label: "India", processingWeeks: "6-8" },
-  { value: "iran", label: "Iran", processingWeeks: "8-12" },
-  { value: "turkey", label: "Turkey", processingWeeks: "4-6" },
-  { value: "china", label: "China", processingWeeks: "6-10" },
-  { value: "brazil", label: "Brazil", processingWeeks: "5-7" },
-  { value: "pakistan", label: "Pakistan", processingWeeks: "8-10" },
-  { value: "other", label: "Other", processingWeeks: "6-8" }
+  { value: "israel", label: "Israel", processingWeeks: "4-6", embassyUrl: "https://ambtelaviv.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/isr/en/ita" },
+  { value: "india", label: "India", processingWeeks: "6-8", embassyUrl: "https://ambdelhi.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/ind/en/ita" },
+  { value: "iran", label: "Iran", processingWeeks: "8-12", embassyUrl: "https://ambtehran.esteri.it/", vfsUrl: null },
+  { value: "turkey", label: "Turkey", processingWeeks: "4-6", embassyUrl: "https://ambankara.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/tur/en/ita" },
+  { value: "china", label: "China", processingWeeks: "6-10", embassyUrl: "https://ambpechino.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/chn/en/ita" },
+  { value: "brazil", label: "Brazil", processingWeeks: "5-7", embassyUrl: "https://ambbrasilia.esteri.it/", vfsUrl: null },
+  { value: "pakistan", label: "Pakistan", processingWeeks: "8-10", embassyUrl: "https://ambislamabad.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/pak/en/ita" },
+  { value: "other", label: "Other", processingWeeks: "6-8", embassyUrl: "https://www.esteri.it/en/ministero/la_rete_diplomatica/", vfsUrl: null }
 ];
 
 const baseDocuments = [
@@ -94,7 +94,7 @@ const baseDocuments = [
 ];
 
 const VisaWizard = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0); // Start at overview (step 0)
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -104,22 +104,22 @@ const VisaWizard = () => {
   });
   const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
 
-  const totalSteps = 4;
-  const progressPercentage = (currentStep / totalSteps) * 100;
+  const totalSteps = 5; // Now 5 steps including overview
+  const progressPercentage = (currentStep / (totalSteps - 1)) * 100;
 
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
   const selectedCountryData = countries.find(c => c.value === formData.country);
 
   const handleNext = () => {
-    if (currentStep < totalSteps) {
+    if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
     }
   };
 
   const handlePrev = () => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
       window.scrollTo(0, 0);
     }
@@ -134,6 +134,8 @@ const VisaWizard = () => {
 
   const canProceed = () => {
     switch (currentStep) {
+      case 0: // Overview
+        return true;
       case 1:
         return formData.fullName && formData.email;
       case 2:
@@ -174,7 +176,7 @@ const VisaWizard = () => {
         <div className="container mx-auto max-w-4xl">
           <div className="flex items-center justify-between mb-2 sm:mb-3">
             <span className="text-xs sm:text-sm font-medium text-foreground">
-              Step {currentStep} of {totalSteps}
+              {currentStep === 0 ? "Overview" : `Step ${currentStep} of ${totalSteps - 1}`}
             </span>
             <span className="text-xs sm:text-sm text-muted-foreground">
               {Math.round(progressPercentage)}% Complete
@@ -183,8 +185,9 @@ const VisaWizard = () => {
           <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
           {/* Step indicators */}
-          <div className="grid grid-cols-4 gap-1 sm:gap-2 mt-4 sm:mt-6">
+          <div className="grid grid-cols-5 gap-1 sm:gap-2 mt-4 sm:mt-6">
             {[
+              { num: 0, label: "Overview" },
               { num: 1, label: "Personal Info" },
               { num: 2, label: "Country" },
               { num: 3, label: "Documents" },
@@ -206,7 +209,7 @@ const VisaWizard = () => {
                     currentStep < step.num && "bg-muted text-muted-foreground"
                   )}
                 >
-                  {currentStep > step.num ? <CheckCircle2 className="w-4 h-4 sm:w-4 sm:h-4" /> : step.num}
+                  {currentStep > step.num ? <CheckCircle2 className="w-4 h-4 sm:w-4 sm:h-4" /> : step.num === 0 ? <Info className="w-4 h-4" /> : step.num}
                 </div>
                 <span className="text-[10px] sm:text-xs text-center font-medium leading-tight">{step.label}</span>
               </div>
@@ -219,6 +222,113 @@ const VisaWizard = () => {
       <div className="py-6 sm:py-8 md:py-12 px-4">
         <div className="container mx-auto max-w-4xl">
           <Card className="p-4 sm:p-6 md:p-8 shadow-elevated">
+            {/* Step 0: Overview */}
+            {currentStep === 0 && (
+              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Understanding the Italian Student Visa</h2>
+                  <p className="text-sm sm:text-base text-muted-foreground">
+                    Before we start your application, here's what you need to know about the D-Visa process.
+                  </p>
+                </div>
+
+                {/* Visa Overview */}
+                <Card className="p-6 bg-primary/5 border-primary/20">
+                  <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-primary" />
+                    What is the Italian Student Visa (D-Visa)?
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    The Type D (National) visa is required for non-EU students planning to study in Italy for more than 90 days. 
+                    This visa allows you to:
+                  </p>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
+                      Stay in Italy for the duration of your studies
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
+                      Work part-time (up to 20 hours/week during semester)
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
+                      Travel within the Schengen Area
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
+                      Apply for a Residence Permit (Permesso di Soggiorno) upon arrival
+                    </li>
+                  </ul>
+                </Card>
+
+                {/* Process Overview */}
+                <div>
+                  <h3 className="font-semibold text-foreground mb-4">The Application Process</h3>
+                  <div className="space-y-3">
+                    {[
+                      { step: 1, title: "Gather Documents", desc: "Collect all required documents (admission letter, passport, insurance, etc.)" },
+                      { step: 2, title: "Book Embassy Appointment", desc: "Schedule your visa appointment at the Italian embassy/consulate" },
+                      { step: 3, title: "Attend Interview", desc: "Submit documents and provide biometrics at your appointment" },
+                      { step: 4, title: "Wait for Processing", desc: "Typical processing time is 4-12 weeks depending on your country" },
+                      { step: 5, title: "Receive Visa", desc: "Collect your passport with the visa stamp and book your flight!" }
+                    ].map((item) => (
+                      <div key={item.step} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <span className="text-sm font-bold text-primary">{item.step}</span>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-foreground text-sm">{item.title}</h4>
+                          <p className="text-xs text-muted-foreground">{item.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Official Resources */}
+                <Card className="p-6 bg-secondary/5 border-secondary/20">
+                  <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                    <ExternalLink className="w-5 h-5 text-secondary" />
+                    Official Resources
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a
+                      href="https://vistoperitalia.esteri.it/home/en"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
+                    >
+                      <Globe className="w-4 h-4 text-secondary" />
+                      <div className="flex-1">
+                        <span className="text-sm font-medium text-foreground group-hover:text-secondary">Official Visa Portal</span>
+                        <p className="text-xs text-muted-foreground">vistoperitalia.esteri.it</p>
+                      </div>
+                      <ExternalLink className="w-3 h-3 text-muted-foreground" />
+                    </a>
+                    <a
+                      href="https://www.esteri.it/en/ministero/la_rete_diplomatica/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
+                    >
+                      <Globe className="w-4 h-4 text-secondary" />
+                      <div className="flex-1">
+                        <span className="text-sm font-medium text-foreground group-hover:text-secondary">Find Your Embassy</span>
+                        <p className="text-xs text-muted-foreground">Italian diplomatic network</p>
+                      </div>
+                      <ExternalLink className="w-3 h-3 text-muted-foreground" />
+                    </a>
+                  </div>
+                </Card>
+
+                <Button onClick={handleNext} className="w-full" size="lg">
+                  Start Application Wizard
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            )}
+
             {/* Step 1: Personal Information */}
             {currentStep === 1 && (
               <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -306,21 +416,77 @@ const VisaWizard = () => {
                 </div>
 
                 {formData.country && selectedCountryData && (
-                  <Card className="p-6 bg-primary/5 border-primary/20 animate-in fade-in duration-300">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                        <Calendar className="w-6 h-6 text-primary" />
+                  <>
+                    <Card className="p-6 bg-primary/5 border-primary/20 animate-in fade-in duration-300">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <Calendar className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-foreground mb-1">Processing Time for {selectedCountryData.label}</h3>
+                          <p className="text-2xl font-bold text-primary mb-2">{selectedCountryData.processingWeeks} weeks</p>
+                          <p className="text-sm text-muted-foreground">
+                            This is the typical processing time at the Italian embassy/consulate in {selectedCountryData.label}.
+                            We recommend applying at least 2 months before your intended travel date.
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-1">Processing Time for {selectedCountryData.label}</h3>
-                        <p className="text-2xl font-bold text-primary mb-2">{selectedCountryData.processingWeeks} weeks</p>
-                        <p className="text-sm text-muted-foreground">
-                          This is the typical processing time at the Italian embassy/consulate in {selectedCountryData.label}.
-                          We recommend applying at least 2 months before your intended travel date.
-                        </p>
+                    </Card>
+
+                    {/* Embassy Links */}
+                    <Card className="p-6 bg-secondary/5 border-secondary/20">
+                      <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+                        <Globe className="w-5 h-5 text-secondary" />
+                        Embassy & Appointment Links
+                      </h3>
+                      <div className="space-y-3">
+                        <a
+                          href={selectedCountryData.embassyUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
+                        >
+                          <ExternalLink className="w-4 h-4 text-secondary" />
+                          <div className="flex-1">
+                            <span className="text-sm font-medium text-foreground group-hover:text-secondary">
+                              Italian Embassy in {selectedCountryData.label}
+                            </span>
+                            <p className="text-xs text-muted-foreground">Official embassy website</p>
+                          </div>
+                        </a>
+                        {selectedCountryData.vfsUrl && (
+                          <a
+                            href={selectedCountryData.vfsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
+                          >
+                            <ExternalLink className="w-4 h-4 text-secondary" />
+                            <div className="flex-1">
+                              <span className="text-sm font-medium text-foreground group-hover:text-secondary">
+                                VFS Global - Book Appointment
+                              </span>
+                              <p className="text-xs text-muted-foreground">Schedule your visa appointment</p>
+                            </div>
+                          </a>
+                        )}
+                        <a
+                          href="https://prenotaonline.esteri.it/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
+                        >
+                          <ExternalLink className="w-4 h-4 text-secondary" />
+                          <div className="flex-1">
+                            <span className="text-sm font-medium text-foreground group-hover:text-secondary">
+                              Prenota Online
+                            </span>
+                            <p className="text-xs text-muted-foreground">Alternative appointment booking system</p>
+                          </div>
+                        </a>
                       </div>
-                    </div>
-                  </Card>
+                    </Card>
+                  </>
                 )}
               </div>
             )}
@@ -517,7 +683,7 @@ const VisaWizard = () => {
               <Button
                 variant="outline"
                 onClick={handlePrev}
-                disabled={currentStep === 1}
+                disabled={currentStep === 0}
                 className="text-sm sm:text-base"
               >
                 <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
@@ -525,13 +691,13 @@ const VisaWizard = () => {
                 <span className="sm:hidden">Back</span>
               </Button>
 
-              {currentStep < totalSteps ? (
+              {currentStep < totalSteps - 1 ? (
                 <Button
                   onClick={handleNext}
                   disabled={!canProceed()}
                   className="text-sm sm:text-base"
                 >
-                  <span className="hidden sm:inline">Next Step</span>
+                  <span className="hidden sm:inline">{currentStep === 0 ? "Start" : "Next Step"}</span>
                   <span className="sm:hidden">Next</span>
                   <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
                 </Button>

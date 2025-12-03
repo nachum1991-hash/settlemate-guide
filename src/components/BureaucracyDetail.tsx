@@ -3,13 +3,18 @@ import {
   FileText, 
   CheckCircle2, 
   DollarSign, 
-  Lightbulb
+  Lightbulb,
+  ExternalLink,
+  Globe,
+  Building,
+  MessageCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "./TaskChat";
 import { TaskFAQ } from "./TaskFAQ";
+import type { Step, OfficialResource, Partner } from "./BureaucracyTimeline";
 
 // Import document images
 import passportImg from "@/assets/documents/passport.png";
@@ -39,7 +44,7 @@ const getDocumentImage = (docName: string): string | null => {
     return insuranceImg;
   }
   if (lowerDoc.includes("financial") || lowerDoc.includes("bank statement") || lowerDoc.includes("scholarship")) {
-    return null; // Will use default FileText icon
+    return null;
   }
   if (lowerDoc.includes("rental") || lowerDoc.includes("contract") || lowerDoc.includes("cessione") || lowerDoc.includes("fabbricato")) {
     return accommodationImg;
@@ -57,23 +62,32 @@ const getDocumentImage = (docName: string): string | null => {
     return permessoImg;
   }
   
-  // Default: no image
   return null;
 };
 
-interface StepDetails {
-  location: string;
-  documents: string[];
-  process: string[];
-  cost: string;
-  tips: string;
-}
-
-interface Step {
-  id: string;
-  title: string;
-  details: StepDetails;
-}
+// Community groups for each step
+const communityGroups: Record<string, { name: string; url: string; platform: string }[]> = {
+  codice: [
+    { name: "Milan Students Help", url: "https://t.me/milanstudentshelp", platform: "Telegram" }
+  ],
+  sim: [
+    { name: "Italy Mobile Tips", url: "https://t.me/italymobiletips", platform: "Telegram" }
+  ],
+  permesso: [
+    { name: "Permesso di Soggiorno Help", url: "https://t.me/permessoitaly", platform: "Telegram" },
+    { name: "Milan Questura Updates", url: "https://t.me/milanquestura", platform: "Telegram" }
+  ],
+  atm: [
+    { name: "Milan Transport Students", url: "https://t.me/milantransport", platform: "Telegram" }
+  ],
+  bank: [
+    { name: "Expat Banking Italy", url: "https://t.me/expatbankingitaly", platform: "Telegram" }
+  ],
+  housing: [
+    { name: "Milan Student Housing", url: "https://t.me/milanstudenthousing", platform: "Telegram" },
+    { name: "Polimi Housing", url: "https://www.facebook.com/groups/polimihousing", platform: "Facebook" }
+  ]
+};
 
 interface BureaucracyDetailProps {
   step: Step;
@@ -82,6 +96,8 @@ interface BureaucracyDetailProps {
 }
 
 const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyDetailProps) => {
+  const groups = communityGroups[step.id] || [];
+
   return (
     <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
       <Separator />
@@ -162,6 +178,66 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
         </div>
       </div>
 
+      {/* Official Resources */}
+      {step.details.officialResources && step.details.officialResources.length > 0 && (
+        <div className="p-3 sm:p-4 bg-secondary/5 border border-secondary/20 rounded-lg">
+          <div className="flex items-start gap-2 sm:gap-3">
+            <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">Official Resources</h5>
+              <ul className="space-y-2">
+                {step.details.officialResources.map((resource, idx) => (
+                  <li key={idx}>
+                    <a 
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-2 p-2 rounded-md hover:bg-secondary/10 transition-colors group"
+                    >
+                      <ExternalLink className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5 group-hover:text-secondary/80" />
+                      <div>
+                        <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">{resource.name}</span>
+                        <p className="text-xs text-muted-foreground">{resource.description}</p>
+                      </div>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Recommended Partners */}
+      {step.details.partners && step.details.partners.length > 0 && (
+        <div className="p-3 sm:p-4 bg-accent/5 border border-accent/20 rounded-lg">
+          <div className="flex items-start gap-2 sm:gap-3">
+            <Building className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0 mt-0.5" />
+            <div className="flex-1 min-w-0">
+              <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">Recommended Partners</h5>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {step.details.partners.map((partner, idx) => (
+                  <a 
+                    key={idx}
+                    href={partner.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col p-3 rounded-lg bg-background/50 hover:bg-background transition-colors border border-border/50 hover:border-accent/30 group"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium text-foreground group-hover:text-accent transition-colors">{partner.name}</span>
+                      <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-accent" />
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 bg-accent/10 text-accent rounded-full w-fit mb-1">{partner.category}</span>
+                    <p className="text-xs text-muted-foreground">{partner.description}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Action button */}
       <Button 
         onClick={onToggleComplete}
@@ -181,6 +257,33 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
           <TaskFAQ taskId={step.id} phase="phase-2" />
         </TabsContent>
         <TabsContent value="chat" className="mt-4">
+          {/* External community groups */}
+          {groups.length > 0 && (
+            <div className="mb-4 p-3 bg-muted/30 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <MessageCircle className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium text-foreground">Join External Groups</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {groups.map((group, idx) => (
+                  <a
+                    key={idx}
+                    href={group.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium rounded-full transition-colors"
+                  >
+                    {group.name}
+                    <span className="text-[10px] text-primary/70">({group.platform})</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                ))}
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-2">
+                These are community-run groups. Please follow their rules.
+              </p>
+            </div>
+          )}
           <TaskChat taskId={step.id} phase="phase-2" />
         </TabsContent>
       </Tabs>
