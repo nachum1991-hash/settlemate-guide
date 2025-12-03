@@ -7,7 +7,8 @@ import {
   Building2,
   Home,
   ChevronRight,
-  CheckCircle2
+  CheckCircle2,
+  X
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -444,10 +445,20 @@ const BureaucracyTimeline = () => {
                         <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-primary/10 text-primary font-medium whitespace-nowrap">
                           {step.duration}
                         </span>
-                        <ChevronRight className={cn(
-                          "w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground transition-transform duration-300",
-                          isSelected && "rotate-90"
-                        )} />
+                        {isSelected ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedStep(null);
+                            }}
+                            className="w-8 h-8 sm:w-9 sm:h-9 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
+                            aria-label="Close"
+                          >
+                            <X className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
+                          </button>
+                        ) : (
+                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
+                        )}
                       </div>
                     </div>
                     <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
