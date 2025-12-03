@@ -18,15 +18,12 @@ export const Navbar = () => {
 
   const navLinks = [
     { to: '/', label: 'Home' },
-    { to: '/visa-wizard', label: 'Phase 1: Visa' },
-    { to: '/', label: 'Phase 2: Arrival', hash: '#phase-2' },
-    { to: '/', label: 'Phase 3: Social', hash: '#phase-3' },
+    { to: '/visa-wizard', label: 'Visa' },
+    { to: '/arrival-italy', label: 'Arrival' },
+    { to: '/social-integration', label: 'Social' },
   ];
 
-  const isActive = (path: string, hash?: string) => {
-    if (hash) {
-      return location.pathname === path && location.hash === hash;
-    }
+  const isActive = (path: string) => {
     return location.pathname === path;
   };
 
@@ -43,11 +40,11 @@ export const Navbar = () => {
           <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
               <Link
-                key={link.to + (link.hash || '')}
-                to={link.to + (link.hash || '')}
+                key={link.to}
+                to={link.to}
                 className={cn(
                   'text-sm font-medium transition-colors hover:text-primary',
-                  isActive(link.to, link.hash)
+                  isActive(link.to)
                     ? 'text-primary'
                     : 'text-muted-foreground'
                 )}
@@ -98,11 +95,11 @@ export const Navbar = () => {
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link
-                  key={link.to + (link.hash || '')}
-                  to={link.to + (link.hash || '')}
+                  key={link.to}
+                  to={link.to}
                   className={cn(
                     'text-sm font-medium py-2 transition-colors',
-                    isActive(link.to, link.hash)
+                    isActive(link.to)
                       ? 'text-primary'
                       : 'text-muted-foreground'
                   )}
