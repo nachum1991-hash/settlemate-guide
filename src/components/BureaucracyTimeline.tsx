@@ -456,11 +456,13 @@ const BureaucracyTimeline = () => {
 
                     {/* Expanded details */}
                     {isSelected && (
-                      <BureaucracyDetail 
-                        step={step} 
-                        isCompleted={isCompleted}
-                        onToggleComplete={() => toggleProgress(step.id)}
-                      />
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <BureaucracyDetail 
+                          step={step} 
+                          isCompleted={isCompleted}
+                          onToggleComplete={() => toggleProgress(step.id)}
+                        />
+                      </div>
                     )}
                   </div>
                 </div>
