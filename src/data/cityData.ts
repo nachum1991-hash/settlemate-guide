@@ -16,6 +16,7 @@ export interface CityBureaucracyInfo {
     cardName: string;
     website: string;
     studentPrice: string;
+    studentPassUrl: string;
   };
   universities: string[];
   esnChapter: {
@@ -41,7 +42,8 @@ export const cityData: Record<City, CityBureaucracyInfo> = {
       name: "ATM Milano",
       cardName: "ATM Card",
       website: "https://www.atm.it/",
-      studentPrice: "€200/year (under 27)"
+      studentPrice: "€200/year (under 27)",
+      studentPassUrl: "https://www.atm.it/it/ViasperATM/Abbonamenti/Pagine/Under27.aspx"
     },
     universities: ["Politecnico di Milano", "Università degli Studi di Milano", "Bocconi University", "Cattolica"],
     esnChapter: {
@@ -65,7 +67,8 @@ export const cityData: Record<City, CityBureaucracyInfo> = {
       name: "ATAC Roma",
       cardName: "Metrebus Card",
       website: "https://www.atac.roma.it/",
-      studentPrice: "€250/year"
+      studentPrice: "€250/year",
+      studentPassUrl: "https://www.atac.roma.it/biglietti-e-abbonamenti/abbonamenti"
     },
     universities: ["Sapienza Università di Roma", "LUISS Guido Carli", "Roma Tre", "Tor Vergata"],
     esnChapter: {
@@ -89,7 +92,8 @@ export const cityData: Record<City, CityBureaucracyInfo> = {
       name: "GTT Torino",
       cardName: "GTT Card",
       website: "https://www.gtt.to.it/",
-      studentPrice: "€180/year"
+      studentPrice: "€180/year",
+      studentPassUrl: "https://www.gtt.to.it/cms/biglietti-e-abbonamenti/abbonamenti"
     },
     universities: ["Politecnico di Torino", "Università degli Studi di Torino"],
     esnChapter: {
@@ -113,7 +117,8 @@ export const cityData: Record<City, CityBureaucracyInfo> = {
       name: "Line Pavia",
       cardName: "Abbonamento Bus",
       website: "https://www.lineservizi.it/",
-      studentPrice: "€150/year"
+      studentPrice: "€150/year",
+      studentPassUrl: "https://www.lineservizi.it/abbonamenti"
     },
     universities: ["Università degli Studi di Pavia", "IUSS Pavia"],
     esnChapter: {
