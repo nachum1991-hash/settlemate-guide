@@ -19,34 +19,11 @@ import {
   Clock,
   CheckCircle2
 } from "lucide-react";
+import CitySelector from "@/components/CitySelector";
+import { useCity } from "@/contexts/CityContext";
+import { universityGroupsByCity, eventsByCity, cityData } from "@/data/cityData";
 
-// University groups data
-const universityGroups = [
-  {
-    university: "Politecnico di Milano",
-    groups: [
-      { name: "Polimi International Students", url: "https://t.me/polimiinternational", platform: "Telegram", members: "5k+" },
-      { name: "Polimi Housing", url: "https://www.facebook.com/groups/polimihousing", platform: "Facebook", members: "12k+" },
-      { name: "Polimi Erasmus", url: "https://t.me/polimierasmus", platform: "Telegram", members: "2k+" }
-    ]
-  },
-  {
-    university: "University of Milano",
-    groups: [
-      { name: "UniMi International", url: "https://t.me/unimiinternational", platform: "Telegram", members: "3k+" },
-      { name: "UniMi Students", url: "https://www.facebook.com/groups/unimistudents", platform: "Facebook", members: "8k+" }
-    ]
-  },
-  {
-    university: "Bocconi University",
-    groups: [
-      { name: "Bocconi International", url: "https://t.me/bocconiint", platform: "Telegram", members: "4k+" },
-      { name: "Bocconi Housing", url: "https://www.facebook.com/groups/bocconihousing", platform: "Facebook", members: "6k+" }
-    ]
-  }
-];
-
-// Nationality groups
+// Nationality groups (same across all cities)
 const nationalityGroups = [
   { name: "Israeli Students Italy", url: "https://t.me/israelistudentsitaly", platform: "Telegram", flag: "🇮🇱" },
   { name: "Indian Students Milan", url: "https://t.me/indianstudentsmilan", platform: "Telegram", flag: "🇮🇳" },
@@ -56,56 +33,8 @@ const nationalityGroups = [
   { name: "Brazilian Students Italy", url: "https://t.me/brazilianstudentsitaly", platform: "Telegram", flag: "🇧🇷" }
 ];
 
-// Events data
-const upcomingEvents = [
-  {
-    name: "ESN Welcome Week Milan",
-    date: "September 2024",
-    location: "Various locations, Milan",
-    type: "Social",
-    free: true,
-    url: "https://milan.esn.it/",
-    description: "Welcome activities, city tours, and parties for new international students"
-  },
-  {
-    name: "International Students Aperitivo",
-    date: "Every Thursday",
-    location: "Navigli, Milan",
-    type: "Social",
-    free: false,
-    url: "https://milan.esn.it/events",
-    description: "Weekly social meetup with ESN - €5 includes drink"
-  },
-  {
-    name: "Italian Language Tandem",
-    date: "Every Tuesday",
-    location: "Online / Cafés",
-    type: "Language",
-    free: true,
-    url: "https://www.tandemexchange.com/",
-    description: "Practice Italian with native speakers who want to learn your language"
-  },
-  {
-    name: "Polimi International Welcome Day",
-    date: "Start of each semester",
-    location: "Politecnico di Milano",
-    type: "Academic",
-    free: true,
-    url: "https://www.polimi.it/en/international-prospective-students/",
-    description: "Official orientation for new international students"
-  },
-  {
-    name: "Milan Free Walking Tour",
-    date: "Daily",
-    location: "Piazza Duomo, Milan",
-    type: "Cultural",
-    free: true,
-    url: "https://www.neweuropetours.eu/milan/",
-    description: "Discover Milan's history and landmarks with local guides"
-  }
-];
-
 const SocialIntegration = () => {
+  const { selectedCity, cityInfo } = useCity();
   const [buddyForm, setBuddyForm] = useState({
     name: "",
     email: "",
@@ -120,6 +49,10 @@ const SocialIntegration = () => {
     e.preventDefault();
     setBuddySubmitted(true);
   };
+
+  const universityGroups = universityGroupsByCity[selectedCity] || [];
+  const upcomingEvents = eventsByCity[selectedCity] || [];
+  const currentCityData = cityData[selectedCity];
 
   return (
     <div className="min-h-screen bg-background">
@@ -137,6 +70,8 @@ const SocialIntegration = () => {
                 <p className="text-sm sm:text-base text-muted-foreground">Build your community and feel at home in Italy</p>
               </div>
             </div>
+            
+            <CitySelector />
             
             <Tabs defaultValue="groups" className="w-full">
               <TabsList className="grid w-full grid-cols-3 mb-6">
@@ -221,7 +156,7 @@ const SocialIntegration = () => {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <a
-                      href="https://milan.esn.it/"
+                      href={currentCityData.esnChapter.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 p-4 bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg transition-colors group"
@@ -230,13 +165,13 @@ const SocialIntegration = () => {
                         <Globe className="w-6 h-6 text-accent" />
                       </div>
                       <div className="flex-1">
-                        <span className="font-medium text-foreground group-hover:text-accent transition-colors">ESN Milano</span>
+                        <span className="font-medium text-foreground group-hover:text-accent transition-colors">{currentCityData.esnChapter.name}</span>
                         <p className="text-xs text-muted-foreground">Erasmus Student Network - events, trips, support</p>
                       </div>
                       <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent" />
                     </a>
                     <a
-                      href="https://www.facebook.com/groups/expatsinmilan"
+                      href={`https://www.facebook.com/groups/expatsin${cityInfo.name.toLowerCase()}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 p-4 bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg transition-colors group"
@@ -245,8 +180,8 @@ const SocialIntegration = () => {
                         <Users className="w-6 h-6 text-accent" />
                       </div>
                       <div className="flex-1">
-                        <span className="font-medium text-foreground group-hover:text-accent transition-colors">Expats in Milan</span>
-                        <p className="text-xs text-muted-foreground">Large community of internationals in Milan</p>
+                        <span className="font-medium text-foreground group-hover:text-accent transition-colors">Expats in {cityInfo.name}</span>
+                        <p className="text-xs text-muted-foreground">Large community of internationals in {cityInfo.name}</p>
                       </div>
                       <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent" />
                     </a>
@@ -357,9 +292,9 @@ const SocialIntegration = () => {
               {/* Events Tab */}
               <TabsContent value="events" className="space-y-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-foreground">Upcoming Events</h3>
+                  <h3 className="text-lg font-semibold text-foreground">Upcoming Events in {cityInfo.name}</h3>
                   <a
-                    href="https://milan.esn.it/events"
+                    href={`${currentCityData.esnChapter.url}events`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-primary hover:underline flex items-center gap-1"

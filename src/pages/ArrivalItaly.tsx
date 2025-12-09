@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import BureaucracyTimeline from "@/components/BureaucracyTimeline";
+import CitySelector from "@/components/CitySelector";
 
 const ArrivalItaly = () => {
   return (
@@ -21,6 +22,7 @@ const ArrivalItaly = () => {
               </div>
             </div>
             
+            <CitySelector />
             <BureaucracyTimeline />
           </Card>
         </div>
