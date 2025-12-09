@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { 
   FileText, 
   Smartphone, 
@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import BureaucracyDetail from "./BureaucracyDetail";
 import { useUserProgress } from "@/hooks/useUserProgress";
+import { useCity } from "@/contexts/CityContext";
+import { cityData } from "@/data/cityData";
 import jsPDF from 'jspdf';
 
 export interface OfficialResource {
@@ -50,333 +52,341 @@ export interface Step {
   details: StepDetails;
 }
 
-const steps: Step[] = [
-  {
-    id: "codice",
-    title: "Codice Fiscale",
-    icon: FileText,
-    color: "primary",
-    duration: "1-2 days",
-    description: "Get your Italian tax code - required for everything",
-    details: {
-      location: "Agenzia delle Entrate",
-      documents: ["Passport", "University admission letter"],
-      process: [
-        "Visit local Agenzia delle Entrate office",
-        "Bring passport and admission letter",
-        "Fill out simple form",
-        "Receive printed tax code immediately or within 1-2 days"
-      ],
-      cost: "Free",
-      tips: "Go early in the morning to avoid queues. You can also get it at CAF offices.",
-      officialResources: [
-        {
-          name: "Agenzia delle Entrate",
-          url: "https://www.agenziaentrate.gov.it/portale/web/guest/servizi/istanze-e-richieste/richiesta-di-attribuzione-del-codice-fiscale",
-          description: "Official tax agency - apply online or find office locations"
-        },
-        {
-          name: "Find Nearest Office",
-          url: "https://www.agenziaentrate.gov.it/portale/web/guest/contatta/assistenza-fiscale/cerca-un-ufficio",
-          description: "Locate the nearest Agenzia delle Entrate office"
-        }
-      ],
-      partners: [
-        {
-          name: "CAF ACLI",
-          url: "https://www.caf.acli.it/",
-          description: "Tax assistance center - can help with Codice Fiscale",
-          category: "Tax Assistance"
-        },
-        {
-          name: "Patronato INCA",
-          url: "https://www.inca.it/",
-          description: "Free assistance for immigrants",
-          category: "Support Services"
-        }
-      ]
-    }
-  },
-  {
-    id: "sim",
-    title: "SIM Card",
-    icon: Smartphone,
-    color: "secondary",
-    duration: "Same day",
-    description: "Get connected with an Italian phone number",
-    details: {
-      location: "Mobile provider stores (Iliad, TIM, WindTre, Vodafone)",
-      documents: ["Passport", "Codice Fiscale"],
-      process: [
-        "Compare providers: Iliad (€7.99/month), TIM (€9.99/month), WindTre (€8.99/month)",
-        "Visit store or kiosk with documents",
-        "Choose plan and activate SIM",
-        "SIM activates within hours"
-      ],
-      cost: "€5-15 for SIM + monthly plan",
-      tips: "Iliad offers great value with no contract. TIM has best coverage in rural areas.",
-      officialResources: [
-        {
-          name: "AGCOM",
-          url: "https://www.agcom.it/",
-          description: "Italian telecom regulator - compare rates and coverage"
-        }
-      ],
-      partners: [
-        {
-          name: "Iliad",
-          url: "https://www.iliad.it/",
-          description: "Best value plans from €7.99/month, no contract",
-          category: "Mobile Provider"
-        },
-        {
-          name: "TIM",
-          url: "https://www.tim.it/",
-          description: "Best coverage nationwide, student offers available",
-          category: "Mobile Provider"
-        },
-        {
-          name: "WindTre",
-          url: "https://www.windtre.it/",
-          description: "Competitive student plans, good urban coverage",
-          category: "Mobile Provider"
-        },
-        {
-          name: "Vodafone",
-          url: "https://www.vodafone.it/",
-          description: "Premium network, international roaming options",
-          category: "Mobile Provider"
-        }
-      ]
-    }
-  },
-  {
-    id: "permesso",
-    title: "Residence Permit",
-    icon: Fingerprint,
-    color: "accent",
-    duration: "2-4 weeks",
-    description: "Essential permit - start this within 8 days of arrival",
-    details: {
-      location: "Poste Italiane (Sportello Amico) → Questura",
-      documents: [
-        "Modulo 1 (filled in black ink)",
-        "Passport copies (data page, visa, entry stamp)",
-        "Codice Fiscale copy",
-        "Polimi admission certificate",
-        "Health insurance proof",
-        "Rental contract or Cessione di fabbricato",
-        "4 passport photos",
-        "€16 marca da bollo (revenue stamp)"
-      ],
-      process: [
-        "Buy Yellow Kit at post office",
-        "Pay: €70.46 (permit card) + €31 (postal) + €16 (marca) + €30 (service fee)",
-        "Submit kit at Sportello Amico - receive barcode receipt",
-        "Wait for Questura appointment (via SMS)",
-        "Attend fingerprinting with all original documents",
-        "Track status at portaleimmigrazione.it"
-      ],
-      cost: "€147.46 total",
-      tips: "Start immediately - you must apply within 8 days! Bring copies of everything.",
-      officialResources: [
-        {
-          name: "Portale Immigrazione",
-          url: "https://www.portaleimmigrazione.it/",
-          description: "Track your permit application status"
-        },
-        {
-          name: "Polizia di Stato",
-          url: "https://www.poliziadistato.it/articolo/10930",
-          description: "Official residence permit information"
-        },
-        {
-          name: "Questura di Milano",
-          url: "https://questure.poliziadistato.it/Milano",
-          description: "Milan immigration office - appointments and info"
-        }
-      ],
-      partners: [
-        {
-          name: "Poste Italiane",
-          url: "https://www.poste.it/sportello-amico.html",
-          description: "Submit your Yellow Kit here",
-          category: "Post Office"
-        }
-      ]
-    }
-  },
-  {
-    id: "atm",
-    title: "ATM Metro Card",
-    icon: CreditCard,
-    color: "primary",
-    duration: "3-7 days",
-    description: "Get student discount on Milan public transport",
-    details: {
-      location: "ATM website/app or ATM Points",
-      documents: ["Passport photo", "Codice Fiscale", "Proof of enrollment"],
-      process: [
-        "Register on ATM Milano app or website",
-        "Upload documents and photo",
-        "Select student rate (under 27 years)",
-        "Pay for annual/monthly pass",
-        "Receive card by mail or pick up at ATM Point (Duomo, Centrale)"
-      ],
-      cost: "€200/year (under 27) or €22/month",
-      tips: "Annual pass is best value. You can recharge at any metro station yellow machines.",
-      officialResources: [
-        {
-          name: "ATM Milano",
-          url: "https://www.atm.it/",
-          description: "Official Milan transport - buy passes online"
-        },
-        {
-          name: "ATM Student Pass",
-          url: "https://www.atm.it/it/ViasperATM/Abbonamenti/Pagine/Under27.aspx",
-          description: "Under 27 student discounts information"
-        }
-      ],
-      partners: [
-        {
-          name: "ATM Point Duomo",
-          url: "https://www.atm.it/it/AtmInforma/Pagine/AtmPoint.aspx",
-          description: "Pick up your card in person",
-          category: "Service Point"
-        }
-      ]
-    }
-  },
-  {
-    id: "bank",
-    title: "Bank Account",
-    icon: Building2,
-    color: "secondary",
-    duration: "1-2 weeks",
-    description: "Open account for rent payments and daily expenses",
-    details: {
-      location: "Bank branches or online (N26, Revolut)",
-      documents: [
-        "Passport",
-        "Codice Fiscale",
-        "Proof of residence (Polimi letter or rental)",
-        "Residence permit receipt"
-      ],
-      process: [
-        "Choose: Traditional (Intesa, Unicredit) or Online (N26, Revolut)",
-        "Book appointment or sign up online",
-        "Bring all documents",
-        "Wait for approval (faster with online banks)",
-        "Activate account and receive card"
-      ],
-      cost: "€0-5/month depending on bank",
-      tips: "N26 and Revolut are fastest. Traditional banks may require your residence permit receipt.",
-      officialResources: [
-        {
-          name: "Bank of Italy",
-          url: "https://www.bancaditalia.it/",
-          description: "Italian banking regulations and consumer rights"
-        }
-      ],
-      partners: [
-        {
-          name: "N26",
-          url: "https://n26.com/",
-          description: "Free digital bank, instant signup, no Italian required",
-          category: "Digital Bank"
-        },
-        {
-          name: "Revolut",
-          url: "https://www.revolut.com/",
-          description: "Multi-currency account, great for international students",
-          category: "Digital Bank"
-        },
-        {
-          name: "UniCredit",
-          url: "https://www.unicredit.it/",
-          description: "Major Italian bank with student accounts",
-          category: "Traditional Bank"
-        },
-        {
-          name: "Intesa Sanpaolo",
-          url: "https://www.intesasanpaolo.com/",
-          description: "Largest Italian bank, XME Conto under 35",
-          category: "Traditional Bank"
-        }
-      ]
-    }
-  },
-  {
-    id: "housing",
-    title: "Find Accommodation",
-    icon: Home,
-    color: "accent",
-    duration: "1-2 weeks",
-    description: "Secure permanent housing and get your rental contract",
-    details: {
-      location: "Online platforms (Spotahome, HousingAnywhere, Immobiliare.it) + Real estate agencies",
-      documents: [
-        "Passport with visa",
-        "University enrollment proof",
-        "Codice Fiscale",
-        "Proof of financial means (bank statement or scholarship letter)"
-      ],
-      process: [
-        "Start searching using Spotahome, HousingAnywhere, or Immobiliare.it",
-        "Join Facebook groups for student housing in your city",
-        "Schedule viewings for your first weeks in Italy",
-        "ALWAYS visit in person before signing or paying anything",
-        "Sign rental contract (contratto transitorio is common for students)",
-        "Pay deposit (usually 1-3 months rent)",
-        "Request Cessione di fabbricato from landlord (needed for residence permit)"
-      ],
-      cost: "€400-800/month (shared room), €800-1500/month (studio in Milan)",
-      tips: "Never pay before visiting! Beware of scams - if it seems too good to be true, it probably is. Always get a proper contract and Cessione di fabbricato for your residence permit.",
-      officialResources: [
-        {
-          name: "Comune di Milano Housing",
-          url: "https://www.comune.milano.it/servizi/casa",
-          description: "Official city housing resources and tenant rights"
-        },
-        {
-          name: "SUNIA (Tenants Union)",
-          url: "https://www.sunia.it/",
-          description: "Tenant rights organization - free legal advice"
-        }
-      ],
-      partners: [
-        {
-          name: "Spotahome",
-          url: "https://www.spotahome.com/",
-          description: "Verified listings, book online before arrival",
-          category: "Housing Platform"
-        },
-        {
-          name: "HousingAnywhere",
-          url: "https://housinganywhere.com/",
-          description: "Student-focused platform, secure payments",
-          category: "Housing Platform"
-        },
-        {
-          name: "Immobiliare.it",
-          url: "https://www.immobiliare.it/",
-          description: "Italy's largest real estate portal",
-          category: "Housing Platform"
-        },
-        {
-          name: "Idealista",
-          url: "https://www.idealista.it/",
-          description: "Popular rental listings, map-based search",
-          category: "Housing Platform"
-        }
-      ]
-    }
-  }
-];
+// Steps are now generated dynamically inside the component based on selected city
 
 const BureaucracyTimeline = () => {
   const [selectedStep, setSelectedStep] = useState<string | null>(null);
   const { progress, toggleProgress, getCompletionPercentage, loading } = useUserProgress('phase-2');
+  const { selectedCity, cityInfo } = useCity();
+  const currentCityData = cityData[selectedCity];
+
+  // Generate city-specific steps
+  const steps: Step[] = useMemo(() => [
+    {
+      id: "codice",
+      title: "Codice Fiscale",
+      icon: FileText,
+      color: "primary",
+      duration: "1-2 days",
+      description: "Get your Italian tax code - required for everything",
+      details: {
+        location: `Agenzia delle Entrate - ${currentCityData.agenziaEntrate.address}`,
+        documents: ["Passport", "University admission letter"],
+        process: [
+          `Visit ${currentCityData.agenziaEntrate.address}`,
+          `Hours: ${currentCityData.agenziaEntrate.hours}`,
+          "Bring passport and admission letter",
+          "Fill out simple form",
+          "Receive printed tax code immediately or within 1-2 days"
+        ],
+        cost: "Free",
+        tips: "Go early in the morning to avoid queues. You can also get it at CAF offices.",
+        officialResources: [
+          {
+            name: "Agenzia delle Entrate",
+            url: "https://www.agenziaentrate.gov.it/portale/web/guest/servizi/istanze-e-richieste/richiesta-di-attribuzione-del-codice-fiscale",
+            description: "Official tax agency - apply online or find office locations"
+          },
+          {
+            name: "Find Nearest Office",
+            url: "https://www.agenziaentrate.gov.it/portale/web/guest/contatta/assistenza-fiscale/cerca-un-ufficio",
+            description: "Locate the nearest Agenzia delle Entrate office"
+          }
+        ],
+        partners: [
+          {
+            name: "CAF ACLI",
+            url: "https://www.caf.acli.it/",
+            description: "Tax assistance center - can help with Codice Fiscale",
+            category: "Tax Assistance"
+          },
+          {
+            name: "Patronato INCA",
+            url: "https://www.inca.it/",
+            description: "Free assistance for immigrants",
+            category: "Support Services"
+          }
+        ]
+      }
+    },
+    {
+      id: "sim",
+      title: "SIM Card",
+      icon: Smartphone,
+      color: "secondary",
+      duration: "Same day",
+      description: "Get connected with an Italian phone number",
+      details: {
+        location: "Mobile provider stores (Iliad, TIM, WindTre, Vodafone)",
+        documents: ["Passport", "Codice Fiscale"],
+        process: [
+          "Compare providers: Iliad (€7.99/month), TIM (€9.99/month), WindTre (€8.99/month)",
+          "Visit store or kiosk with documents",
+          "Choose plan and activate SIM",
+          "SIM activates within hours"
+        ],
+        cost: "€5-15 for SIM + monthly plan",
+        tips: "Iliad offers great value with no contract. TIM has best coverage in rural areas.",
+        officialResources: [
+          {
+            name: "AGCOM",
+            url: "https://www.agcom.it/",
+            description: "Italian telecom regulator - compare rates and coverage"
+          }
+        ],
+        partners: [
+          {
+            name: "Iliad",
+            url: "https://www.iliad.it/",
+            description: "Best value plans from €7.99/month, no contract",
+            category: "Mobile Provider"
+          },
+          {
+            name: "TIM",
+            url: "https://www.tim.it/",
+            description: "Best coverage nationwide, student offers available",
+            category: "Mobile Provider"
+          },
+          {
+            name: "WindTre",
+            url: "https://www.windtre.it/",
+            description: "Competitive student plans, good urban coverage",
+            category: "Mobile Provider"
+          },
+          {
+            name: "Vodafone",
+            url: "https://www.vodafone.it/",
+            description: "Premium network, international roaming options",
+            category: "Mobile Provider"
+          }
+        ]
+      }
+    },
+    {
+      id: "permesso",
+      title: "Residence Permit",
+      icon: Fingerprint,
+      color: "accent",
+      duration: "2-4 weeks",
+      description: "Essential permit - start this within 8 days of arrival",
+      details: {
+        location: `Poste Italiane (Sportello Amico) → ${currentCityData.questura.name}`,
+        documents: [
+          "Modulo 1 (filled in black ink)",
+          "Passport copies (data page, visa, entry stamp)",
+          "Codice Fiscale copy",
+          "University admission certificate",
+          "Health insurance proof",
+          "Rental contract or Cessione di fabbricato",
+          "4 passport photos",
+          "€16 marca da bollo (revenue stamp)"
+        ],
+        process: [
+          "Buy Yellow Kit at post office",
+          "Pay: €70.46 (permit card) + €31 (postal) + €16 (marca) + €30 (service fee)",
+          "Submit kit at Sportello Amico - receive barcode receipt",
+          "Wait for Questura appointment (via SMS)",
+          `Attend fingerprinting at ${currentCityData.questura.address}`,
+          "Track status at portaleimmigrazione.it"
+        ],
+        cost: "€147.46 total",
+        tips: "Start immediately - you must apply within 8 days! Bring copies of everything.",
+        officialResources: [
+          {
+            name: "Portale Immigrazione",
+            url: "https://www.portaleimmigrazione.it/",
+            description: "Track your permit application status"
+          },
+          {
+            name: "Polizia di Stato",
+            url: "https://www.poliziadistato.it/articolo/10930",
+            description: "Official residence permit information"
+          },
+          {
+            name: currentCityData.questura.name,
+            url: currentCityData.questura.website,
+            description: `${cityInfo.name} immigration office - appointments and info`
+          }
+        ],
+        partners: [
+          {
+            name: "Poste Italiane",
+            url: "https://www.poste.it/sportello-amico.html",
+            description: "Submit your Yellow Kit here",
+            category: "Post Office"
+          }
+        ]
+      }
+    },
+    {
+      id: "atm",
+      title: currentCityData.transport.cardName,
+      icon: CreditCard,
+      color: "primary",
+      duration: "3-7 days",
+      description: `Get student discount on ${cityInfo.name} public transport`,
+      details: {
+        location: `${currentCityData.transport.name} website/app or service points`,
+        documents: ["Passport photo", "Codice Fiscale", "Proof of enrollment"],
+        process: [
+          `Register on ${currentCityData.transport.name} app or website`,
+          "Upload documents and photo",
+          "Select student rate (under 27 years)",
+          "Pay for annual/monthly pass",
+          "Receive card by mail or pick up at service point"
+        ],
+        cost: currentCityData.transport.studentPrice,
+        tips: "Annual pass is best value. You can recharge at metro station machines.",
+        officialResources: [
+          {
+            name: currentCityData.transport.name,
+            url: currentCityData.transport.website,
+            description: `Official ${cityInfo.name} transport - buy passes online`
+          },
+          {
+            name: `${currentCityData.transport.name} Student Pass`,
+            url: currentCityData.transport.studentPassUrl,
+            description: "Under 27 student discounts information"
+          }
+        ],
+        partners: [
+          {
+            name: `${currentCityData.transport.name} Service Point`,
+            url: currentCityData.transport.website,
+            description: "Pick up your card in person",
+            category: "Service Point"
+          }
+        ]
+      }
+    },
+    {
+      id: "bank",
+      title: "Bank Account",
+      icon: Building2,
+      color: "secondary",
+      duration: "1-2 weeks",
+      description: "Open account for rent payments and daily expenses",
+      details: {
+        location: "Bank branches or online (N26, Revolut)",
+        documents: [
+          "Passport",
+          "Codice Fiscale",
+          "Proof of residence (university letter or rental)",
+          "Residence permit receipt"
+        ],
+        process: [
+          "Choose: Traditional (Intesa, Unicredit) or Online (N26, Revolut)",
+          "Book appointment or sign up online",
+          "Bring all documents",
+          "Wait for approval (faster with online banks)",
+          "Activate account and receive card"
+        ],
+        cost: "€0-5/month depending on bank",
+        tips: "N26 and Revolut are fastest. Traditional banks may require your residence permit receipt.",
+        officialResources: [
+          {
+            name: "Bank of Italy",
+            url: "https://www.bancaditalia.it/",
+            description: "Italian banking regulations and consumer rights"
+          }
+        ],
+        partners: [
+          {
+            name: "N26",
+            url: "https://n26.com/",
+            description: "Free digital bank, instant signup, no Italian required",
+            category: "Digital Bank"
+          },
+          {
+            name: "Revolut",
+            url: "https://www.revolut.com/",
+            description: "Multi-currency account, great for international students",
+            category: "Digital Bank"
+          },
+          {
+            name: "UniCredit",
+            url: "https://www.unicredit.it/",
+            description: "Major Italian bank with student accounts",
+            category: "Traditional Bank"
+          },
+          {
+            name: "Intesa Sanpaolo",
+            url: "https://www.intesasanpaolo.com/",
+            description: "Largest Italian bank, XME Conto under 35",
+            category: "Traditional Bank"
+          }
+        ]
+      }
+    },
+    {
+      id: "housing",
+      title: "Find Accommodation",
+      icon: Home,
+      color: "accent",
+      duration: "1-2 weeks",
+      description: "Secure permanent housing and get your rental contract",
+      details: {
+        location: "Online platforms (Spotahome, HousingAnywhere, Immobiliare.it) + Real estate agencies",
+        documents: [
+          "Passport with visa",
+          "University enrollment proof",
+          "Codice Fiscale",
+          "Proof of financial means (bank statement or scholarship letter)"
+        ],
+        process: [
+          "Start searching using Spotahome, HousingAnywhere, or Immobiliare.it",
+          `Join Facebook groups for student housing in ${cityInfo.name}`,
+          "Schedule viewings for your first weeks in Italy",
+          "ALWAYS visit in person before signing or paying anything",
+          "Sign rental contract (contratto transitorio is common for students)",
+          "Pay deposit (usually 1-3 months rent)",
+          "Request Cessione di fabbricato from landlord (needed for residence permit)"
+        ],
+        cost: currentCityData.neighborhoods.length > 0 
+          ? `€400-800/month (shared room), €700-1200/month (studio in ${cityInfo.name})`
+          : "€400-800/month (shared room)",
+        tips: "Never pay before visiting! Beware of scams - if it seems too good to be true, it probably is. Always get a proper contract and Cessione di fabbricato for your residence permit.",
+        officialResources: [
+          {
+            name: `Comune di ${cityInfo.name} Housing`,
+            url: `https://www.comune.${selectedCity === 'milano' ? 'milano' : selectedCity === 'roma' ? 'roma' : selectedCity === 'torino' ? 'torino' : 'pv'}.it/`,
+            description: "Official city housing resources and tenant rights"
+          },
+          {
+            name: "SUNIA (Tenants Union)",
+            url: "https://www.sunia.it/",
+            description: "Tenant rights organization - free legal advice"
+          }
+        ],
+        partners: [
+          {
+            name: "Spotahome",
+            url: "https://www.spotahome.com/",
+            description: "Verified listings, book online before arrival",
+            category: "Housing Platform"
+          },
+          {
+            name: "HousingAnywhere",
+            url: "https://housinganywhere.com/",
+            description: "Student-focused platform, secure payments",
+            category: "Housing Platform"
+          },
+          {
+            name: "Immobiliare.it",
+            url: "https://www.immobiliare.it/",
+            description: "Italy's largest real estate portal",
+            category: "Housing Platform"
+          },
+          {
+            name: "Idealista",
+            url: "https://www.idealista.it/",
+            description: "Popular rental listings, map-based search",
+            category: "Housing Platform"
+          }
+        ]
+      }
+    }
+  ], [selectedCity, cityInfo, currentCityData]);
 
   const completionPercentage = getCompletionPercentage(steps.length);
 
