@@ -24,14 +24,94 @@ import applicationImg from "@/assets/documents/application-form.png";
 import paymentImg from "@/assets/documents/payment.png";
 
 const countries = [
-  { value: "israel", label: "Israel", processingWeeks: "4-6", embassyUrl: "https://ambtelaviv.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/isr/en/ita" },
-  { value: "india", label: "India", processingWeeks: "6-8", embassyUrl: "https://ambdelhi.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/ind/en/ita" },
-  { value: "iran", label: "Iran", processingWeeks: "8-12", embassyUrl: "https://ambtehran.esteri.it/", vfsUrl: null },
-  { value: "turkey", label: "Turkey", processingWeeks: "4-6", embassyUrl: "https://ambankara.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/tur/en/ita" },
-  { value: "china", label: "China", processingWeeks: "6-10", embassyUrl: "https://ambpechino.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/chn/en/ita" },
-  { value: "brazil", label: "Brazil", processingWeeks: "5-7", embassyUrl: "https://ambbrasilia.esteri.it/", vfsUrl: null },
-  { value: "pakistan", label: "Pakistan", processingWeeks: "8-10", embassyUrl: "https://ambislamabad.esteri.it/", vfsUrl: "https://visa.vfsglobal.com/pak/en/ita" },
-  { value: "other", label: "Other", processingWeeks: "6-8", embassyUrl: "https://www.esteri.it/en/ministero/la_rete_diplomatica/", vfsUrl: null }
+  { 
+    value: "israel", 
+    label: "Israel", 
+    processingWeeks: "4-6", 
+    embassyUrl: "https://ambtelaviv.esteri.it/", 
+    vfsUrl: "https://visa.vfsglobal.com/isr/en/ita",
+    passportRenewalUrl: "https://www.gov.il/en/service/biometric_passport",
+    appointmentUrl: "https://prenotaonline.esteri.it/Login.aspx?cidsede=100046",
+    apostilleInfo: "Required for sponsor letters - get from Ministry of Justice",
+    paymentMethod: "Credit card or bank transfer at embassy"
+  },
+  { 
+    value: "india", 
+    label: "India", 
+    processingWeeks: "6-8", 
+    embassyUrl: "https://ambdelhi.esteri.it/", 
+    vfsUrl: "https://visa.vfsglobal.com/ind/en/ita",
+    passportRenewalUrl: "https://www.passportindia.gov.in/",
+    appointmentUrl: "https://visa.vfsglobal.com/ind/en/ita/book-an-appointment",
+    apostilleInfo: "Required - get from MEA (Ministry of External Affairs)",
+    paymentMethod: "Cash or demand draft at VFS center"
+  },
+  { 
+    value: "iran", 
+    label: "Iran", 
+    processingWeeks: "8-12", 
+    embassyUrl: "https://ambtehran.esteri.it/", 
+    vfsUrl: null,
+    passportRenewalUrl: "https://epolice.ir/",
+    appointmentUrl: "https://prenotaonline.esteri.it/",
+    apostilleInfo: "Required - get from Ministry of Foreign Affairs",
+    paymentMethod: "Check with embassy for current payment methods"
+  },
+  { 
+    value: "turkey", 
+    label: "Turkey", 
+    processingWeeks: "4-6", 
+    embassyUrl: "https://ambankara.esteri.it/", 
+    vfsUrl: "https://visa.vfsglobal.com/tur/en/ita",
+    passportRenewalUrl: "https://www.nvi.gov.tr/",
+    appointmentUrl: "https://visa.vfsglobal.com/tur/en/ita/book-an-appointment",
+    apostilleInfo: "Required - get from local notary or governorship",
+    paymentMethod: "Cash at VFS center (Turkish Lira or Euro)"
+  },
+  { 
+    value: "china", 
+    label: "China", 
+    processingWeeks: "6-10", 
+    embassyUrl: "https://ambpechino.esteri.it/", 
+    vfsUrl: "https://visa.vfsglobal.com/chn/en/ita",
+    passportRenewalUrl: "https://www.nia.gov.cn/",
+    appointmentUrl: "https://visa.vfsglobal.com/chn/en/ita/book-an-appointment",
+    apostilleInfo: "Required - get from local notary public office",
+    paymentMethod: "Online payment or cash at VFS center (CNY)"
+  },
+  { 
+    value: "brazil", 
+    label: "Brazil", 
+    processingWeeks: "5-7", 
+    embassyUrl: "https://ambbrasilia.esteri.it/", 
+    vfsUrl: null,
+    passportRenewalUrl: "https://www.gov.br/pt-br/servicos/obter-passaporte-comum",
+    appointmentUrl: "https://prenotaonline.esteri.it/",
+    apostilleInfo: "Required - get from local cartório (notary office)",
+    paymentMethod: "Bank transfer (check embassy website for details)"
+  },
+  { 
+    value: "pakistan", 
+    label: "Pakistan", 
+    processingWeeks: "8-10", 
+    embassyUrl: "https://ambislamabad.esteri.it/", 
+    vfsUrl: "https://visa.vfsglobal.com/pak/en/ita",
+    passportRenewalUrl: "https://www.dgip.gov.pk/",
+    appointmentUrl: "https://visa.vfsglobal.com/pak/en/ita/book-an-appointment",
+    apostilleInfo: "Required - get from Ministry of Foreign Affairs",
+    paymentMethod: "Cash at VFS center (PKR)"
+  },
+  { 
+    value: "other", 
+    label: "Other", 
+    processingWeeks: "6-8", 
+    embassyUrl: "https://www.esteri.it/en/ministero/la_rete_diplomatica/", 
+    vfsUrl: null,
+    passportRenewalUrl: null,
+    appointmentUrl: "https://prenotaonline.esteri.it/",
+    apostilleInfo: "Check with your local authorities for apostille requirements",
+    paymentMethod: "Check with your local embassy for payment methods"
+  }
 ];
 
 interface DocumentDetails {
@@ -637,6 +717,64 @@ const VisaWizard = () => {
     setExpandedDocument(prev => prev === docId ? null : docId);
   };
 
+  // Generate country-specific links for each document
+  const getCountrySpecificLinks = (documentId: string) => {
+    if (!selectedCountryData) return [];
+    
+    const countryLinks: Array<{ label: string; url: string; description: string }> = [];
+    
+    switch (documentId) {
+      case "passport":
+        if (selectedCountryData.passportRenewalUrl) {
+          countryLinks.push({
+            label: `${selectedCountryData.label} Passport Services`,
+            url: selectedCountryData.passportRenewalUrl,
+            description: `Official passport renewal for ${selectedCountryData.label}`
+          });
+        }
+        break;
+      case "embassy-appointment":
+        countryLinks.push({
+          label: `Italian Embassy in ${selectedCountryData.label}`,
+          url: selectedCountryData.embassyUrl,
+          description: "Official embassy website"
+        });
+        if (selectedCountryData.vfsUrl) {
+          countryLinks.push({
+            label: `VFS Global ${selectedCountryData.label}`,
+            url: selectedCountryData.vfsUrl,
+            description: "Book your visa appointment"
+          });
+        }
+        if (selectedCountryData.appointmentUrl) {
+          countryLinks.push({
+            label: "Book Appointment",
+            url: selectedCountryData.appointmentUrl,
+            description: "Direct appointment booking link"
+          });
+        }
+        break;
+      case "fee":
+        countryLinks.push({
+          label: `Embassy in ${selectedCountryData.label}`,
+          url: selectedCountryData.embassyUrl,
+          description: `Payment: ${selectedCountryData.paymentMethod}`
+        });
+        break;
+      case "financial":
+        if (selectedCountryData.apostilleInfo) {
+          countryLinks.push({
+            label: `Apostille in ${selectedCountryData.label}`,
+            url: selectedCountryData.embassyUrl,
+            description: selectedCountryData.apostilleInfo
+          });
+        }
+        break;
+    }
+    
+    return countryLinks;
+  };
+
   const canProceed = () => {
     switch (currentStep) {
       case 0:
@@ -1164,35 +1302,58 @@ const VisaWizard = () => {
                             </div>
 
                             {/* Official Links */}
-                            {doc.details.officialLinks.length > 0 && (
-                              <div className="space-y-2">
-                                <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                                  <ExternalLink className="w-4 h-4 text-secondary" />
-                                  Official Links & Resources
-                                </h5>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6">
-                                  {doc.details.officialLinks.map((link, idx) => (
-                                    <a
-                                      key={idx}
-                                      href={link.url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-center gap-2 p-2 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors group text-xs"
-                                    >
-                                      <ExternalLink className="w-3 h-3 text-secondary flex-shrink-0" />
-                                      <div className="flex-1 min-w-0">
-                                        <span className="font-medium text-foreground group-hover:text-secondary block truncate">
-                                          {link.label}
-                                        </span>
-                                        <span className="text-muted-foreground truncate block">
-                                          {link.description}
-                                        </span>
-                                      </div>
-                                    </a>
-                                  ))}
+                            {(() => {
+                              const countryLinks = getCountrySpecificLinks(doc.id);
+                              const allLinks = [...countryLinks, ...doc.details.officialLinks];
+                              
+                              if (allLinks.length === 0) return null;
+                              
+                              return (
+                                <div className="space-y-2">
+                                  <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                                    <ExternalLink className="w-4 h-4 text-secondary" />
+                                    Official Links & Resources
+                                    {countryLinks.length > 0 && selectedCountryData && (
+                                      <span className="text-xs font-normal text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                                        {selectedCountryData.label}
+                                      </span>
+                                    )}
+                                  </h5>
+                                  {!formData.country && (
+                                    <p className="text-xs text-muted-foreground pl-6 italic">
+                                      Select your country in Step 2 to see country-specific links
+                                    </p>
+                                  )}
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6">
+                                    {allLinks.map((link, idx) => (
+                                      <a
+                                        key={idx}
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={cn(
+                                          "flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors group text-xs",
+                                          idx < countryLinks.length ? "bg-primary/5 border border-primary/20" : "bg-muted/30"
+                                        )}
+                                      >
+                                        <ExternalLink className={cn(
+                                          "w-3 h-3 flex-shrink-0",
+                                          idx < countryLinks.length ? "text-primary" : "text-secondary"
+                                        )} />
+                                        <div className="flex-1 min-w-0">
+                                          <span className="font-medium text-foreground group-hover:text-secondary block truncate">
+                                            {link.label}
+                                          </span>
+                                          <span className="text-muted-foreground truncate block">
+                                            {link.description}
+                                          </span>
+                                        </div>
+                                      </a>
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
-                            )}
+                              );
+                            })()}
 
                             {/* Tips */}
                             {doc.details.tips && doc.details.tips.length > 0 && (
