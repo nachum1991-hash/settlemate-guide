@@ -115,15 +115,14 @@ const countries = [
 ];
 
 interface DocumentDetails {
-  whatIsIt: string;
-  whyRequired: string;
-  acceptanceRules: {
+  keyInfo?: string;
+  acceptanceRules?: {
     valid: string[];
-    invalid: string[];
+    invalid?: string[];
   };
-  commonMistakes: string[];
-  howToObtain: string;
-  officialLinks: Array<{
+  commonMistakes?: string[];
+  howToObtain?: string;
+  officialLinks?: Array<{
     label: string;
     url: string;
     description: string;
@@ -148,30 +147,19 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: passportImg,
     details: {
-      whatIsIt: "Government-issued travel document for visa sticker placement.",
-      whyRequired: "Validity must extend 3+ months AFTER visa end date, not arrival date.",
+      keyInfo: "Validity must extend 3+ months AFTER visa end date, not arrival date.",
       acceptanceRules: {
         valid: [
           "Valid 3+ months AFTER visa expiry date",
-          "At least 2 blank pages for stamps",
-          "Clean and undamaged"
+          "At least 2 blank pages for stamps"
         ],
         invalid: [
-          "Temporary/emergency travel documents",
-          "Water damage or torn pages"
+          "Temporary/emergency travel documents"
         ]
       },
       commonMistakes: [
         "Renewal takes 4-8 weeks - start early",
         "Validity must extend AFTER visa ends, not just after arrival"
-      ],
-      howToObtain: "Contact your passport authority 3+ months before travel. Many countries offer expedited processing.",
-      officialLinks: [
-        {
-          label: "MAECI Visa Requirements",
-          url: "https://vistoperitalia.esteri.it/home/en",
-          description: "Official Italian visa portal"
-        }
       ],
       tips: [
         "If close to expiry, renew BEFORE starting visa process"
@@ -185,40 +173,25 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: admissionImg,
     details: {
-      whatIsIt: "Official enrollment confirmation from your Italian university.",
-      whyRequired: "Must be FINAL acceptance (not conditional) with program dates.",
+      keyInfo: "Must be FINAL acceptance (not conditional) with program dates.",
       acceptanceRules: {
         valid: [
           "Final (unconditional) acceptance on official letterhead",
-          "Name matches passport exactly",
           "Includes program name, start date, and end date",
           "Official stamp and/or authorized signature"
         ],
         invalid: [
           "Conditional offers (pending language test, documents)",
-          "UNIVERSITALY confirmation alone (need university letter too)",
-          "Name mismatch with passport"
+          "UNIVERSITALY confirmation alone (need university letter too)"
         ]
       },
-      commonMistakes: [
-        "Submitting conditional acceptance instead of final enrollment",
-        "Not including BOTH UNIVERSITALY confirmation AND university letter"
-      ],
       howToObtain: "Download from your university portal. Politecnico: Online Services → Career → Enrollment Status → Download Documents.",
       officialLinks: [
         {
           label: "UNIVERSITALY Portal",
           url: "https://www.universitaly.it/",
           description: "Official pre-enrollment platform"
-        },
-        {
-          label: "Politecnico di Milano Services",
-          url: "https://www.polimi.it/en/online-services/",
-          description: "Access enrollment documents"
         }
-      ],
-      tips: [
-        "Request a specific 'visa letter' if your university offers one"
       ]
     }
   },
@@ -229,36 +202,28 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: applicationImg,
     details: {
-      whatIsIt: "Official Type D (National) visa form for stays over 90 days.",
-      whyRequired: "Must select Type D (National), NOT Type C (Schengen/tourist).",
+      keyInfo: "Must select Type D (National), NOT Type C (Schengen/tourist).",
       acceptanceRules: {
         valid: [
           "Completed in CAPITAL LETTERS or typed",
-          "All sections filled ('N/A' for non-applicable)",
-          "Signed and dated in ink",
-          "Visa type: D (National) for Study/Studio"
+          "Visa type: D (National) for Study/Studio",
+          "Signed and dated in ink"
         ],
         invalid: [
           "Wrong visa type (C instead of D)",
-          "Blank fields (must write N/A)",
           "Missing signature"
         ]
       },
       commonMistakes: [
         "Selecting Type C (Schengen) instead of Type D (National)",
-        "Leaving 'Address in Italy' blank - use university address if unsure",
-        "Forms get updated - download fresh copy before appointment"
+        "Leaving 'Address in Italy' blank - use university address if unsure"
       ],
-      howToObtain: "Download latest form from official Italian visa portal.",
       officialLinks: [
         {
           label: "Official MAECI Visa Portal",
           url: "https://vistoperitalia.esteri.it/home/en",
           description: "Download Type D visa form"
         }
-      ],
-      tips: [
-        "Type: D (National) | Entries: Multiple | Purpose: Studio/Study"
       ]
     }
   },
@@ -269,26 +234,20 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: insuranceImg,
     details: {
-      whatIsIt: "Medical coverage including hospitalization and emergency repatriation.",
-      whyRequired: "Minimum €30,000 coverage, dates must match visa period exactly.",
       acceptanceRules: {
         valid: [
           "Minimum €30,000 coverage",
           "Covers ENTIRE visa period (entry to expiry)",
-          "Valid in Italy and all Schengen countries",
-          "Includes emergency repatriation"
+          "Valid in Italy and all Schengen countries"
         ],
         invalid: [
           "Travel insurance without medical coverage",
-          "Coverage below €30,000",
           "Dates don't match visa period exactly"
         ]
       },
       commonMistakes: [
-        "Coverage dates not matching visa dates exactly",
-        "Buying trip cancellation insurance instead of medical"
+        "Coverage dates not matching visa dates exactly"
       ],
-      howToObtain: "Purchase from recognized international insurers. Get policy certificate immediately.",
       officialLinks: [
         {
           label: "SWISSCARE",
@@ -313,37 +272,23 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: financialImg,
     details: {
-      whatIsIt: "Proof of funds to support yourself during studies.",
-      whyRequired: "Minimum €6,079.45/year (€506.62/month × 12) - 2024/2025 rates.",
+      keyInfo: "Minimum €6,079.45/year (€506.62/month × 12) - 2024/2025 rates.",
       acceptanceRules: {
         valid: [
           "Bank statements from last 3-6 months showing consistent balance",
           "Scholarship letter covering full amount",
-          "Sponsor bank statement WITH notarized sponsorship letter",
-          "Official bank letterhead with stamps"
+          "Sponsor bank statement WITH notarized sponsorship letter"
         ],
         invalid: [
           "Banking app screenshots",
-          "Sponsor letter without bank proof",
-          "Statements older than 3 months"
+          "Sponsor letter without bank proof"
         ]
       },
       commonMistakes: [
-        "Showing only current balance instead of consistent savings over months",
-        "Sponsor letter not notarized/apostilled",
-        "Not showing 12 months of support"
-      ],
-      howToObtain: "Request official stamped bank statements. Sponsors need: bank statements + formal letter + relationship proof.",
-      officialLinks: [
-        {
-          label: "MAECI Financial Requirements",
-          url: "https://vistoperitalia.esteri.it/home/en",
-          description: "Official financial guidelines"
-        }
+        "Sponsor letter not notarized/apostilled"
       ],
       tips: [
-        "€506.62/month is MINIMUM - showing more improves your application",
-        "Scholarship holders: include official award letter"
+        "€506.62/month is MINIMUM - showing more improves your application"
       ]
     }
   },
@@ -354,8 +299,6 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: accommodationImg,
     details: {
-      whatIsIt: "Confirmed housing in Italy (permanent or temporary first weeks).",
-      whyRequired: "Must show verified address - verbal agreements not accepted.",
       acceptanceRules: {
         valid: [
           "Signed rental contract with landlord details",
@@ -364,22 +307,14 @@ const baseDocuments: VisaDocument[] = [
           "Hotel/Airbnb for first 2-4 weeks + statement of intent"
         ],
         invalid: [
-          "Unverifiable promises",
-          "Contracts missing landlord signature or codice fiscale"
+          "Contracts missing landlord's codice fiscale"
         ]
       },
       commonMistakes: [
-        "SCAM: Never pay before verifying landlord/seeing property",
-        "Contract missing landlord's codice fiscale (Italian tax code)",
-        "Embassies verify accommodation letters"
+        "⚠️ SCAM: Never pay before verifying landlord/seeing property",
+        "Contract missing landlord's codice fiscale (Italian tax code)"
       ],
-      howToObtain: "University: Apply through housing office. Private: Spotahome, HousingAnywhere, Immobiliare.it. Host declaration: submitted at Questura.",
       officialLinks: [
-        {
-          label: "Politecnico di Milano Housing",
-          url: "https://www.residenze.polimi.it/",
-          description: "University housing"
-        },
         {
           label: "Spotahome",
           url: "https://www.spotahome.com/",
@@ -387,8 +322,7 @@ const baseDocuments: VisaDocument[] = [
         }
       ],
       tips: [
-        "University housing deadlines often May/June - apply early",
-        "Host must submit hospitality declaration BEFORE your appointment"
+        "University housing deadlines often May/June - apply early"
       ]
     }
   },
@@ -399,33 +333,14 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: photosImg,
     details: {
-      whatIsIt: "Biometric passport photos meeting Schengen standards.",
-      whyRequired: "35mm × 45mm, white background, taken within 6 months.",
       acceptanceRules: {
         valid: [
           "Size: 35mm × 45mm",
           "Taken within last 6 months",
           "White/light background",
           "No glasses (new rule at most embassies)"
-        ],
-        invalid: [
-          "Selfies or home-printed",
-          "Wearing any glasses",
-          "Colored backgrounds"
         ]
       },
-      commonMistakes: [
-        "Most embassies now reject photos with any eyewear",
-        "Wrong dimensions - confirm with your embassy"
-      ],
-      howToObtain: "Professional photo studio or pharmacy. Specify 'Italian/Schengen visa photo'.",
-      officialLinks: [
-        {
-          label: "ICAO Photo Guidelines",
-          url: "https://www.icao.int/Security/FAL/TRIP/Documents/TR%20-%20Portrait%20Quality.pdf",
-          description: "International standards"
-        }
-      ],
       tips: [
         "Bring 4 photos (embassy keeps 2, extras for other documents)"
       ]
@@ -438,122 +353,17 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: paymentImg,
     details: {
-      whatIsIt: "Mandatory €116 processing fee (non-refundable).",
-      whyRequired: "Payment method varies by embassy - check before appointment.",
-      acceptanceRules: {
-        valid: [
-          "€116 for National (D) visa",
-          "Payment method as specified by your embassy"
-        ],
-        invalid: [
-          "Wrong payment method for your embassy"
-        ]
-      },
+      keyInfo: "€116 for National (D) visa - NON-REFUNDABLE even if denied.",
       commonMistakes: [
         "Bringing only card when embassy requires cash (or vice versa)",
         "VFS centers have additional service fees (€20-30)"
       ],
-      howToObtain: "Check your embassy website for exact payment methods.",
       officialLinks: [
         {
           label: "Find Your Embassy",
           url: "https://www.esteri.it/en/ministero/la_rete_diplomatica/",
           description: "Embassy payment requirements"
         }
-      ],
-      tips: [
-        "Fee is NON-REFUNDABLE even if denied",
-        "Some embassies offer reduced fees for scholarship holders"
-      ]
-    }
-  },
-  {
-    id: "embassy-appointment",
-    name: "Embassy Appointment",
-    description: "Schedule and prepare for your visa submission appointment",
-    required: true,
-    image: applicationImg,
-    details: {
-      whatIsIt: "In-person appointment for document submission and biometrics.",
-      whyRequired: "Book early - slots fill fast during June-August peak season.",
-      acceptanceRules: {
-        valid: [
-          "Appointment at correct embassy for your region",
-          "Scheduled with enough time for processing",
-          "Confirmation email printed"
-        ],
-        invalid: [
-          "Wrong jurisdiction embassy",
-          "Appointment too close to travel date"
-        ]
-      },
-      commonMistakes: [
-        "Peak season (June-August): book 4-6 weeks in advance",
-        "Arriving late = cancelled appointment at most embassies",
-        "Must book at embassy in your region of residence"
-      ],
-      howToObtain: "Book through VFS Global or directly via embassy website (Prenota Online).",
-      officialLinks: [
-        {
-          label: "VFS Global Italy",
-          url: "https://visa.vfsglobal.com/",
-          description: "Primary booking for most countries"
-        },
-        {
-          label: "Prenota Online",
-          url: "https://prenotaonline.esteri.it/",
-          description: "Direct embassy booking"
-        }
-      ],
-      tips: [
-        "Arrive 15-30 minutes early",
-        "Bring ALL originals + 2 photocopies of each",
-        "Passport kept during processing - plan accordingly"
-      ]
-    }
-  },
-  {
-    id: "final-check",
-    name: "Final Document Check",
-    description: "Pre-submission checklist to ensure everything is ready",
-    required: true,
-    image: paymentImg,
-    details: {
-      whatIsIt: "Final verification before appointment.",
-      whyRequired: "Missing documents = delays or rejection.",
-      acceptanceRules: {
-        valid: [
-          "All documents present with 2 photocopies each",
-          "Documents organized in order",
-          "Translations certified where required"
-        ],
-        invalid: [
-          "Missing documents or photocopies",
-          "Expired documents"
-        ]
-      },
-      commonMistakes: [
-        "Forgetting photocopies",
-        "Missing translations of non-English/Italian documents"
-      ],
-      howToObtain: "Use checklist below to verify every item.",
-      officialLinks: [
-        {
-          label: "MAECI Requirements",
-          url: "https://vistoperitalia.esteri.it/home/en",
-          description: "Official reference"
-        }
-      ],
-      tips: [
-        "✓ Passport: 3+ months validity after visa ends, 2+ blank pages",
-        "✓ Form: Complete, signed, Type D selected",
-        "✓ Acceptance letter: Final, with dates",
-        "✓ Insurance: €30,000+, dates match visa",
-        "✓ Financial: €506+/month proof",
-        "✓ Accommodation: Contract/letter/declaration",
-        "✓ Photos: 4× (35×45mm, recent)",
-        "✓ Fee: Ready with correct payment method",
-        "✓ Appointment confirmation: Printed"
       ]
     }
   }
@@ -1104,94 +914,89 @@ const VisaWizard = () => {
                       {expandedDocument === doc.id && (
                         <div className="px-4 pb-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-200">
                           <div className="pt-4 space-y-4">
-                            {/* What is it */}
-                            <div className="space-y-2">
-                              <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                                <FileText className="w-4 h-4 text-primary" />
-                                What is this document?
-                              </h5>
-                              <p className="text-sm text-muted-foreground pl-6">
-                                {doc.details.whatIsIt}
-                              </p>
-                            </div>
-
-                            {/* Why required */}
-                            <div className="space-y-2">
-                              <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                                <Info className="w-4 h-4 text-secondary" />
-                                Why is it required?
-                              </h5>
-                              <p className="text-sm text-muted-foreground pl-6">
-                                {doc.details.whyRequired}
-                              </p>
-                            </div>
+                            {/* Key Info */}
+                            {doc.details.keyInfo && (
+                              <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
+                                <p className="text-sm text-foreground font-medium">
+                                  {doc.details.keyInfo}
+                                </p>
+                              </div>
+                            )}
 
                             {/* Acceptance Rules */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {/* Valid */}
-                              <div className="space-y-2 p-3 bg-success/5 rounded-lg border border-success/20">
-                                <h5 className="text-sm font-semibold text-success flex items-center gap-2">
-                                  <Check className="w-4 h-4" />
-                                  What's Accepted
-                                </h5>
-                                <ul className="space-y-1.5">
-                                  {doc.details.acceptanceRules.valid.map((rule, idx) => (
-                                    <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                      <Check className="w-3 h-3 text-success flex-shrink-0 mt-0.5" />
-                                      {rule}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
+                            {doc.details.acceptanceRules && (
+                              <div className={`grid grid-cols-1 ${doc.details.acceptanceRules.invalid ? 'md:grid-cols-2' : ''} gap-4`}>
+                                {/* Valid */}
+                                <div className="space-y-2 p-3 bg-success/5 rounded-lg border border-success/20">
+                                  <h5 className="text-sm font-semibold text-success flex items-center gap-2">
+                                    <Check className="w-4 h-4" />
+                                    What's Accepted
+                                  </h5>
+                                  <ul className="space-y-1.5">
+                                    {doc.details.acceptanceRules.valid.map((rule, idx) => (
+                                      <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
+                                        <Check className="w-3 h-3 text-success flex-shrink-0 mt-0.5" />
+                                        {rule}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
 
-                              {/* Invalid */}
-                              <div className="space-y-2 p-3 bg-destructive/5 rounded-lg border border-destructive/20">
-                                <h5 className="text-sm font-semibold text-destructive flex items-center gap-2">
-                                  <X className="w-4 h-4" />
-                                  What's NOT Accepted
-                                </h5>
-                                <ul className="space-y-1.5">
-                                  {doc.details.acceptanceRules.invalid.map((rule, idx) => (
-                                    <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                      <X className="w-3 h-3 text-destructive flex-shrink-0 mt-0.5" />
-                                      {rule}
-                                    </li>
-                                  ))}
-                                </ul>
+                                {/* Invalid - only show if exists */}
+                                {doc.details.acceptanceRules.invalid && doc.details.acceptanceRules.invalid.length > 0 && (
+                                  <div className="space-y-2 p-3 bg-destructive/5 rounded-lg border border-destructive/20">
+                                    <h5 className="text-sm font-semibold text-destructive flex items-center gap-2">
+                                      <X className="w-4 h-4" />
+                                      What's NOT Accepted
+                                    </h5>
+                                    <ul className="space-y-1.5">
+                                      {doc.details.acceptanceRules.invalid.map((rule, idx) => (
+                                        <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
+                                          <X className="w-3 h-3 text-destructive flex-shrink-0 mt-0.5" />
+                                          {rule}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
                               </div>
-                            </div>
+                            )}
 
                             {/* Common Mistakes */}
-                            <div className="space-y-2 p-3 bg-warning/5 rounded-lg border border-warning/20">
-                              <h5 className="text-sm font-semibold text-warning flex items-center gap-2">
-                                <AlertTriangle className="w-4 h-4" />
-                                Common Mistakes to Avoid
-                              </h5>
-                              <ul className="space-y-1.5">
-                                {doc.details.commonMistakes.map((mistake, idx) => (
-                                  <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                    <AlertTriangle className="w-3 h-3 text-warning flex-shrink-0 mt-0.5" />
-                                    {mistake}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
+                            {doc.details.commonMistakes && doc.details.commonMistakes.length > 0 && (
+                              <div className="space-y-2 p-3 bg-warning/5 rounded-lg border border-warning/20">
+                                <h5 className="text-sm font-semibold text-warning flex items-center gap-2">
+                                  <AlertTriangle className="w-4 h-4" />
+                                  Common Mistakes to Avoid
+                                </h5>
+                                <ul className="space-y-1.5">
+                                  {doc.details.commonMistakes.map((mistake, idx) => (
+                                    <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
+                                      <AlertTriangle className="w-3 h-3 text-warning flex-shrink-0 mt-0.5" />
+                                      {mistake}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
 
                             {/* How to Obtain */}
-                            <div className="space-y-2">
-                              <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                                <FileText className="w-4 h-4 text-primary" />
-                                How to Obtain
-                              </h5>
-                              <p className="text-sm text-muted-foreground pl-6">
-                                {doc.details.howToObtain}
-                              </p>
-                            </div>
+                            {doc.details.howToObtain && (
+                              <div className="space-y-2">
+                                <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                                  <FileText className="w-4 h-4 text-primary" />
+                                  How to Obtain
+                                </h5>
+                                <p className="text-sm text-muted-foreground pl-6">
+                                  {doc.details.howToObtain}
+                                </p>
+                              </div>
+                            )}
 
                             {/* Official Links */}
                             {(() => {
                               const countryLinks = getCountrySpecificLinks(doc.id);
-                              const allLinks = [...countryLinks, ...doc.details.officialLinks];
+                              const allLinks = [...countryLinks, ...(doc.details.officialLinks || [])];
                               
                               if (allLinks.length === 0) return null;
                               
