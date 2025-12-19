@@ -148,40 +148,33 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: passportImg,
     details: {
-      whatIsIt: "Your passport is the government-issued travel document that proves your identity and citizenship. It's the most important document for your visa application.",
-      whyRequired: "The Italian embassy needs your passport to issue the visa sticker and verify your identity. Without a valid passport, your application cannot proceed.",
+      whatIsIt: "Government-issued travel document for visa sticker placement.",
+      whyRequired: "Validity must extend 3+ months AFTER visa end date, not arrival date.",
       acceptanceRules: {
         valid: [
-          "Valid for at least 3 months AFTER your visa expiry date (not entry date)",
-          "At least 2 blank pages available for visa stamps",
-          "Clean and undamaged condition",
-          "Original passport (not a copy)"
+          "Valid 3+ months AFTER visa expiry date",
+          "At least 2 blank pages for stamps",
+          "Clean and undamaged"
         ],
         invalid: [
-          "Expired or expiring within 3 months of visa end date",
-          "Damaged, torn, or heavily worn passports",
-          "Passports with no blank pages",
-          "Temporary or emergency travel documents (usually rejected)"
+          "Temporary/emergency travel documents",
+          "Water damage or torn pages"
         ]
       },
       commonMistakes: [
-        "Not checking expiry date early enough - passport renewal takes 4-8 weeks in most countries",
-        "Forgetting that validity must extend AFTER the visa ends, not just after arrival",
-        "Not counting blank pages correctly (some stamps use full pages)",
-        "Submitting a passport with water damage or torn pages"
+        "Renewal takes 4-8 weeks - start early",
+        "Validity must extend AFTER visa ends, not just after arrival"
       ],
-      howToObtain: "Contact your country's passport authority at least 3 months before your intended travel. Many countries offer expedited processing for an additional fee. Check if your country allows passport renewal online.",
+      howToObtain: "Contact your passport authority 3+ months before travel. Many countries offer expedited processing.",
       officialLinks: [
         {
           label: "MAECI Visa Requirements",
           url: "https://vistoperitalia.esteri.it/home/en",
-          description: "Official Italian visa portal with passport requirements"
+          description: "Official Italian visa portal"
         }
       ],
       tips: [
-        "Make 2 color photocopies of your passport's main page",
-        "Take a photo of your passport and store it securely online",
-        "If your passport is close to expiry, renew it BEFORE starting the visa process"
+        "If close to expiry, renew BEFORE starting visa process"
       ]
     }
   },
@@ -192,49 +185,40 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: admissionImg,
     details: {
-      whatIsIt: "The university acceptance letter (also called enrollment letter or admission letter) is an official document from your Italian university confirming your enrollment in a degree program.",
-      whyRequired: "This letter proves you have a legitimate study purpose in Italy. The embassy uses it to verify your enrollment and understand the duration of your studies.",
+      whatIsIt: "Official enrollment confirmation from your Italian university.",
+      whyRequired: "Must be FINAL acceptance (not conditional) with program dates.",
       acceptanceRules: {
         valid: [
-          "Final (unconditional) acceptance on official university letterhead",
-          "Shows your full legal name exactly as in passport",
-          "Includes program name, start date, and expected end date",
-          "Contains official university stamp and/or authorized signature",
-          "Dated within the last 3-6 months"
+          "Final (unconditional) acceptance on official letterhead",
+          "Name matches passport exactly",
+          "Includes program name, start date, and end date",
+          "Official stamp and/or authorized signature"
         ],
         invalid: [
-          "Conditional offers (pending language test, pending documents)",
-          "Letters without official university stamp or signature",
-          "Pre-enrollment confirmations from UNIVERSITALY only (need university letter too)",
-          "Letters with incorrect personal details",
-          "Outdated letters from previous application cycles"
+          "Conditional offers (pending language test, documents)",
+          "UNIVERSITALY confirmation alone (need university letter too)",
+          "Name mismatch with passport"
         ]
       },
       commonMistakes: [
-        "Submitting a conditional acceptance instead of the final enrollment letter",
-        "Letter missing program duration or exact dates",
-        "Using an old letter from initial application instead of updated enrollment confirmation",
-        "Not including both UNIVERSITALY confirmation AND university acceptance letter",
-        "Name mismatch between passport and acceptance letter"
+        "Submitting conditional acceptance instead of final enrollment",
+        "Not including BOTH UNIVERSITALY confirmation AND university letter"
       ],
-      howToObtain: "Download from your university's online portal. For Politecnico di Milano: Online Services → Career → Enrollment Status → Download Documents. For other universities, check your student portal under 'Documents' or 'Certificates' section.",
+      howToObtain: "Download from your university portal. Politecnico: Online Services → Career → Enrollment Status → Download Documents.",
       officialLinks: [
         {
           label: "UNIVERSITALY Portal",
           url: "https://www.universitaly.it/",
-          description: "Official pre-enrollment platform for international students"
+          description: "Official pre-enrollment platform"
         },
         {
           label: "Politecnico di Milano Services",
           url: "https://www.polimi.it/en/online-services/",
-          description: "Access your enrollment documents"
+          description: "Access enrollment documents"
         }
       ],
       tips: [
-        "Request an English version if available (Italian is also accepted)",
-        "If your name has changed, ensure all documents match",
-        "Download multiple copies and save digitally",
-        "Some universities provide a specific 'visa letter' - request this if available"
+        "Request a specific 'visa letter' if your university offers one"
       ]
     }
   },
@@ -245,51 +229,36 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: applicationImg,
     details: {
-      whatIsIt: "The visa application form is the official document where you provide your personal information, travel details, and purpose of stay. For studies in Italy lasting more than 90 days, you need the Type D (National) visa form.",
-      whyRequired: "This standardized form captures all information the embassy needs to process your visa application. Incomplete or incorrect forms are the most common cause of delays.",
+      whatIsIt: "Official Type D (National) visa form for stays over 90 days.",
+      whyRequired: "Must select Type D (National), NOT Type C (Schengen/tourist).",
       acceptanceRules: {
         valid: [
-          "Completed entirely in CAPITAL LETTERS or typed",
-          "All sections filled in (use 'N/A' for non-applicable fields)",
-          "Signed and dated in ink (not digital signature)",
-          "Using the current/latest form version",
-          "Visa type selected: D (National) for Study/Studio"
+          "Completed in CAPITAL LETTERS or typed",
+          "All sections filled ('N/A' for non-applicable)",
+          "Signed and dated in ink",
+          "Visa type: D (National) for Study/Studio"
         ],
         invalid: [
-          "Handwritten in lowercase or illegible writing",
-          "Blank fields left empty (must write N/A)",
-          "Using outdated form versions",
-          "Missing signature or date",
-          "Wrong visa type selected (Schengen C instead of National D)"
+          "Wrong visa type (C instead of D)",
+          "Blank fields (must write N/A)",
+          "Missing signature"
         ]
       },
       commonMistakes: [
-        "Selecting wrong visa type - must be 'D' (National), not 'C' (Schengen/tourist)",
-        "Putting wrong dates - visa start should align with semester/program start",
-        "Leaving 'Address in Italy' blank - use university address or temporary accommodation",
-        "Writing 'tourism' or vague purposes instead of 'Study/Studio' in purpose field",
-        "Forgetting to sign EVERY required signature field",
-        "Using a form downloaded months ago (forms get updated)"
+        "Selecting Type C (Schengen) instead of Type D (National)",
+        "Leaving 'Address in Italy' blank - use university address if unsure",
+        "Forms get updated - download fresh copy before appointment"
       ],
-      howToObtain: "Download the latest form from the official Italian visa portal. Print clearly on A4 paper. Fill it out carefully, checking each field twice.",
+      howToObtain: "Download latest form from official Italian visa portal.",
       officialLinks: [
         {
           label: "Official MAECI Visa Portal",
           url: "https://vistoperitalia.esteri.it/home/en",
-          description: "Download the official Type D visa application form"
-        },
-        {
-          label: "Form Filling Guide",
-          url: "https://vistoperitalia.esteri.it/Moduli/en/A_Application_Form_EN.pdf",
-          description: "English version of the application form"
+          description: "Download Type D visa form"
         }
       ],
       tips: [
-        "Type of visa: Select 'D' (National/Long-stay)",
-        "Number of entries: Select 'Multiple'",
-        "Duration of stay: Match your program length (e.g., '365 days' for 1 year)",
-        "Purpose: Write 'Studio' (Italian) or 'Study'",
-        "Print 2 copies and keep one unsigned as backup"
+        "Type: D (National) | Entries: Multiple | Purpose: Studio/Study"
       ]
     }
   },
@@ -300,55 +269,40 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: insuranceImg,
     details: {
-      whatIsIt: "Health insurance is a policy that covers medical expenses, hospitalization, and emergency repatriation during your stay in Italy. This protects both you and the Italian healthcare system.",
-      whyRequired: "Italy requires proof that you won't burden the public healthcare system. This insurance ensures you can receive medical care without financial issues during your studies.",
+      whatIsIt: "Medical coverage including hospitalization and emergency repatriation.",
+      whyRequired: "Minimum €30,000 coverage, dates must match visa period exactly.",
       acceptanceRules: {
         valid: [
-          "Minimum coverage of €30,000 (medical treatment + hospitalization)",
-          "Covers the ENTIRE visa validity period (from entry to expiry)",
+          "Minimum €30,000 coverage",
+          "Covers ENTIRE visa period (entry to expiry)",
           "Valid in Italy and all Schengen countries",
-          "Includes emergency medical repatriation",
-          "Policy document in English or Italian (or with certified translation)"
+          "Includes emergency repatriation"
         ],
         invalid: [
-          "Basic travel insurance without medical coverage",
+          "Travel insurance without medical coverage",
           "Coverage below €30,000",
-          "Policy that doesn't cover Italy specifically",
-          "Insurance starting AFTER your visa start date",
-          "Coverage ending BEFORE your visa expiry date",
-          "Policies that exclude pre-existing conditions (some embassies reject these)"
+          "Dates don't match visa period exactly"
         ]
       },
       commonMistakes: [
-        "Buying cheap travel insurance that only covers trip cancellation, not medical",
         "Coverage dates not matching visa dates exactly",
-        "Not including emergency repatriation coverage",
-        "Buying insurance from non-recognized providers",
-        "Forgetting that coverage must start from day 1, not from arrival in Italy"
+        "Buying trip cancellation insurance instead of medical"
       ],
-      howToObtain: "Purchase from embassy-approved insurance providers or international student insurers. Compare policies online and ensure they meet all Italian visa requirements. Get the policy certificate immediately after purchase.",
+      howToObtain: "Purchase from recognized international insurers. Get policy certificate immediately.",
       officialLinks: [
         {
-          label: "SWISSCARE Insurance",
+          label: "SWISSCARE",
           url: "https://www.swisscare.com/",
-          description: "Commonly accepted for Italian student visas"
+          description: "Commonly accepted for Italian visas"
         },
         {
           label: "DR-WALTER EDUCARE24",
           url: "https://www.dr-walter.com/en/educare24.html",
-          description: "Popular choice among international students"
-        },
-        {
-          label: "ING Student Insurance",
-          url: "https://www.ingstudent.com/",
-          description: "Designed specifically for students in Italy"
+          description: "Popular student choice"
         }
       ],
       tips: [
-        "After arriving in Italy, you can enroll in SSN (Italian National Health Service) for €149.77/year",
-        "Keep digital and printed copies of your insurance policy",
-        "Save the 24-hour emergency contact number in your phone",
-        "Check if your insurance offers direct billing to hospitals (avoids out-of-pocket payments)"
+        "After arrival, enroll in SSN (Italian NHS) for €149.77/year"
       ]
     }
   },
@@ -359,47 +313,37 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: financialImg,
     details: {
-      whatIsIt: "Financial proof demonstrates you have sufficient funds to support yourself during your studies in Italy without needing public assistance or illegal employment.",
-      whyRequired: "Italy needs assurance that you can afford tuition, rent, food, and daily expenses. This is a key factor in visa approval decisions.",
+      whatIsIt: "Proof of funds to support yourself during studies.",
+      whyRequired: "Minimum €6,079.45/year (€506.62/month × 12) - 2024/2025 rates.",
       acceptanceRules: {
         valid: [
-          "Minimum €6,079.45/year (€506.62/month × 12 months) - 2024/2025 rates",
           "Bank statements from last 3-6 months showing consistent balance",
-          "Scholarship letter covering full amount (if applicable)",
-          "Parent/sponsor bank statement WITH notarized sponsorship letter",
-          "Official bank letterhead with stamps and authorized signatures"
+          "Scholarship letter covering full amount",
+          "Sponsor bank statement WITH notarized sponsorship letter",
+          "Official bank letterhead with stamps"
         ],
         invalid: [
-          "Screenshots of banking apps or online banking",
-          "Cryptocurrency holdings or investments",
-          "Bank statements showing insufficient funds",
-          "Sponsor letter without accompanying bank proof",
-          "Statements older than 3 months",
-          "Handwritten or unofficial financial documents"
+          "Banking app screenshots",
+          "Sponsor letter without bank proof",
+          "Statements older than 3 months"
         ]
       },
       commonMistakes: [
         "Showing only current balance instead of consistent savings over months",
-        "Sponsor letter not notarized or apostilled (required in many countries)",
-        "Not accounting for full academic year (must show 12 months of support)",
-        "Mixing multiple currencies without conversion",
-        "Bank statement not translated when required",
-        "Forgetting to include proof of scholarship if claiming one"
+        "Sponsor letter not notarized/apostilled",
+        "Not showing 12 months of support"
       ],
-      howToObtain: "Request official bank statements from your bank (stamped and signed). If using a sponsor, they need to provide: their bank statements + a formal sponsorship letter + proof of relationship (if family member). Have sponsorship letters notarized at a public notary.",
+      howToObtain: "Request official stamped bank statements. Sponsors need: bank statements + formal letter + relationship proof.",
       officialLinks: [
         {
           label: "MAECI Financial Requirements",
           url: "https://vistoperitalia.esteri.it/home/en",
-          description: "Official guidelines on financial proof"
+          description: "Official financial guidelines"
         }
       ],
       tips: [
-        "The €506.62/month is a MINIMUM - showing more improves your application",
-        "If sponsored, include relationship proof (birth certificate for parents)",
-        "Scholarship holders: include official scholarship award letter",
-        "Some embassies accept blocked bank accounts as proof",
-        "Keep funds accessible until visa is approved (don't invest them)"
+        "€506.62/month is MINIMUM - showing more improves your application",
+        "Scholarship holders: include official award letter"
       ]
     }
   },
@@ -410,54 +354,41 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: accommodationImg,
     details: {
-      whatIsIt: "Accommodation proof is a document showing you have a confirmed place to stay in Italy. This can be permanent housing or temporary accommodation while you search for long-term options.",
-      whyRequired: "The embassy needs to confirm you won't be homeless upon arrival. This also helps verify your declared address in Italy matches your application.",
+      whatIsIt: "Confirmed housing in Italy (permanent or temporary first weeks).",
+      whyRequired: "Must show verified address - verbal agreements not accepted.",
       acceptanceRules: {
         valid: [
-          "Signed rental contract with landlord details and property address",
-          "University dormitory assignment/confirmation letter",
-          "Dichiarazione di Ospitalità (hospitality declaration from Italian resident host)",
-          "Hotel/Airbnb booking for first 2-4 weeks + statement of intent to find housing",
-          "Letter from accommodation provider on official letterhead"
+          "Signed rental contract with landlord details",
+          "University dormitory confirmation",
+          "Dichiarazione di Ospitalità (from Italian host)",
+          "Hotel/Airbnb for first 2-4 weeks + statement of intent"
         ],
         invalid: [
-          "Verbal agreements or promises",
-          "Unverifiable 'promised' housing",
-          "Screenshots of rental listings or searches",
-          "Contracts missing landlord signature or property details",
-          "Expired reservations or old contracts"
+          "Unverifiable promises",
+          "Contracts missing landlord signature or codice fiscale"
         ]
       },
       commonMistakes: [
-        "Signing contracts with scammers - NEVER pay before seeing the property or verifying the landlord",
-        "Contract missing landlord's full name, ID number, or signature",
-        "Temporary booking without any plan for permanent housing",
-        "Using fake accommodation letters (embassies verify these)",
-        "Not having the landlord's codice fiscale (Italian tax code) on the contract"
+        "SCAM: Never pay before verifying landlord/seeing property",
+        "Contract missing landlord's codice fiscale (Italian tax code)",
+        "Embassies verify accommodation letters"
       ],
-      howToObtain: "University housing: Apply through your university's housing office. Private rentals: Use trusted platforms like Spotahome, HousingAnywhere, Immobiliare.it. For hospitality declaration: Your Italian host must submit this at their local police station (Questura).",
+      howToObtain: "University: Apply through housing office. Private: Spotahome, HousingAnywhere, Immobiliare.it. Host declaration: submitted at Questura.",
       officialLinks: [
         {
           label: "Politecnico di Milano Housing",
           url: "https://www.residenze.polimi.it/",
-          description: "Official university housing service"
+          description: "University housing"
         },
         {
           label: "Spotahome",
           url: "https://www.spotahome.com/",
-          description: "Verified rentals with virtual viewings"
-        },
-        {
-          label: "HousingAnywhere",
-          url: "https://housinganywhere.com/",
-          description: "Student-focused accommodation platform"
+          description: "Verified rentals"
         }
       ],
       tips: [
-        "SCAM WARNING: Never wire money abroad before arrival or without verification",
-        "University housing is safest but limited - apply early (deadlines are often in May/June)",
-        "Temporary accommodation for first month is acceptable - mention you'll find permanent housing",
-        "If staying with someone in Italy, they need to submit the hospitality declaration BEFORE your visa appointment"
+        "University housing deadlines often May/June - apply early",
+        "Host must submit hospitality declaration BEFORE your appointment"
       ]
     }
   },
@@ -468,48 +399,35 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: photosImg,
     details: {
-      whatIsIt: "Biometric-style passport photographs that will be used on your visa sticker and official records. These must meet specific Italian/Schengen standards.",
-      whyRequired: "Photos are attached to your visa application and used for identification purposes. Non-compliant photos can delay your application.",
+      whatIsIt: "Biometric passport photos meeting Schengen standards.",
+      whyRequired: "35mm × 45mm, white background, taken within 6 months.",
       acceptanceRules: {
         valid: [
-          "Size: 35mm × 45mm (Italian standard) or 35mm × 40mm",
-          "Taken within the last 6 months",
-          "White or light gray/cream background",
-          "Face clearly visible, centered, looking directly at camera",
-          "Neutral expression (mouth closed)",
-          "No glasses, hats, or head coverings (religious exceptions with face fully visible)",
-          "Printed on high-quality photo paper"
+          "Size: 35mm × 45mm",
+          "Taken within last 6 months",
+          "White/light background",
+          "No glasses (new rule at most embassies)"
         ],
         invalid: [
-          "Selfies or home-printed photos",
-          "Smiling with teeth showing",
-          "Photos older than 6 months",
-          "Dark or colored backgrounds",
-          "Shadows on face or background",
-          "Photos where face takes less than 70% of frame",
-          "Wearing glasses (even clear ones - new rule in many embassies)"
+          "Selfies or home-printed",
+          "Wearing any glasses",
+          "Colored backgrounds"
         ]
       },
       commonMistakes: [
-        "Using photos from previous visa applications (must be recent)",
-        "Wrong dimensions - check your embassy's specific requirements",
-        "Wearing glasses - most embassies now require photos without any eyewear",
-        "Background not pure white or light enough",
-        "Photo quality too low (pixelated when printed)"
+        "Most embassies now reject photos with any eyewear",
+        "Wrong dimensions - confirm with your embassy"
       ],
-      howToObtain: "Visit a professional photo studio or passport photo booth. Many pharmacies offer this service. Specify 'Italian visa photo' or 'Schengen visa photo' requirements. Some embassies take photos on-site.",
+      howToObtain: "Professional photo studio or pharmacy. Specify 'Italian/Schengen visa photo'.",
       officialLinks: [
         {
           label: "ICAO Photo Guidelines",
           url: "https://www.icao.int/Security/FAL/TRIP/Documents/TR%20-%20Portrait%20Quality.pdf",
-          description: "International standards for travel document photos"
+          description: "International standards"
         }
       ],
       tips: [
-        "Bring 4 photos (embassy keeps 2, keep extras for other documents)",
-        "Ask the photo studio to confirm Schengen/Italian visa specifications",
-        "Keep photos in an envelope to prevent damage",
-        "If you wear glasses daily, bring them but remove for the photo"
+        "Bring 4 photos (embassy keeps 2, extras for other documents)"
       ]
     }
   },
@@ -520,40 +438,32 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: paymentImg,
     details: {
-      whatIsIt: "The visa processing fee that covers administrative costs of reviewing your application. This is a mandatory government fee.",
-      whyRequired: "No visa application is processed without payment of the required fee. This is non-refundable even if your visa is denied.",
+      whatIsIt: "Mandatory €116 processing fee (non-refundable).",
+      whyRequired: "Payment method varies by embassy - check before appointment.",
       acceptanceRules: {
         valid: [
-          "€116 for National (D) visa - standard fee for most embassies",
-          "Payment in accepted currency (usually local currency or EUR)",
-          "Payment method as specified by your embassy (cash, card, bank transfer)",
-          "Payment receipt kept as proof"
+          "€116 for National (D) visa",
+          "Payment method as specified by your embassy"
         ],
         invalid: [
-          "Insufficient payment amount",
-          "Payment in wrong currency",
-          "Using payment methods not accepted by specific embassy"
+          "Wrong payment method for your embassy"
         ]
       },
       commonMistakes: [
-        "Not checking your specific embassy's accepted payment methods",
         "Bringing only card when embassy requires cash (or vice versa)",
-        "Not having exact change when cash is required",
-        "Confusing Schengen (C) visa fee with National (D) visa fee"
+        "VFS centers have additional service fees (€20-30)"
       ],
-      howToObtain: "Check your embassy's website for exact fee and payment methods. Some embassies require bank transfer before appointment; others accept payment on the day. VFS Global centers may have additional service fees.",
+      howToObtain: "Check your embassy website for exact payment methods.",
       officialLinks: [
         {
-          label: "Check Your Embassy",
+          label: "Find Your Embassy",
           url: "https://www.esteri.it/en/ministero/la_rete_diplomatica/",
-          description: "Find your embassy and specific payment requirements"
+          description: "Embassy payment requirements"
         }
       ],
       tips: [
-        "Fee is NON-REFUNDABLE even if visa is denied - prepare documents carefully",
-        "VFS Global adds service fees (usually €20-30) on top of visa fee",
-        "Some embassies offer reduced fees for scholarship holders - ask in advance",
-        "Keep payment receipt with your documents"
+        "Fee is NON-REFUNDABLE even if denied",
+        "Some embassies offer reduced fees for scholarship holders"
       ]
     }
   },
@@ -564,54 +474,41 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: applicationImg,
     details: {
-      whatIsIt: "Your scheduled appointment at the Italian embassy, consulate, or VFS Global center where you submit your application, documents, and provide biometrics (fingerprints and photo).",
-      whyRequired: "In-person submission is mandatory for student visas. The embassy needs to verify your identity and collect biometric data for the visa.",
+      whatIsIt: "In-person appointment for document submission and biometrics.",
+      whyRequired: "Book early - slots fill fast during June-August peak season.",
       acceptanceRules: {
         valid: [
-          "Confirmed appointment at correct embassy/consulate for your region",
-          "Appointment scheduled when all documents are ready",
-          "Appointment time allows for processing before your intended travel date",
-          "Booking confirmation email/SMS printed"
+          "Appointment at correct embassy for your region",
+          "Scheduled with enough time for processing",
+          "Confirmation email printed"
         ],
         invalid: [
-          "Appointment at embassy in wrong jurisdiction",
-          "Showing up without confirmed appointment",
-          "Appointment too close to travel date (no time for processing)"
+          "Wrong jurisdiction embassy",
+          "Appointment too close to travel date"
         ]
       },
       commonMistakes: [
-        "Waiting too long to book - appointment slots fill up fast during June-August peak season",
-        "Booking at wrong embassy/consulate (must be in your region of residence)",
-        "Forgetting to bring ALL required documents on appointment day",
-        "Arriving late - most embassies cancel appointments if you're late",
-        "Not bringing the appointment confirmation printout"
+        "Peak season (June-August): book 4-6 weeks in advance",
+        "Arriving late = cancelled appointment at most embassies",
+        "Must book at embassy in your region of residence"
       ],
-      howToObtain: "Book through VFS Global (most countries) or directly through the embassy website. Check which booking system your embassy uses. Set calendar reminders for appointment opening dates.",
+      howToObtain: "Book through VFS Global or directly via embassy website (Prenota Online).",
       officialLinks: [
         {
           label: "VFS Global Italy",
           url: "https://visa.vfsglobal.com/",
-          description: "Primary appointment booking for most countries"
+          description: "Primary booking for most countries"
         },
         {
           label: "Prenota Online",
           url: "https://prenotaonline.esteri.it/",
-          description: "Direct embassy booking system"
-        },
-        {
-          label: "Find Your Embassy",
-          url: "https://www.esteri.it/en/ministero/la_rete_diplomatica/",
-          description: "Italian diplomatic network worldwide"
+          description: "Direct embassy booking"
         }
       ],
       tips: [
-        "Book as soon as all documents are ready - don't wait!",
-        "Peak season (June-August): Book 4-6 weeks in advance minimum",
-        "Arrive 15-30 minutes early on appointment day",
-        "Dress professionally and be polite - first impressions matter",
-        "Bring ALL original documents + 2 photocopies of each",
-        "Prepare for basic questions about your studies and plans",
-        "Your passport will be kept during processing - plan accordingly"
+        "Arrive 15-30 minutes early",
+        "Bring ALL originals + 2 photocopies of each",
+        "Passport kept during processing - plan accordingly"
       ]
     }
   },
@@ -622,51 +519,41 @@ const baseDocuments: VisaDocument[] = [
     required: true,
     image: paymentImg,
     details: {
-      whatIsIt: "A final verification step before your embassy appointment to ensure all documents are complete, organized, and ready for submission.",
-      whyRequired: "Missing or incomplete documents are the #1 cause of visa delays and rejections. This final check prevents last-minute problems.",
+      whatIsIt: "Final verification before appointment.",
+      whyRequired: "Missing documents = delays or rejection.",
       acceptanceRules: {
         valid: [
-          "All required documents present and complete",
-          "All photocopies made (originals + 2 copies of each)",
-          "Documents organized in logical order",
-          "Translations completed and certified where required",
-          "All documents within validity dates"
+          "All documents present with 2 photocopies each",
+          "Documents organized in order",
+          "Translations certified where required"
         ],
         invalid: [
-          "Missing any required document",
-          "Documents not translated when required",
-          "Expired documents or outdated information",
-          "Messy or disorganized document folder"
+          "Missing documents or photocopies",
+          "Expired documents"
         ]
       },
       commonMistakes: [
-        "Forgetting photocopies of documents",
-        "Not organizing documents in order",
-        "Missing translations of documents not in Italian/English",
-        "Bringing expired bank statements or insurance",
-        "Forgetting appointment confirmation printout"
+        "Forgetting photocopies",
+        "Missing translations of non-English/Italian documents"
       ],
-      howToObtain: "Use the checklist below to verify every item before your appointment. Check off each item and double-check anything you're unsure about.",
+      howToObtain: "Use checklist below to verify every item.",
       officialLinks: [
         {
-          label: "MAECI Visa Requirements",
+          label: "MAECI Requirements",
           url: "https://vistoperitalia.esteri.it/home/en",
-          description: "Official requirements reference"
+          description: "Official reference"
         }
       ],
       tips: [
-        "Check: Passport valid 3+ months after visa ends, 2+ blank pages",
-        "Check: Visa application form complete, signed, dated",
-        "Check: University acceptance letter (final, with dates)",
-        "Check: Health insurance (€30,000+, matching visa dates)",
-        "Check: Financial proof (€506+/month for study duration)",
-        "Check: Accommodation proof (contract, letter, or declaration)",
-        "Check: 4 passport photos (35×45mm, recent)",
-        "Check: Visa fee ready (check payment method with embassy)",
-        "Check: All foreign documents translated to Italian/English",
-        "Check: Originals + 2 photocopies of everything",
-        "Check: Embassy appointment confirmation printed",
-        "Organization tip: Use a folder with labeled sections for each document type"
+        "✓ Passport: 3+ months validity after visa ends, 2+ blank pages",
+        "✓ Form: Complete, signed, Type D selected",
+        "✓ Acceptance letter: Final, with dates",
+        "✓ Insurance: €30,000+, dates match visa",
+        "✓ Financial: €506+/month proof",
+        "✓ Accommodation: Contract/letter/declaration",
+        "✓ Photos: 4× (35×45mm, recent)",
+        "✓ Fee: Ready with correct payment method",
+        "✓ Appointment confirmation: Printed"
       ]
     }
   }
