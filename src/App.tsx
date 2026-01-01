@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import HomeCountry from "./pages/HomeCountry";
 import ArrivalItaly from "./pages/ArrivalItaly";
 import SocialIntegration from "./pages/SocialIntegration";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -25,13 +26,13 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/home-country" element={<HomeCountry />} />
-            <Route path="/arrival-italy" element={<ArrivalItaly />} />
-            <Route path="/social-integration" element={<SocialIntegration />} />
-            <Route path="/visa-wizard" element={<VisaWizard />} />
-            <Route path="/pre-departure" element={<PreDepartureChecklist />} />
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/home-country" element={<ProtectedRoute><HomeCountry /></ProtectedRoute>} />
+              <Route path="/arrival-italy" element={<ProtectedRoute><ArrivalItaly /></ProtectedRoute>} />
+              <Route path="/social-integration" element={<ProtectedRoute><SocialIntegration /></ProtectedRoute>} />
+              <Route path="/visa-wizard" element={<ProtectedRoute><VisaWizard /></ProtectedRoute>} />
+              <Route path="/pre-departure" element={<ProtectedRoute><PreDepartureChecklist /></ProtectedRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
