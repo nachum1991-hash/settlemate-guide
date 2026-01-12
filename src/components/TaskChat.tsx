@@ -25,14 +25,11 @@ interface TaskChatProps {
 }
 
 const MAX_MESSAGE_LENGTH = 2000;
-const RATE_LIMIT_MESSAGES = 10;
-const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
 
 export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [messageTimestamps, setMessageTimestamps] = useState<number[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -123,7 +120,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
     
     if (!trimmedMessage || !user) return;
 
-    // Input validation - length check
+    // Client-side validation for instant UX feedback
     if (trimmedMessage.length > MAX_MESSAGE_LENGTH) {
       toast({
         title: 'Message too long',
@@ -137,33 +134,21 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
       return;
     }
 
-    // Rate limiting check
-    const now = Date.now();
-    const recentTimestamps = messageTimestamps.filter(
-      ts => now - ts < RATE_LIMIT_WINDOW_MS
-    );
-    
-    if (recentTimestamps.length >= RATE_LIMIT_MESSAGES) {
-      toast({
-        title: 'Rate limit exceeded',
-        description: 'Please wait a moment before sending more messages.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
     setLoading(true);
 
-    const { error } = await supabase.from('task_messages').insert({
-      task_id: taskId,
-      phase: phase,
-      user_id: user.id,
-      message: trimmedMessage,
+    // Call Edge Function for server-side validation and rate limiting
+    const { data, error } = await supabase.functions.invoke('send-chat-message', {
+      body: {
+        task_id: taskId,
+        phase: phase,
+        message: trimmedMessage,
+      },
     });
 
     setLoading(false);
 
     if (error) {
+      console.error('Edge function error:', error);
       toast({
         title: 'Error',
         description: 'Failed to send message',
@@ -172,8 +157,17 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
       return;
     }
 
-    // Update rate limiting timestamps
-    setMessageTimestamps([...recentTimestamps, now]);
+    // Handle rate limit or validation errors from the backend
+    if (data?.error) {
+      const isRateLimit = data.error === 'Rate limit exceeded';
+      toast({
+        title: isRateLimit ? 'Rate limit exceeded' : 'Error',
+        description: data.message || data.error,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setNewMessage('');
   };
 
