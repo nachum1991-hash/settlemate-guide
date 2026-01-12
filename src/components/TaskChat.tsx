@@ -24,10 +24,15 @@ interface TaskChatProps {
   phase: string;
 }
 
+const MAX_MESSAGE_LENGTH = 2000;
+const RATE_LIMIT_MESSAGES = 10;
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
+
 export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [messageTimestamps, setMessageTimestamps] = useState<number[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -114,7 +119,38 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !user) return;
+    const trimmedMessage = newMessage.trim();
+    
+    if (!trimmedMessage || !user) return;
+
+    // Input validation - length check
+    if (trimmedMessage.length > MAX_MESSAGE_LENGTH) {
+      toast({
+        title: 'Message too long',
+        description: `Messages must be ${MAX_MESSAGE_LENGTH} characters or less.`,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (trimmedMessage.length < 1) {
+      return;
+    }
+
+    // Rate limiting check
+    const now = Date.now();
+    const recentTimestamps = messageTimestamps.filter(
+      ts => now - ts < RATE_LIMIT_WINDOW_MS
+    );
+    
+    if (recentTimestamps.length >= RATE_LIMIT_MESSAGES) {
+      toast({
+        title: 'Rate limit exceeded',
+        description: 'Please wait a moment before sending more messages.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setLoading(true);
 
@@ -122,7 +158,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
       task_id: taskId,
       phase: phase,
       user_id: user.id,
-      message: newMessage.trim(),
+      message: trimmedMessage,
     });
 
     setLoading(false);
@@ -136,6 +172,8 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
       return;
     }
 
+    // Update rate limiting timestamps
+    setMessageTimestamps([...recentTimestamps, now]);
     setNewMessage('');
   };
 
@@ -192,13 +230,19 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
 
       <form onSubmit={handleSendMessage} className="p-4 border-t bg-muted/30">
         <div className="flex gap-2">
-          <Textarea
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
-            className="min-h-[60px] resize-none"
-            disabled={loading}
-          />
+          <div className="flex-1 space-y-1">
+            <Textarea
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value.slice(0, MAX_MESSAGE_LENGTH))}
+              placeholder="Type your message..."
+              className="min-h-[60px] resize-none"
+              disabled={loading}
+              maxLength={MAX_MESSAGE_LENGTH}
+            />
+            <div className="text-xs text-muted-foreground text-right">
+              {newMessage.length}/{MAX_MESSAGE_LENGTH}
+            </div>
+          </div>
           <Button type="submit" size="icon" disabled={loading || !newMessage.trim()}>
             <Send className="w-4 h-4" />
           </Button>
