@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -30,7 +29,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, supabase: authSupabase } = useAuth();
   const { toast } = useToast();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +40,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
     fetchMessages();
 
     // Set up realtime subscription
-    const channel = supabase
+    const channel = authSupabase
       .channel(`task-chat-${taskId}`)
       .on(
         'postgres_changes',
@@ -51,14 +50,14 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
           table: 'task_messages',
           filter: `task_id=eq.${taskId}`,
         },
-        (payload) => {
+        () => {
           fetchMessages();
         }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      authSupabase.removeChannel(channel);
     };
   }, [taskId, user]);
 
@@ -67,7 +66,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
   }, [messages]);
 
   const fetchMessages = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await authSupabase
       .from('task_messages')
       .select('*')
       .eq('task_id', taskId)
@@ -85,15 +84,19 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
     }
 
     // Fetch profile display info securely using the SECURITY DEFINER function
-    const userIds = [...new Set(data.map(m => m.user_id))];
+    const userIds = [...new Set((data as any[]).map((m: any) => m.user_id as string))];
     const profileMap = new Map<string, { full_name: string | null }>();
-    
+
     // Fetch profile info for each user using the secure function
     await Promise.all(
       userIds.map(async (userId) => {
-        const { data: profileData } = await supabase
+        const { data: profileDataRaw } = await authSupabase
           .rpc('get_profile_display_info', { profile_user_id: userId });
-        
+
+        const profileData = profileDataRaw as
+          | Array<{ full_name: string | null; avatar_url: string | null }>
+          | null;
+
         if (profileData && profileData.length > 0) {
           profileMap.set(userId, { full_name: profileData[0].full_name });
         } else {
@@ -101,10 +104,10 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
         }
       })
     );
-    
-    const messagesWithProfiles = data.map(msg => ({
+
+    const messagesWithProfiles = (data as any[]).map((msg: any) => ({
       ...msg,
-      profiles: profileMap.get(msg.user_id) || { full_name: null }
+      profiles: profileMap.get(msg.user_id) || { full_name: null },
     }));
 
     setMessages(messagesWithProfiles as Message[]);
@@ -136,8 +139,8 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
 
     setLoading(true);
 
-    // Call Edge Function for server-side validation and rate limiting
-    const { data, error } = await supabase.functions.invoke('send-chat-message', {
+    // Call backend function for server-side validation and rate limiting
+    const { data, error } = await authSupabase.functions.invoke('send-chat-message', {
       body: {
         task_id: taskId,
         phase: phase,
