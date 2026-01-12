@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle, ExternalLink, Info, Globe, ChevronDown, ChevronUp, Check, X, AlertTriangle, FileText, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
+import { FloatingChat, setStoredCountry } from "@/components/FloatingChat";
 
 // Import document images
 import passportImg from "@/assets/documents/passport.png";
@@ -387,6 +388,13 @@ const VisaWizard = () => {
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
   const selectedCountryData = countries.find(c => c.value === formData.country);
+
+  // Persist country selection to localStorage for other Phase 1 pages
+  useEffect(() => {
+    if (formData.country) {
+      setStoredCountry(formData.country);
+    }
+  }, [formData.country]);
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
@@ -1247,6 +1255,12 @@ const VisaWizard = () => {
           </Card>
         </div>
       </div>
+
+      <FloatingChat 
+        taskId={formData.country ? `visa-${formData.country}` : 'visa-general'} 
+        phase="phase-1"
+        label={formData.country ? `${formData.country.charAt(0).toUpperCase() + formData.country.slice(1)} Community` : 'General Community'}
+      />
     </div>
   );
 };

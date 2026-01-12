@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, CheckCircle2, Circle, Download, Plane, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
+import { FloatingChat, getStoredCountry } from "@/components/FloatingChat";
 
 interface ChecklistItem {
   id: string;
@@ -228,6 +229,11 @@ const PreDepartureChecklist = () => {
   const { toast } = useToast();
   const [completedItems, setCompletedItems] = useState<Set<string>>(new Set());
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelectedCountry(getStoredCountry());
+  }, []);
 
   const toggleItem = (itemId: string) => {
     setCompletedItems(prev => {
@@ -497,6 +503,12 @@ const PreDepartureChecklist = () => {
           )}
         </div>
       </div>
+
+      <FloatingChat 
+        taskId={selectedCountry ? `pre-departure-${selectedCountry}` : 'pre-departure-general'} 
+        phase="phase-1"
+        label={selectedCountry ? `${selectedCountry.charAt(0).toUpperCase() + selectedCountry.slice(1)} Community` : 'General Community'}
+      />
     </div>
   );
 };

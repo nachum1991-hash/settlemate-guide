@@ -1,13 +1,19 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plane, CheckCircle2, Circle } from "lucide-react";
 import { IntroVideoModal } from "@/components/IntroVideoModal";
+import { FloatingChat, getStoredCountry } from "@/components/FloatingChat";
 
 const HomeCountry = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSelectedCountry(getStoredCountry());
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -55,6 +61,12 @@ const HomeCountry = () => {
       </section>
 
       <IntroVideoModal open={videoModalOpen} onOpenChange={setVideoModalOpen} />
+      
+      <FloatingChat 
+        taskId={selectedCountry ? `visa-${selectedCountry}` : 'visa-general'} 
+        phase="phase-1"
+        label={selectedCountry ? `${selectedCountry.charAt(0).toUpperCase() + selectedCountry.slice(1)} Community` : 'General Community'}
+      />
     </div>
   );
 };
