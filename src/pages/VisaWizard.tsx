@@ -1194,10 +1194,10 @@ const VisaWizard = () => {
                           <TabsTrigger value="chat">Community Chat</TabsTrigger>
                         </TabsList>
                         <TabsContent value="faq" className="mt-4">
-                          <TaskFAQ taskId="visa" phase="phase-1" />
+                          <TaskFAQ taskId={formData.country ? `visa-${formData.country}` : 'visa-general'} phase="phase-1" />
                         </TabsContent>
                         <TabsContent value="chat" className="mt-4">
-                          <TaskChat taskId="visa" phase="phase-1" />
+                          <TaskChat taskId={formData.country ? `visa-${formData.country}` : 'visa-general'} phase="phase-1" />
                         </TabsContent>
                       </Tabs>
                       
