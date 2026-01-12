@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "./TaskChat";
 import { TaskFAQ } from "./TaskFAQ";
 import type { Step, OfficialResource, Partner } from "./BureaucracyTimeline";
+import { useCity } from "@/contexts/CityContext";
 
 // Import document images
 import passportImg from "@/assets/documents/passport.png";
@@ -96,6 +97,7 @@ interface BureaucracyDetailProps {
 }
 
 const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyDetailProps) => {
+  const { selectedCity } = useCity();
   const groups = communityGroups[step.id] || [];
 
   return (
@@ -254,7 +256,7 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
           <TabsTrigger value="chat">Community Chat</TabsTrigger>
         </TabsList>
         <TabsContent value="faq" className="mt-4">
-          <TaskFAQ taskId={step.id} phase="phase-2" />
+          <TaskFAQ taskId={`${step.id}-${selectedCity}`} phase="phase-2" />
         </TabsContent>
         <TabsContent value="chat" className="mt-4">
           {/* External community groups */}
@@ -284,7 +286,7 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
               </p>
             </div>
           )}
-          <TaskChat taskId={step.id} phase="phase-2" />
+          <TaskChat taskId={`${step.id}-${selectedCity}`} phase="phase-2" />
         </TabsContent>
       </Tabs>
     </div>
