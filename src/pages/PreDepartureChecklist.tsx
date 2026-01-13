@@ -504,11 +504,13 @@ const PreDepartureChecklist = () => {
         </div>
       </div>
 
-      <FloatingChat 
-        taskId={selectedCountry ? `pre-departure-${selectedCountry}` : 'pre-departure-general'} 
-        phase="phase-1"
-        label={selectedCountry ? `${selectedCountry.charAt(0).toUpperCase() + selectedCountry.slice(1)} Community` : 'General Community'}
-      />
+      {selectedCountry && (
+        <FloatingChat 
+          taskId={`pre-departure-${selectedCountry}`} 
+          phase="phase-1"
+          label={`${selectedCountry.charAt(0).toUpperCase() + selectedCountry.slice(1)} Community`}
+        />
+      )}
     </div>
   );
 };
