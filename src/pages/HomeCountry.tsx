@@ -32,7 +32,7 @@ const HomeCountry = () => {
               </div>
             </div>
             
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <Link to="/visa-wizard">
                 <ChecklistItem completed title="Visa Application Wizard" description="Step-by-step guidance for Italian D-Visa process" />
               </Link>
