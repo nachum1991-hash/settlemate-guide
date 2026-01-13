@@ -1256,11 +1256,13 @@ const VisaWizard = () => {
         </div>
       </div>
 
-      <FloatingChat 
-        taskId={formData.country ? `visa-${formData.country}` : 'visa-general'} 
-        phase="phase-1"
-        label={formData.country ? `${formData.country.charAt(0).toUpperCase() + formData.country.slice(1)} Community` : 'General Community'}
-      />
+      {formData.country && (
+        <FloatingChat 
+          taskId={`visa-${formData.country}`} 
+          phase="phase-1"
+          label={`${countries.find(c => c.value === formData.country)?.label || formData.country} Community`}
+        />
+      )}
     </div>
   );
 };

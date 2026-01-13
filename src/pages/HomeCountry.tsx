@@ -62,11 +62,13 @@ const HomeCountry = () => {
 
       <IntroVideoModal open={videoModalOpen} onOpenChange={setVideoModalOpen} />
       
-      <FloatingChat 
-        taskId={selectedCountry ? `visa-${selectedCountry}` : 'visa-general'} 
-        phase="phase-1"
-        label={selectedCountry ? `${selectedCountry.charAt(0).toUpperCase() + selectedCountry.slice(1)} Community` : 'General Community'}
-      />
+      {selectedCountry && (
+        <FloatingChat 
+          taskId={`visa-${selectedCountry}`} 
+          phase="phase-1"
+          label={`${selectedCountry.charAt(0).toUpperCase() + selectedCountry.slice(1)} Community`}
+        />
+      )}
     </div>
   );
 };
