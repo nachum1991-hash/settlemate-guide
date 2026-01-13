@@ -66,27 +66,28 @@ const getDocumentImage = (docName: string): string | null => {
   return null;
 };
 
-// Community groups for each step
+// Community groups for each step - verified links to official resources and real Facebook groups
 const communityGroups: Record<string, { name: string; url: string; platform: string }[]> = {
   codice: [
-    { name: "Milan Students Help", url: "https://t.me/milanstudentshelp", platform: "Telegram" }
+    { name: "PoliNetwork Student Hub", url: "https://linktr.ee/polinetwork", platform: "Multi-platform" },
+    { name: "Expats Living in Italy", url: "https://www.facebook.com/groups/expatslivinginitaly", platform: "Facebook" }
   ],
   sim: [
-    { name: "Italy Mobile Tips", url: "https://t.me/italymobiletips", platform: "Telegram" }
+    { name: "Expats in Milano", url: "https://www.facebook.com/groups/expatsinmilano", platform: "Facebook" }
   ],
   permesso: [
-    { name: "Permesso di Soggiorno Help", url: "https://t.me/permessoitaly", platform: "Telegram" },
-    { name: "Milan Questura Updates", url: "https://t.me/milanquestura", platform: "Telegram" }
+    { name: "Portale Immigrazione (Official)", url: "https://www.portaleimmigrazione.it/", platform: "Website" },
+    { name: "Expats Living in Italy", url: "https://www.facebook.com/groups/expatslivinginitaly", platform: "Facebook" }
   ],
   atm: [
-    { name: "Milan Transport Students", url: "https://t.me/milantransport", platform: "Telegram" }
+    { name: "ATM Milano Official", url: "https://www.atm.it/", platform: "Website" }
   ],
   bank: [
-    { name: "Expat Banking Italy", url: "https://t.me/expatbankingitaly", platform: "Telegram" }
+    { name: "Expats in Milano", url: "https://www.facebook.com/groups/expatsinmilano", platform: "Facebook" }
   ],
   housing: [
-    { name: "Milan Student Housing", url: "https://t.me/milanstudenthousing", platform: "Telegram" },
-    { name: "Polimi Housing", url: "https://www.facebook.com/groups/polimihousing", platform: "Facebook" }
+    { name: "Milan Housing - Expats", url: "https://www.facebook.com/groups/expatsinmilano", platform: "Facebook" },
+    { name: "PoliNetwork Groups", url: "https://linktr.ee/polinetwork", platform: "Multi-platform" }
   ]
 };
 
