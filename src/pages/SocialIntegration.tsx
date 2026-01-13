@@ -23,14 +23,14 @@ import CitySelector from "@/components/CitySelector";
 import { useCity } from "@/contexts/CityContext";
 import { universityGroupsByCity, eventsByCity, cityData } from "@/data/cityData";
 
-// Nationality groups (same across all cities)
+// Nationality groups (same across all cities) - Links to official embassy/consulate student pages and verified Facebook groups
 const nationalityGroups = [
-  { name: "Israeli Students Italy", url: "https://t.me/israelistudentsitaly", platform: "Telegram", flag: "🇮🇱" },
-  { name: "Indian Students Milan", url: "https://t.me/indianstudentsmilan", platform: "Telegram", flag: "🇮🇳" },
-  { name: "Iranian Students Italy", url: "https://t.me/iranianstudentsitaly", platform: "Telegram", flag: "🇮🇷" },
-  { name: "Turkish Students Milan", url: "https://t.me/turkishstudentsmilan", platform: "Telegram", flag: "🇹🇷" },
-  { name: "Chinese Students Italy", url: "https://t.me/chinesestudentsitaly", platform: "Telegram", flag: "🇨🇳" },
-  { name: "Brazilian Students Italy", url: "https://t.me/brazilianstudentsitaly", platform: "Telegram", flag: "🇧🇷" }
+  { name: "Israeli Students in Italy", url: "https://www.facebook.com/groups/israelisinmilan", platform: "Facebook", flag: "🇮🇱" },
+  { name: "Indians in Italy", url: "https://www.facebook.com/groups/indiansinitaly", platform: "Facebook", flag: "🇮🇳" },
+  { name: "Iranians in Milan", url: "https://www.facebook.com/groups/iraniansinmilan", platform: "Facebook", flag: "🇮🇷" },
+  { name: "Turkish Community Italy", url: "https://www.facebook.com/groups/turkishcommunityitaly", platform: "Facebook", flag: "🇹🇷" },
+  { name: "Chinese Students Italy", url: "https://www.facebook.com/groups/chinesestudentsitaly", platform: "Facebook", flag: "🇨🇳" },
+  { name: "Brasileiros na Italia", url: "https://www.facebook.com/groups/brasileirosnaitalia", platform: "Facebook", flag: "🇧🇷" }
 ];
 
 const SocialIntegration = () => {
@@ -171,7 +171,10 @@ const SocialIntegration = () => {
                       <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent" />
                     </a>
                     <a
-                      href={`https://www.facebook.com/groups/expatsin${cityInfo.name.toLowerCase()}`}
+                      href={selectedCity === 'milano' ? 'https://www.facebook.com/groups/expatsinmilano' : 
+                            selectedCity === 'roma' ? 'https://www.facebook.com/groups/expatsinroma' :
+                            selectedCity === 'torino' ? 'https://www.facebook.com/groups/expatsintorino' :
+                            'https://www.facebook.com/groups/expatslivinginitaly'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 p-4 bg-accent/5 hover:bg-accent/10 border border-accent/20 rounded-lg transition-colors group"
@@ -353,39 +356,87 @@ const SocialIntegration = () => {
                   <h3 className="text-lg font-semibold text-foreground mb-4">Student Organizations</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <a
-                      href="https://milan.esn.it/"
+                      href={currentCityData.esnChapter.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-4 bg-primary/5 border border-primary/20 rounded-lg hover:bg-primary/10 transition-colors group"
                     >
-                      <h4 className="font-medium text-foreground group-hover:text-primary mb-1">ESN Milano</h4>
+                      <h4 className="font-medium text-foreground group-hover:text-primary mb-1">{currentCityData.esnChapter.name}</h4>
                       <p className="text-xs text-muted-foreground">Erasmus Student Network - trips, parties, cultural events</p>
                     </a>
+                    {selectedCity === 'milano' && (
+                      <>
+                        <a
+                          href="https://www.polimi.it/en/international-prospective-students/student-life/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-4 bg-secondary/5 border border-secondary/20 rounded-lg hover:bg-secondary/10 transition-colors group"
+                        >
+                          <h4 className="font-medium text-foreground group-hover:text-secondary mb-1">Polimi Student Life</h4>
+                          <p className="text-xs text-muted-foreground">Official Politecnico di Milano student activities</p>
+                        </a>
+                        <a
+                          href="https://linktr.ee/polinetwork"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-4 bg-accent/5 border border-accent/20 rounded-lg hover:bg-accent/10 transition-colors group"
+                        >
+                          <h4 className="font-medium text-foreground group-hover:text-accent mb-1">PoliNetwork</h4>
+                          <p className="text-xs text-muted-foreground">Student-run network with Telegram/Facebook groups</p>
+                        </a>
+                      </>
+                    )}
+                    {selectedCity === 'roma' && (
+                      <>
+                        <a
+                          href="https://sapienzastudents.net/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-4 bg-secondary/5 border border-secondary/20 rounded-lg hover:bg-secondary/10 transition-colors group"
+                        >
+                          <h4 className="font-medium text-foreground group-hover:text-secondary mb-1">Sapienza Students Network</h4>
+                          <p className="text-xs text-muted-foreground">Student hub with Telegram groups and Discord</p>
+                        </a>
+                        <a
+                          href="https://www.uniroma1.it/en/pagina/student-life"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-4 bg-accent/5 border border-accent/20 rounded-lg hover:bg-accent/10 transition-colors group"
+                        >
+                          <h4 className="font-medium text-foreground group-hover:text-accent mb-1">Sapienza Student Life</h4>
+                          <p className="text-xs text-muted-foreground">Official university student services</p>
+                        </a>
+                      </>
+                    )}
+                    {selectedCity === 'torino' && (
+                      <a
+                        href="https://www.polito.it/en/education/international-students"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-4 bg-secondary/5 border border-secondary/20 rounded-lg hover:bg-secondary/10 transition-colors group"
+                      >
+                        <h4 className="font-medium text-foreground group-hover:text-secondary mb-1">PoliTo International</h4>
+                        <p className="text-xs text-muted-foreground">Official Politecnico di Torino student services</p>
+                      </a>
+                    )}
+                    {selectedCity === 'pavia' && (
+                      <a
+                        href="https://en.unipv.it/en/international-students"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-4 bg-secondary/5 border border-secondary/20 rounded-lg hover:bg-secondary/10 transition-colors group"
+                      >
+                        <h4 className="font-medium text-foreground group-hover:text-secondary mb-1">UniPV International</h4>
+                        <p className="text-xs text-muted-foreground">Official University of Pavia student services</p>
+                      </a>
+                    )}
                     <a
-                      href="https://www.polimi.it/en/international-prospective-students/student-life/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-4 bg-secondary/5 border border-secondary/20 rounded-lg hover:bg-secondary/10 transition-colors group"
-                    >
-                      <h4 className="font-medium text-foreground group-hover:text-secondary mb-1">Polimi Student Clubs</h4>
-                      <p className="text-xs text-muted-foreground">Sports, cultural, and academic clubs at Politecnico</p>
-                    </a>
-                    <a
-                      href="https://www.unimib.it/en/students/student-services/campus-life"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-4 bg-accent/5 border border-accent/20 rounded-lg hover:bg-accent/10 transition-colors group"
-                    >
-                      <h4 className="font-medium text-foreground group-hover:text-accent mb-1">UniMi Student Life</h4>
-                      <p className="text-xs text-muted-foreground">University of Milan student activities</p>
-                    </a>
-                    <a
-                      href="https://www.meetup.com/cities/it/milan/"
+                      href={`https://www.meetup.com/cities/it/${cityInfo.name.toLowerCase()}/`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-4 bg-muted/50 border border-border rounded-lg hover:bg-muted transition-colors group"
                     >
-                      <h4 className="font-medium text-foreground mb-1">Meetup Milan</h4>
+                      <h4 className="font-medium text-foreground mb-1">Meetup {cityInfo.name}</h4>
                       <p className="text-xs text-muted-foreground">Find hobby groups and local meetups</p>
                     </a>
                   </div>
