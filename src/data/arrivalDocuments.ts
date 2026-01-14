@@ -7,6 +7,13 @@ import insuranceImg from '@/assets/documents/insurance.png';
 import accommodationImg from '@/assets/documents/accommodation.png';
 import photosImg from '@/assets/documents/photos.png';
 import marcaBolloImg from '@/assets/documents/marca-bollo.png';
+import { City } from '@/contexts/CityContext';
+
+export interface CitySpecificLink {
+  label: string;
+  url: string;
+  description: string;
+}
 
 export interface ArrivalDocument {
   id: string;
@@ -22,9 +29,55 @@ export interface ArrivalDocument {
     commonMistakes?: string[];
     howToObtain?: string;
     officialLinks?: Array<{ label: string; url: string; description: string }>;
+    citySpecificLinks?: Record<City, CitySpecificLink[]>;
     tips?: string[];
   };
 }
+
+// City-specific resources for documents
+const cityResources = {
+  milano: {
+    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/web/guest/contatta/uffici-territoriali/lombardia',
+    questura: 'https://questure.poliziadistato.it/Milano',
+    aslHealth: 'https://www.ats-milano.it/',
+    postOffice: 'https://www.poste.it/cerca/uffici-postali.html#/search?regione=LOMBARDIA&citta=MILANO',
+    universities: [
+      { name: 'Politecnico di Milano - Segreteria', url: 'https://www.polimi.it/studenti-iscritti/segreterie-studenti/', description: 'Student services and certificates' },
+      { name: 'Università degli Studi di Milano', url: 'https://www.unimi.it/it/studiare/frequentare-un-corso-di-laurea/iscriversi/segreterie-studenti', description: 'Enrollment certificates' },
+      { name: 'Bocconi Student Services', url: 'https://www.unibocconi.it/wps/wcm/connect/bocconi/sitopubblico_it/albero+di+navigazione/home/corsi+di+studio/studenti+iscritti/', description: 'Student desk services' }
+    ]
+  },
+  roma: {
+    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/web/guest/contatta/uffici-territoriali/lazio',
+    questura: 'https://questure.poliziadistato.it/Roma',
+    aslHealth: 'https://www.aslroma1.it/',
+    postOffice: 'https://www.poste.it/cerca/uffici-postali.html#/search?regione=LAZIO&citta=ROMA',
+    universities: [
+      { name: 'Sapienza - Student Services', url: 'https://www.uniroma1.it/it/pagina/segreterie-studenti', description: 'Enrollment certificates and student services' },
+      { name: 'LUISS Student Office', url: 'https://www.luiss.it/studenti', description: 'Student administration' },
+      { name: 'Roma Tre Segreteria', url: 'https://www.uniroma3.it/servizi/segreterie-studenti/', description: 'Student secretariat' }
+    ]
+  },
+  torino: {
+    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/web/guest/contatta/uffici-territoriali/piemonte',
+    questura: 'https://questure.poliziadistato.it/Torino',
+    aslHealth: 'https://www.aslcittaditorino.it/',
+    postOffice: 'https://www.poste.it/cerca/uffici-postali.html#/search?regione=PIEMONTE&citta=TORINO',
+    universities: [
+      { name: 'Politecnico di Torino - Segreteria', url: 'https://www.polito.it/didattica/segreteria_studenti', description: 'Student services and certificates' },
+      { name: 'Università di Torino', url: 'https://www.unito.it/servizi/lo-studio/segreterie-studenti', description: 'Enrollment certificates' }
+    ]
+  },
+  pavia: {
+    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/web/guest/contatta/uffici-territoriali/lombardia',
+    questura: 'https://questure.poliziadistato.it/Pavia',
+    aslHealth: 'https://www.asst-pavia.it/',
+    postOffice: 'https://www.poste.it/cerca/uffici-postali.html#/search?regione=LOMBARDIA&citta=PAVIA',
+    universities: [
+      { name: 'Università di Pavia - Segreteria', url: 'https://portale.unipv.it/it/didattica/segreterie-studenti', description: 'Student services and certificates' }
+    ]
+  }
+};
 
 // Documents for Codice Fiscale application
 export const codiceFiscaleDocuments: ArrivalDocument[] = [
@@ -93,6 +146,25 @@ export const codiceFiscaleDocuments: ArrivalDocument[] = [
           description: 'Official platform for international student applications'
         }
       ],
+      citySpecificLinks: {
+        milano: [
+          { label: 'Politecnico di Milano - Segreteria', url: cityResources.milano.universities[0].url, description: cityResources.milano.universities[0].description },
+          { label: 'UniMi Student Services', url: cityResources.milano.universities[1].url, description: cityResources.milano.universities[1].description },
+          { label: 'Bocconi Student Desk', url: cityResources.milano.universities[2].url, description: cityResources.milano.universities[2].description }
+        ],
+        roma: [
+          { label: 'Sapienza Segreteria', url: cityResources.roma.universities[0].url, description: cityResources.roma.universities[0].description },
+          { label: 'LUISS Student Office', url: cityResources.roma.universities[1].url, description: cityResources.roma.universities[1].description },
+          { label: 'Roma Tre Services', url: cityResources.roma.universities[2].url, description: cityResources.roma.universities[2].description }
+        ],
+        torino: [
+          { label: 'PoliTo Segreteria', url: cityResources.torino.universities[0].url, description: cityResources.torino.universities[0].description },
+          { label: 'UniTo Student Services', url: cityResources.torino.universities[1].url, description: cityResources.torino.universities[1].description }
+        ],
+        pavia: [
+          { label: 'UniPV Segreteria', url: cityResources.pavia.universities[0].url, description: cityResources.pavia.universities[0].description }
+        ]
+      },
       tips: [
         'Get multiple certified copies from your university',
         'If your letter is in English, some offices may request an Italian translation',
@@ -140,6 +212,20 @@ export const residencePermitDocuments: ArrivalDocument[] = [
           description: 'Official information about the residence permit kit'
         }
       ],
+      citySpecificLinks: {
+        milano: [
+          { label: 'Find Post Offices in Milano', url: cityResources.milano.postOffice, description: 'Locate nearest Sportello Amico in Milan' }
+        ],
+        roma: [
+          { label: 'Find Post Offices in Roma', url: cityResources.roma.postOffice, description: 'Locate nearest Sportello Amico in Rome' }
+        ],
+        torino: [
+          { label: 'Find Post Offices in Torino', url: cityResources.torino.postOffice, description: 'Locate nearest Sportello Amico in Turin' }
+        ],
+        pavia: [
+          { label: 'Find Post Offices in Pavia', url: cityResources.pavia.postOffice, description: 'Locate nearest Sportello Amico in Pavia' }
+        ]
+      },
       tips: [
         'Practice filling out a draft version first before the official form',
         'Ask the post office staff for help if unsure about any sections',
@@ -205,6 +291,27 @@ export const residencePermitDocuments: ArrivalDocument[] = [
         'Not making copies before the appointment'
       ],
       howToObtain: 'You should have obtained this already from Agenzia delle Entrate. If you only have the temporary paper certificate, that works. The physical card arrives by mail later.',
+      officialLinks: [
+        {
+          label: 'Agenzia delle Entrate',
+          url: 'https://www.agenziaentrate.gov.it/portale/web/guest/servizi/istanze-e-richieste/richiesta-di-attribuzione-del-codice-fiscale',
+          description: 'Official tax agency - request Codice Fiscale online'
+        }
+      ],
+      citySpecificLinks: {
+        milano: [
+          { label: 'Milano Tax Offices', url: cityResources.milano.agenziaEntrate, description: 'Find Agenzia delle Entrate offices in Milano' }
+        ],
+        roma: [
+          { label: 'Roma Tax Offices', url: cityResources.roma.agenziaEntrate, description: 'Find Agenzia delle Entrate offices in Roma' }
+        ],
+        torino: [
+          { label: 'Torino Tax Offices', url: cityResources.torino.agenziaEntrate, description: 'Find Agenzia delle Entrate offices in Torino' }
+        ],
+        pavia: [
+          { label: 'Pavia Tax Offices', url: cityResources.pavia.agenziaEntrate, description: 'Find Agenzia delle Entrate offices in Pavia' }
+        ]
+      },
       tips: [
         'Apply for the Codice Fiscale FIRST before the residence permit',
         'The paper certificate is equally valid as the plastic card',
@@ -239,6 +346,25 @@ export const residencePermitDocuments: ArrivalDocument[] = [
         'Forgetting to request the official stamp and signature'
       ],
       howToObtain: 'Request from your university\'s Segreteria Studenti (Student Secretariat). Many universities allow you to download this from your student portal. Make sure it has the official stamp.',
+      citySpecificLinks: {
+        milano: [
+          { label: 'Politecnico di Milano - Segreteria', url: cityResources.milano.universities[0].url, description: 'Get enrollment certificate from PoliMi' },
+          { label: 'UniMi Student Services', url: cityResources.milano.universities[1].url, description: 'UniMi enrollment certificates' },
+          { label: 'Bocconi Student Desk', url: cityResources.milano.universities[2].url, description: 'Bocconi enrollment services' }
+        ],
+        roma: [
+          { label: 'Sapienza Segreteria', url: cityResources.roma.universities[0].url, description: 'Sapienza enrollment certificates' },
+          { label: 'LUISS Student Office', url: cityResources.roma.universities[1].url, description: 'LUISS enrollment services' },
+          { label: 'Roma Tre Services', url: cityResources.roma.universities[2].url, description: 'Roma Tre enrollment certificates' }
+        ],
+        torino: [
+          { label: 'PoliTo Segreteria', url: cityResources.torino.universities[0].url, description: 'PoliTo enrollment certificates' },
+          { label: 'UniTo Student Services', url: cityResources.torino.universities[1].url, description: 'UniTo enrollment services' }
+        ],
+        pavia: [
+          { label: 'UniPV Segreteria', url: cityResources.pavia.universities[0].url, description: 'UniPV enrollment certificates' }
+        ]
+      },
       tips: [
         'Some universities charge a small fee for certified copies',
         'Request it in Italian - some offices require Italian documents',
@@ -277,11 +403,25 @@ export const residencePermitDocuments: ArrivalDocument[] = [
       howToObtain: 'Option 1: Use your existing private insurance (check Italy coverage). Option 2: Enroll in Italian SSN at your local ASL office - costs around €150/year for students and provides full coverage.',
       officialLinks: [
         {
-          label: 'SSN Information for Foreign Students',
+          label: 'Ministry of Health - SSN Info',
           url: 'https://www.salute.gov.it/portale/home.html',
-          description: 'Ministry of Health information on healthcare'
+          description: 'Official information on Italian healthcare system'
         }
       ],
+      citySpecificLinks: {
+        milano: [
+          { label: 'ATS Milano - SSN Enrollment', url: cityResources.milano.aslHealth, description: 'Enroll in SSN in Milano region' }
+        ],
+        roma: [
+          { label: 'ASL Roma - SSN Enrollment', url: cityResources.roma.aslHealth, description: 'Enroll in SSN in Roma' }
+        ],
+        torino: [
+          { label: 'ASL Torino - SSN Enrollment', url: cityResources.torino.aslHealth, description: 'Enroll in SSN in Torino' }
+        ],
+        pavia: [
+          { label: 'ASST Pavia - SSN Enrollment', url: cityResources.pavia.aslHealth, description: 'Enroll in SSN in Pavia region' }
+        ]
+      },
       tips: [
         'SSN enrollment takes 1-2 weeks to process - plan ahead',
         'The SSN enrollment receipt is valid proof while waiting for the health card',
@@ -318,6 +458,20 @@ export const residencePermitDocuments: ArrivalDocument[] = [
         'Using a sublet without proper documentation'
       ],
       howToObtain: 'Ask your landlord for a copy of the registered rental contract. If staying with someone, ask them to complete the Cessione di fabbricato or Dichiarazione di ospitalità at their local police station.',
+      citySpecificLinks: {
+        milano: [
+          { label: 'Questura di Milano', url: cityResources.milano.questura, description: 'Submit Cessione di fabbricato here' }
+        ],
+        roma: [
+          { label: 'Questura di Roma', url: cityResources.roma.questura, description: 'Submit Cessione di fabbricato here' }
+        ],
+        torino: [
+          { label: 'Questura di Torino', url: cityResources.torino.questura, description: 'Submit Cessione di fabbricato here' }
+        ],
+        pavia: [
+          { label: 'Questura di Pavia', url: cityResources.pavia.questura, description: 'Submit Cessione di fabbricato here' }
+        ]
+      },
       tips: [
         'The landlord MUST complete Cessione di fabbricato within 48 hours of your arrival',
         'For university housing, request an official letter from the housing office',
