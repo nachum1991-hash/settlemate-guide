@@ -204,7 +204,7 @@ const BureaucracyTimeline = () => {
                 onClick={() => setSelectedStep(isSelected ? null : step.id)}
                 className="p-3 sm:p-4 md:p-6"
               >
-                <div className="flex items-start gap-3 sm:gap-4">
+                <div className="flex items-start gap-3 sm:gap-4 w-full overflow-hidden">
                   {/* Step number & icon */}
                   <div className="flex flex-col items-center gap-1 sm:gap-2 flex-shrink-0 min-w-[44px]">
                     <div className={cn(
@@ -223,9 +223,9 @@ const BureaucracyTimeline = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 sm:gap-4 mb-1 sm:mb-2">
-                      <h4 className="text-base sm:text-lg font-bold text-foreground">{step.title}</h4>
+                  <div className="flex-1 min-w-0 overflow-hidden">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4 mb-1 sm:mb-2">
+                      <h4 className="text-base sm:text-lg font-bold text-foreground break-words">{step.title}</h4>
                       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                         <span className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-primary/10 text-primary font-medium whitespace-nowrap">
                           {step.duration}
@@ -246,7 +246,7 @@ const BureaucracyTimeline = () => {
                         )}
                       </div>
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 break-words">
                       {step.description}
                     </p>
 

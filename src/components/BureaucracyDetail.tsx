@@ -132,7 +132,7 @@ const DocumentCard = ({
 
       {/* Expanded Details */}
       {isExpanded && (
-        <div className="px-3 sm:px-4 pb-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+        <div className="px-3 sm:px-4 pb-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 overflow-hidden">
           <Separator />
           
           {/* Key Info Box */}
@@ -420,7 +420,7 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
   };
 
   return (
-    <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
+    <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-500 overflow-hidden w-full">
       <Separator />
       
       {/* Location */}
@@ -433,7 +433,7 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
       </div>
 
       {/* Documents needed - Now with expandable cards */}
-      <div className="flex items-start gap-2 sm:gap-3">
+      <div className="flex items-start gap-2 sm:gap-3 overflow-hidden">
         <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
           <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">
