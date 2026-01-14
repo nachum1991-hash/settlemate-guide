@@ -507,12 +507,24 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
 
       {/* Documents needed - Now with expandable cards */}
       <div className="w-full">
-        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-          <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0" />
-          <h5 className="font-semibold text-xs sm:text-sm text-foreground">
-            Documents Needed 
-            <span className="font-normal text-muted-foreground ml-1">(tap to expand)</span>
-          </h5>
+        <div className="flex items-center justify-between gap-2 sm:gap-3 mb-2 sm:mb-3 max-w-2xl mx-auto">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0" />
+            <h5 className="font-semibold text-xs sm:text-sm text-foreground">
+              Documents Needed 
+              <span className="font-normal text-muted-foreground ml-1">(tap to expand)</span>
+            </h5>
+          </div>
+          {detailedDocuments.length > 0 && (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 rounded-full">
+                <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium text-primary">
+                  {Object.values(documentReadyStatus).filter(Boolean).length}/{detailedDocuments.length} ready
+                </span>
+              </div>
+            </div>
+          )}
         </div>
         
         {detailedDocuments.length > 0 ? (
