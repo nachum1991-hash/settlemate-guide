@@ -532,8 +532,8 @@ const VisaWizard = () => {
           </div>
           <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
-          {/* Step indicators */}
-          <div className="grid grid-cols-5 gap-1 sm:gap-2 mt-4 sm:mt-6">
+          {/* Step indicators - horizontally scrollable on mobile */}
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-5 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             {[
               { num: 0, label: "Overview" },
               { num: 1, label: "Personal Info" },
@@ -544,22 +544,22 @@ const VisaWizard = () => {
               <div
                 key={step.num}
                 className={cn(
-                  "flex flex-col items-center gap-1 sm:gap-2 p-1 sm:p-2 rounded-lg transition-all min-h-[44px]",
+                  "flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto",
                   currentStep === step.num && "bg-primary/10",
                   currentStep > step.num && "opacity-60"
                 )}
               >
                 <div
                   className={cn(
-                    "w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-all min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0",
+                    "w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]",
                     currentStep === step.num && "bg-primary text-primary-foreground",
                     currentStep > step.num && "bg-success text-success-foreground",
                     currentStep < step.num && "bg-muted text-muted-foreground"
                   )}
                 >
-                  {currentStep > step.num ? <CheckCircle2 className="w-4 h-4 sm:w-4 sm:h-4" /> : step.num === 0 ? <Info className="w-4 h-4" /> : step.num}
+                  {currentStep > step.num ? <CheckCircle2 className="w-4 h-4" /> : step.num === 0 ? <Info className="w-4 h-4" /> : step.num}
                 </div>
-                <span className="text-[10px] sm:text-xs text-center font-medium leading-tight">{step.label}</span>
+                <span className="text-[10px] sm:text-xs text-center font-medium leading-tight whitespace-nowrap">{step.label}</span>
               </div>
             ))}
           </div>

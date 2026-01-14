@@ -92,15 +92,15 @@ export const Navbar = () => {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t">
-            <div className="flex flex-col space-y-3">
+            <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
                   className={cn(
-                    'text-sm font-medium py-2 transition-colors',
+                    'text-sm font-medium py-3 min-h-[44px] flex items-center transition-colors rounded-lg px-2 -mx-2 hover:bg-muted/50',
                     isActive(link.to)
-                      ? 'text-primary'
+                      ? 'text-primary bg-primary/5'
                       : 'text-muted-foreground'
                   )}
                   onClick={() => setMobileMenuOpen(false)}
@@ -116,7 +116,7 @@ export const Navbar = () => {
                     handleSignOut();
                     setMobileMenuOpen(false);
                   }}
-                  className="justify-start"
+                  className="justify-start min-h-[44px] h-11 mt-2"
                 >
                   Sign Out
                 </Button>
@@ -125,6 +125,7 @@ export const Navbar = () => {
                   asChild
                   size="sm"
                   onClick={() => setMobileMenuOpen(false)}
+                  className="min-h-[44px] h-11 mt-2"
                 >
                   <Link to="/auth">Sign In</Link>
                 </Button>
