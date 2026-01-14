@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle, ExternalLink, Info, Globe, ChevronDown, ChevronUp, Check, X, AlertTriangle, FileText, Lightbulb } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle, ExternalLink, Info, Globe, ChevronDown, ChevronUp, Check, X, AlertTriangle, FileText, Lightbulb, Upload } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useDocumentUploads } from "@/hooks/useDocumentUploads";
+import DocumentUploadComponent from "@/components/DocumentUpload";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -371,6 +374,9 @@ const baseDocuments: VisaDocument[] = [
 ];
 
 const VisaWizard = () => {
+  const { user, supabase } = useAuth();
+  const { uploads, uploading, uploadDocument, deleteDocument, getViewUrl, isUploaded, getUpload } = useDocumentUploads('visa');
+  
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -388,6 +394,65 @@ const VisaWizard = () => {
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
   const selectedCountryData = countries.find(c => c.value === formData.country);
+
+  // Document upload handlers
+  const handleUpload = async (documentId: string, file: File) => {
+    return await uploadDocument(documentId, file);
+  };
+
+  const handleDelete = async (documentId: string) => {
+    return await deleteDocument(documentId);
+  };
+
+  const handleView = async (documentId: string) => {
+    // Open a blank window immediately to avoid popup blocker
+    const newWindow = window.open('about:blank', '_blank');
+    const url = await getViewUrl(documentId);
+    if (url && newWindow) {
+      newWindow.location.href = url;
+    } else if (newWindow) {
+      newWindow.close();
+    }
+  };
+
+  const handleDownload = async (documentId: string) => {
+    const url = await getViewUrl(documentId);
+    if (url) {
+      const upload = getUpload(documentId);
+      // Fetch the file as a blob and trigger download
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = upload?.file_name || 'document';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        console.error('Download failed:', error);
+      }
+    }
+  };
+
+  const handlePrint = async (documentId: string) => {
+    // Open a blank window immediately to avoid popup blocker
+    const printWindow = window.open('about:blank', '_blank');
+    const url = await getViewUrl(documentId);
+    if (url && printWindow) {
+      printWindow.location.href = url;
+      // Wait for the content to load before triggering print
+      printWindow.onload = () => {
+        setTimeout(() => {
+          printWindow.print();
+        }, 500);
+      };
+    } else if (printWindow) {
+      printWindow.close();
+    }
+  };
 
   // Persist country selection to localStorage for other Phase 1 pages
   useEffect(() => {
@@ -899,6 +964,12 @@ const VisaWizard = () => {
                                     Required
                                   </span>
                                 )}
+                                {isUploaded(doc.id) && (
+                                  <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium whitespace-nowrap flex items-center gap-1">
+                                    <Upload className="w-3 h-3" />
+                                    Uploaded
+                                  </span>
+                                )}
                               </div>
                               <p className="text-xs sm:text-sm text-muted-foreground">{doc.description}</p>
                             </div>
@@ -1080,6 +1151,32 @@ const VisaWizard = () => {
                                 </ul>
                               </div>
                             )}
+
+                            {/* Document Upload Section */}
+                            <div className="space-y-3">
+                              <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                                <Upload className="w-4 h-4 text-primary" />
+                                Your Upload
+                              </h5>
+                              {user ? (
+                                <DocumentUploadComponent
+                                  documentId={doc.id}
+                                  upload={getUpload(doc.id)}
+                                  isUploading={uploading === doc.id}
+                                  onUpload={(file) => handleUpload(doc.id, file)}
+                                  onDelete={() => handleDelete(doc.id)}
+                                  onView={() => handleView(doc.id)}
+                                  onDownload={() => handleDownload(doc.id)}
+                                  onPrint={() => handlePrint(doc.id)}
+                                />
+                              ) : (
+                                <div className="p-4 bg-muted/30 rounded-xl border border-border/50 text-center">
+                                  <p className="text-sm text-muted-foreground">
+                                    Sign in to upload and track your documents
+                                  </p>
+                                </div>
+                              )}
+                            </div>
 
                             {/* Mark as Ready Button */}
                             <div className="pt-2">
