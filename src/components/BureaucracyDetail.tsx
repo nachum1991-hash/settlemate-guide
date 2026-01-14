@@ -570,30 +570,28 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
 
       {/* Recommended Partners */}
       {step.details.partners && step.details.partners.length > 0 && (
-        <div className="p-3 sm:p-4 bg-accent/5 border border-accent/20 rounded-lg">
-          <div className="flex items-start gap-2 sm:gap-3">
-            <Building className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">Recommended Partners</h5>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {step.details.partners.map((partner, idx) => (
-                  <a 
-                    key={idx}
-                    href={partner.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-col p-3 rounded-lg bg-background/50 hover:bg-background transition-colors border border-border/50 hover:border-accent/30 group"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-foreground group-hover:text-accent transition-colors">{partner.name}</span>
-                      <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-accent" />
-                    </div>
-                    <span className="text-[10px] px-2 py-0.5 bg-accent/10 text-accent rounded-full w-fit mb-1">{partner.category}</span>
-                    <p className="text-xs text-muted-foreground">{partner.description}</p>
-                  </a>
-                ))}
-              </div>
-            </div>
+        <div className="w-full max-w-2xl mx-auto p-4 bg-accent/5 border border-accent/20 rounded-xl">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3">
+            <Building className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0" />
+            <h5 className="font-semibold text-xs sm:text-sm text-foreground">Recommended Partners</h5>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {step.details.partners.map((partner, idx) => (
+              <a 
+                key={idx}
+                href={partner.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col p-3 rounded-lg bg-background/50 hover:bg-background transition-colors border border-border/50 hover:border-accent/30 group"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-medium text-foreground group-hover:text-accent transition-colors">{partner.name}</span>
+                  <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-accent" />
+                </div>
+                <span className="text-[10px] px-2 py-0.5 bg-accent/10 text-accent rounded-full w-fit mb-1">{partner.category}</span>
+                <p className="text-xs text-muted-foreground">{partner.description}</p>
+              </a>
+            ))}
           </div>
         </div>
       )}
