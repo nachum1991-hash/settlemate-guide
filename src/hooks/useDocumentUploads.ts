@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -18,7 +17,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
 
 export const useDocumentUploads = (phase: string) => {
-  const { user } = useAuth();
+  const { user, supabase } = useAuth();
   const [uploads, setUploads] = useState<Record<string, DocumentUpload>>({});
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState<string | null>(null);
