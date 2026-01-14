@@ -222,7 +222,7 @@ const BureaucracyTimeline = () => {
                     </span>
                   </div>
 
-                  {/* Content */}
+                  {/* Content - Header only */}
                   <div className="flex-1 min-w-0 overflow-hidden">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4 mb-1 sm:mb-2">
                       <h4 className="text-base sm:text-lg font-bold text-foreground break-words">{step.title}</h4>
@@ -246,22 +246,22 @@ const BureaucracyTimeline = () => {
                         )}
                       </div>
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3 break-words">
+                    <p className="text-xs sm:text-sm text-muted-foreground break-words">
                       {step.description}
                     </p>
-
-                    {/* Expanded details */}
-                    {isSelected && (
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <BureaucracyDetail 
-                          step={step} 
-                          isCompleted={isCompleted}
-                          onToggleComplete={() => toggleProgress(step.id)}
-                        />
-                      </div>
-                    )}
                   </div>
                 </div>
+
+                {/* Expanded details - Full width below header */}
+                {isSelected && (
+                  <div onClick={(e) => e.stopPropagation()} className="mt-4">
+                    <BureaucracyDetail 
+                      step={step} 
+                      isCompleted={isCompleted}
+                      onToggleComplete={() => toggleProgress(step.id)}
+                    />
+                  </div>
+                )}
               </div>
             </Card>
           );
