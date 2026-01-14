@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { 
   MapPin, 
   FileText, 
@@ -7,7 +8,13 @@ import {
   ExternalLink,
   Globe,
   Building,
-  MessageCircle
+  MessageCircle,
+  ChevronDown,
+  ChevronUp,
+  AlertTriangle,
+  Check,
+  X,
+  Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -16,55 +23,8 @@ import { TaskChat } from "./TaskChat";
 import { TaskFAQ } from "./TaskFAQ";
 import type { Step, OfficialResource, Partner } from "./BureaucracyTimeline";
 import { useCity } from "@/contexts/CityContext";
-
-// Import document images
-import passportImg from "@/assets/documents/passport.png";
-import codiceFiscaleImg from "@/assets/documents/codice-fiscale.png";
-import admissionImg from "@/assets/documents/admission-letter.png";
-import insuranceImg from "@/assets/documents/insurance.png";
-import accommodationImg from "@/assets/documents/accommodation.png";
-import photosImg from "@/assets/documents/photos.png";
-import yellowKitImg from "@/assets/documents/yellow-kit.png";
-import marcaBolloImg from "@/assets/documents/marca-bollo.png";
-import permessoImg from "@/assets/documents/permesso.png";
-
-// Helper function to get appropriate image for each document type
-const getDocumentImage = (docName: string): string | null => {
-  const lowerDoc = docName.toLowerCase();
-  
-  if (lowerDoc.includes("passport") && !lowerDoc.includes("photo")) {
-    return passportImg;
-  }
-  if (lowerDoc.includes("codice fiscale")) {
-    return codiceFiscaleImg;
-  }
-  if (lowerDoc.includes("admission") || lowerDoc.includes("certificate") || lowerDoc.includes("polimi") || lowerDoc.includes("enrollment")) {
-    return admissionImg;
-  }
-  if (lowerDoc.includes("insurance")) {
-    return insuranceImg;
-  }
-  if (lowerDoc.includes("financial") || lowerDoc.includes("bank statement") || lowerDoc.includes("scholarship")) {
-    return null;
-  }
-  if (lowerDoc.includes("rental") || lowerDoc.includes("contract") || lowerDoc.includes("cessione") || lowerDoc.includes("fabbricato")) {
-    return accommodationImg;
-  }
-  if (lowerDoc.includes("photo")) {
-    return photosImg;
-  }
-  if (lowerDoc.includes("kit") || lowerDoc.includes("modulo")) {
-    return yellowKitImg;
-  }
-  if (lowerDoc.includes("marca") || lowerDoc.includes("stamp") || lowerDoc.includes("bollo")) {
-    return marcaBolloImg;
-  }
-  if (lowerDoc.includes("permit") || lowerDoc.includes("permesso")) {
-    return permessoImg;
-  }
-  
-  return null;
-};
+import { getDocumentsForStep, type ArrivalDocument } from "@/data/arrivalDocuments";
+import { cn } from "@/lib/utils";
 
 // Community groups for each step - verified links to official resources and real Facebook groups
 const communityGroups: Record<string, { name: string; url: string; platform: string }[]> = {
@@ -91,15 +51,192 @@ const communityGroups: Record<string, { name: string; url: string; platform: str
   ]
 };
 
+// Map step IDs to document keys
+const stepToDocumentKey: Record<string, string> = {
+  'codice': 'codice-fiscale',
+  'permesso': 'residence-permit'
+};
+
 interface BureaucracyDetailProps {
   step: Step;
   isCompleted: boolean;
   onToggleComplete: () => void;
 }
 
+// Expandable Document Card Component
+const DocumentCard = ({ doc }: { doc: ArrivalDocument }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { details } = doc;
+
+  return (
+    <div className="rounded-lg border border-border/50 overflow-hidden bg-background/50">
+      {/* Document Header - Always Visible */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full p-3 sm:p-4 flex items-center gap-3 hover:bg-muted/30 transition-colors text-left"
+      >
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
+          <img 
+            src={doc.image} 
+            alt={doc.name}
+            className="w-full h-full object-contain"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h6 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h6>
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">{doc.description}</p>
+        </div>
+        <div className="flex-shrink-0">
+          {isExpanded ? (
+            <ChevronUp className="w-5 h-5 text-muted-foreground" />
+          ) : (
+            <ChevronDown className="w-5 h-5 text-muted-foreground" />
+          )}
+        </div>
+      </button>
+
+      {/* Expanded Details */}
+      {isExpanded && (
+        <div className="px-3 sm:px-4 pb-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+          <Separator />
+          
+          {/* Key Info Box */}
+          {details.keyInfo && (
+            <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+              <div className="flex items-start gap-2">
+                <Info className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-foreground">{details.keyInfo}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Acceptance Rules */}
+          {details.acceptanceRules && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* What's Accepted */}
+              <div className="p-3 bg-success/5 border border-success/20 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <Check className="w-4 h-4 text-success" />
+                  <span className="text-sm font-semibold text-success">What's Accepted</span>
+                </div>
+                <ul className="space-y-1.5">
+                  {details.acceptanceRules.valid.map((item, idx) => (
+                    <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                      <Check className="w-3 h-3 text-success flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* What's NOT Accepted */}
+              {details.acceptanceRules.invalid && details.acceptanceRules.invalid.length > 0 && (
+                <div className="p-3 bg-destructive/5 border border-destructive/20 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <X className="w-4 h-4 text-destructive" />
+                    <span className="text-sm font-semibold text-destructive">NOT Accepted</span>
+                  </div>
+                  <ul className="space-y-1.5">
+                    {details.acceptanceRules.invalid.map((item, idx) => (
+                      <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                        <X className="w-3 h-3 text-destructive flex-shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Common Mistakes */}
+          {details.commonMistakes && details.commonMistakes.length > 0 && (
+            <div className="p-3 bg-warning/5 border border-warning/20 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <AlertTriangle className="w-4 h-4 text-warning" />
+                <span className="text-sm font-semibold text-warning">Common Mistakes to Avoid</span>
+              </div>
+              <ul className="space-y-1.5">
+                {details.commonMistakes.map((mistake, idx) => (
+                  <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                    <span className="text-warning">•</span>
+                    <span>{mistake}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* How to Obtain */}
+          {details.howToObtain && (
+            <div className="p-3 bg-muted/30 rounded-lg">
+              <div className="flex items-start gap-2">
+                <FileText className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-sm font-semibold text-foreground block mb-1">How to Obtain</span>
+                  <p className="text-xs text-muted-foreground">{details.howToObtain}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Official Links */}
+          {details.officialLinks && details.officialLinks.length > 0 && (
+            <div className="space-y-2">
+              <span className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Globe className="w-4 h-4 text-secondary" />
+                Official Resources
+              </span>
+              <div className="grid gap-2">
+                {details.officialLinks.map((link, idx) => (
+                  <a
+                    key={idx}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-2 p-2 rounded-md bg-secondary/5 hover:bg-secondary/10 transition-colors group"
+                  >
+                    <ExternalLink className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">{link.label}</span>
+                      <p className="text-xs text-muted-foreground">{link.description}</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Pro Tips */}
+          {details.tips && details.tips.length > 0 && (
+            <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Lightbulb className="w-4 h-4 text-accent" />
+                <span className="text-sm font-semibold text-accent">Pro Tips</span>
+              </div>
+              <ul className="space-y-1.5">
+                {details.tips.map((tip, idx) => (
+                  <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                    <span className="text-accent">💡</span>
+                    <span>{tip}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyDetailProps) => {
   const { selectedCity } = useCity();
   const groups = communityGroups[step.id] || [];
+  
+  // Get detailed documents for this step
+  const documentKey = stepToDocumentKey[step.id] || step.id;
+  const detailedDocuments = getDocumentsForStep(documentKey);
 
   return (
     <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
@@ -114,34 +251,32 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
         </div>
       </div>
 
-      {/* Documents needed */}
+      {/* Documents needed - Now with expandable cards */}
       <div className="flex items-start gap-2 sm:gap-3">
         <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
-          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">Documents Needed</h5>
-          <ul className="space-y-2 sm:space-y-3">
-            {step.details.documents.map((doc, idx) => {
-              const docImage = getDocumentImage(doc);
-              return (
-                <li key={idx} className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                  {docImage ? (
-                    <div className="w-full sm:w-12 h-32 sm:h-12 rounded-lg overflow-hidden flex-shrink-0 bg-background">
-                      <img 
-                        src={docImage} 
-                        alt={doc}
-                        className="w-full h-full object-contain sm:object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-full sm:w-12 h-32 sm:h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <FileText className="w-8 h-8 sm:w-6 sm:h-6 text-secondary" />
-                    </div>
-                  )}
-                  <span className="text-sm sm:text-sm text-foreground font-medium break-words w-full pl-0 sm:pl-0">{doc}</span>
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">
+            Documents Needed 
+            <span className="font-normal text-muted-foreground ml-1">(tap to expand)</span>
+          </h5>
+          
+          {detailedDocuments.length > 0 ? (
+            <div className="space-y-2">
+              {detailedDocuments.map((doc) => (
+                <DocumentCard key={doc.id} doc={doc} />
+              ))}
+            </div>
+          ) : (
+            // Fallback to simple list if no detailed documents available
+            <ul className="space-y-2 sm:space-y-3">
+              {step.details.documents.map((doc, idx) => (
+                <li key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                  <FileText className="w-5 h-5 text-secondary" />
+                  <span className="text-sm text-foreground font-medium">{doc}</span>
                 </li>
-              );
-            })}
-          </ul>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
