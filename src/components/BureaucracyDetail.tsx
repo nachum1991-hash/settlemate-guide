@@ -461,45 +461,45 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
       </div>
 
       {/* Documents needed - Now with expandable cards */}
-      <div className="flex items-start gap-2 sm:gap-3 overflow-hidden">
-        <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">
+      <div className="w-full">
+        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+          <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0" />
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground">
             Documents Needed 
             <span className="font-normal text-muted-foreground ml-1">(tap to expand)</span>
           </h5>
-          
-          {detailedDocuments.length > 0 ? (
-            <div className="space-y-2">
-              {detailedDocuments.map((doc) => (
-                <DocumentCard 
-                  key={doc.id} 
-                  doc={doc} 
-                  selectedCity={selectedCity}
-                  isUploaded={isUploaded(doc.id)}
-                  upload={getUpload(doc.id)}
-                  isUploading={uploading === doc.id}
-                  onUpload={(file) => handleUpload(doc.id, file)}
-                  onDelete={() => handleDelete(doc.id)}
-                  onView={() => handleView(doc.id)}
-                  onDownload={() => handleDownload(doc.id)}
-                  onPrint={() => handlePrint(doc.id)}
-                  isAuthenticated={!!user}
-                />
-              ))}
-            </div>
-          ) : (
-            // Fallback to simple list if no detailed documents available
-            <ul className="space-y-2 sm:space-y-3">
-              {step.details.documents.map((doc, idx) => (
-                <li key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
-                  <FileText className="w-5 h-5 text-secondary" />
-                  <span className="text-sm text-foreground font-medium">{doc}</span>
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
+        
+        {detailedDocuments.length > 0 ? (
+          <div className="space-y-3 max-w-2xl mx-auto">
+            {detailedDocuments.map((doc) => (
+              <DocumentCard 
+                key={doc.id} 
+                doc={doc} 
+                selectedCity={selectedCity}
+                isUploaded={isUploaded(doc.id)}
+                upload={getUpload(doc.id)}
+                isUploading={uploading === doc.id}
+                onUpload={(file) => handleUpload(doc.id, file)}
+                onDelete={() => handleDelete(doc.id)}
+                onView={() => handleView(doc.id)}
+                onDownload={() => handleDownload(doc.id)}
+                onPrint={() => handlePrint(doc.id)}
+                isAuthenticated={!!user}
+              />
+            ))}
+          </div>
+        ) : (
+          // Fallback to simple list if no detailed documents available
+          <ul className="space-y-2 sm:space-y-3 max-w-2xl mx-auto">
+            {step.details.documents.map((doc, idx) => (
+              <li key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                <FileText className="w-5 h-5 text-secondary" />
+                <span className="text-sm text-foreground font-medium">{doc}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Process */}
