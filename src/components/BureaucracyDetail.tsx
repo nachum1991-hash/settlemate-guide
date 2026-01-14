@@ -10,6 +10,7 @@ import {
   Building,
   MessageCircle,
   ChevronDown,
+  ChevronUp,
   AlertTriangle,
   Check,
   X,
@@ -83,6 +84,8 @@ interface DocumentCardProps {
   isAuthenticated: boolean;
   isReady: boolean;
   onToggleReady: () => void;
+  isExpanded: boolean;
+  onToggle: () => void;
 }
 
 const DocumentCard = ({ 
@@ -98,16 +101,17 @@ const DocumentCard = ({
   onPrint,
   isAuthenticated,
   isReady,
-  onToggleReady
+  onToggleReady,
+  isExpanded,
+  onToggle
 }: DocumentCardProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const { details } = doc;
 
   return (
     <div className="rounded-xl border border-border/60 overflow-hidden bg-card shadow-sm">
       {/* Document Header - Always Visible */}
       <button
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={onToggle}
         className="w-full p-4 flex items-center gap-4 hover:bg-muted/40 transition-colors text-left"
       >
         {/* Document Image */}
@@ -370,6 +374,18 @@ const DocumentCard = ({
               )}
             </Button>
           </div>
+
+          {/* Close Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggle();
+            }}
+            className="w-full mt-3 py-2 text-sm text-muted-foreground hover:text-foreground flex items-center justify-center gap-2 transition-colors border-t border-border/50 pt-4"
+          >
+            <ChevronUp className="w-4 h-4" />
+            Close
+          </button>
         </div>
       )}
     </div>
@@ -387,6 +403,9 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
   
   // Track document ready status (local state, like Visa Wizard)
   const [documentReadyStatus, setDocumentReadyStatus] = useState<Record<string, boolean>>({});
+  
+  // Track which document card is expanded (accordion behavior)
+  const [expandedDocumentId, setExpandedDocumentId] = useState<string | null>(null);
   
   const toggleDocumentReady = (docId: string) => {
     setDocumentReadyStatus(prev => ({
@@ -545,6 +564,8 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
                 isAuthenticated={!!user}
                 isReady={documentReadyStatus[doc.id] || false}
                 onToggleReady={() => toggleDocumentReady(doc.id)}
+                isExpanded={expandedDocumentId === doc.id}
+                onToggle={() => setExpandedDocumentId(expandedDocumentId === doc.id ? null : doc.id)}
               />
             ))}
           </div>
