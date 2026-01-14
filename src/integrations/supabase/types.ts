@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      document_uploads: {
+        Row: {
+          document_id: string
+          file_name: string
+          file_path: string
+          file_size: number
+          id: string
+          mime_type: string
+          phase: string
+          uploaded_at: string
+          user_id: string
+        }
+        Insert: {
+          document_id: string
+          file_name: string
+          file_path: string
+          file_size: number
+          id?: string
+          mime_type: string
+          phase: string
+          uploaded_at?: string
+          user_id: string
+        }
+        Update: {
+          document_id?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          id?: string
+          mime_type?: string
+          phase?: string
+          uploaded_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

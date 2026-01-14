@@ -14,7 +14,8 @@ import {
   AlertTriangle,
   Check,
   X,
-  Info
+  Info,
+  CheckCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -25,6 +26,9 @@ import type { Step, OfficialResource, Partner } from "./BureaucracyTimeline";
 import { useCity } from "@/contexts/CityContext";
 import { getDocumentsForStep, type ArrivalDocument } from "@/data/arrivalDocuments";
 import { cn } from "@/lib/utils";
+import { useDocumentUploads } from "@/hooks/useDocumentUploads";
+import { DocumentUploadComponent } from "./DocumentUpload";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Community groups for each step - verified links to official resources and real Facebook groups
 const communityGroups: Record<string, { name: string; url: string; platform: string }[]> = {
@@ -64,7 +68,29 @@ interface BureaucracyDetailProps {
 }
 
 // Expandable Document Card Component
-const DocumentCard = ({ doc, selectedCity }: { doc: ArrivalDocument; selectedCity: string }) => {
+interface DocumentCardProps {
+  doc: ArrivalDocument;
+  selectedCity: string;
+  isUploaded: boolean;
+  upload?: ReturnType<typeof useDocumentUploads>['uploads'][string];
+  isUploading: boolean;
+  onUpload: (file: File) => Promise<boolean>;
+  onDelete: () => Promise<boolean>;
+  onView: () => Promise<void>;
+  isAuthenticated: boolean;
+}
+
+const DocumentCard = ({ 
+  doc, 
+  selectedCity, 
+  isUploaded, 
+  upload,
+  isUploading,
+  onUpload,
+  onDelete,
+  onView,
+  isAuthenticated
+}: DocumentCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { details } = doc;
 
@@ -83,7 +109,12 @@ const DocumentCard = ({ doc, selectedCity }: { doc: ArrivalDocument; selectedCit
           />
         </div>
         <div className="flex-1 min-w-0">
-          <h6 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h6>
+          <div className="flex items-center gap-2">
+            <h6 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h6>
+            {isUploaded && (
+              <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+            )}
+          </div>
           <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">{doc.description}</p>
         </div>
         <div className="flex-shrink-0">
@@ -251,6 +282,25 @@ const DocumentCard = ({ doc, selectedCity }: { doc: ArrivalDocument; selectedCit
               </ul>
             </div>
           )}
+
+          {/* Document Upload Section */}
+          {isAuthenticated ? (
+            <DocumentUploadComponent
+              documentId={doc.id}
+              upload={upload}
+              isUploading={isUploading}
+              onUpload={onUpload}
+              onDelete={onDelete}
+              onView={onView}
+              disabled={false}
+            />
+          ) : (
+            <div className="mt-4 border-t border-border pt-4">
+              <p className="text-sm text-muted-foreground text-center">
+                Sign in to upload and track your documents
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -259,11 +309,38 @@ const DocumentCard = ({ doc, selectedCity }: { doc: ArrivalDocument; selectedCit
 
 const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyDetailProps) => {
   const { selectedCity } = useCity();
+  const { user } = useAuth();
   const groups = communityGroups[step.id] || [];
   
   // Get detailed documents for this step
   const documentKey = stepToDocumentKey[step.id] || step.id;
   const detailedDocuments = getDocumentsForStep(documentKey);
+  
+  // Document uploads hook
+  const { 
+    uploads, 
+    uploading, 
+    uploadDocument, 
+    deleteDocument, 
+    getViewUrl,
+    isUploaded,
+    getUpload
+  } = useDocumentUploads('arrival');
+
+  const handleUpload = async (documentId: string, file: File) => {
+    return await uploadDocument(documentId, file);
+  };
+
+  const handleDelete = async (documentId: string) => {
+    return await deleteDocument(documentId);
+  };
+
+  const handleView = async (documentId: string) => {
+    const url = await getViewUrl(documentId);
+    if (url) {
+      window.open(url, '_blank');
+    }
+  };
 
   return (
     <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
@@ -290,7 +367,18 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
           {detailedDocuments.length > 0 ? (
             <div className="space-y-2">
               {detailedDocuments.map((doc) => (
-                <DocumentCard key={doc.id} doc={doc} selectedCity={selectedCity} />
+                <DocumentCard 
+                  key={doc.id} 
+                  doc={doc} 
+                  selectedCity={selectedCity}
+                  isUploaded={isUploaded(doc.id)}
+                  upload={getUpload(doc.id)}
+                  isUploading={uploading === doc.id}
+                  onUpload={(file) => handleUpload(doc.id, file)}
+                  onDelete={() => handleDelete(doc.id)}
+                  onView={() => handleView(doc.id)}
+                  isAuthenticated={!!user}
+                />
               ))}
             </div>
           ) : (
