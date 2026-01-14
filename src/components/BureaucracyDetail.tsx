@@ -448,16 +448,16 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
   };
 
   return (
-    <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4 animate-in fade-in slide-in-from-top-2 duration-500 overflow-hidden w-full">
+    <div className="mt-3 sm:mt-4 space-y-4 sm:space-y-5 animate-in fade-in slide-in-from-top-2 duration-500 overflow-hidden w-full">
       <Separator />
       
       {/* Location */}
-      <div className="flex items-start gap-2 sm:gap-3">
-        <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
-        <div>
-          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-1">Location</h5>
-          <p className="text-xs sm:text-sm text-muted-foreground">{step.details.location}</p>
+      <div className="w-full max-w-2xl mx-auto">
+        <div className="flex items-center gap-2 sm:gap-3 mb-2">
+          <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground">Location</h5>
         </div>
+        <p className="text-xs sm:text-sm text-muted-foreground pl-6 sm:pl-8">{step.details.location}</p>
       </div>
 
       {/* Documents needed - Now with expandable cards */}
@@ -503,68 +503,64 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
       </div>
 
       {/* Process */}
-      <div className="flex items-start gap-2 sm:gap-3">
-        <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-1.5 sm:mb-2">Step-by-Step Process</h5>
-          <ol className="space-y-1.5 sm:space-y-2">
-            {step.details.process.map((processStep, idx) => (
-              <li key={idx} className="text-xs sm:text-sm text-muted-foreground flex items-start gap-2">
-                <span className="font-medium text-accent flex-shrink-0 text-xs sm:text-sm">{idx + 1}.</span>
-                <span className="break-words">{processStep}</span>
-              </li>
-            ))}
-          </ol>
+      <div className="w-full max-w-2xl mx-auto">
+        <div className="flex items-center gap-2 sm:gap-3 mb-2">
+          <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-accent flex-shrink-0" />
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground">Step-by-Step Process</h5>
         </div>
+        <ol className="space-y-2 pl-6 sm:pl-8">
+          {step.details.process.map((processStep, idx) => (
+            <li key={idx} className="text-xs sm:text-sm text-muted-foreground flex items-start gap-2">
+              <span className="font-medium text-accent flex-shrink-0 text-xs sm:text-sm">{idx + 1}.</span>
+              <span className="break-words">{processStep}</span>
+            </li>
+          ))}
+        </ol>
       </div>
 
       {/* Cost */}
-      <div className="flex items-start gap-2 sm:gap-3">
-        <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-warning flex-shrink-0 mt-0.5" />
-        <div>
-          <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-1">Cost</h5>
-          <p className="text-xs sm:text-sm font-medium text-warning">{step.details.cost}</p>
+      <div className="w-full max-w-2xl mx-auto">
+        <div className="flex items-center gap-2 sm:gap-3 mb-2">
+          <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-warning flex-shrink-0" />
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground">Cost</h5>
         </div>
+        <p className="text-xs sm:text-sm font-medium text-warning pl-6 sm:pl-8">{step.details.cost}</p>
       </div>
 
       {/* Tips */}
-      <div className="p-3 sm:p-4 bg-primary/5 border border-primary/20 rounded-lg">
-        <div className="flex items-start gap-2 sm:gap-3">
-          <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
-          <div>
-            <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-1">Pro Tips</h5>
-            <p className="text-xs sm:text-sm text-muted-foreground break-words">{step.details.tips}</p>
-          </div>
+      <div className="w-full max-w-2xl mx-auto p-4 bg-primary/5 border border-primary/20 rounded-xl">
+        <div className="flex items-center gap-2 sm:gap-3 mb-2">
+          <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+          <h5 className="font-semibold text-xs sm:text-sm text-foreground">Pro Tips</h5>
         </div>
+        <p className="text-xs sm:text-sm text-muted-foreground break-words">{step.details.tips}</p>
       </div>
 
       {/* Official Resources */}
       {step.details.officialResources && step.details.officialResources.length > 0 && (
-        <div className="p-3 sm:p-4 bg-secondary/5 border border-secondary/20 rounded-lg">
-          <div className="flex items-start gap-2 sm:gap-3">
-            <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <h5 className="font-semibold text-xs sm:text-sm text-foreground mb-2 sm:mb-3">Official Resources</h5>
-              <ul className="space-y-2">
-                {step.details.officialResources.map((resource, idx) => (
-                  <li key={idx}>
-                    <a 
-                      href={resource.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-start gap-2 p-2 rounded-md hover:bg-secondary/10 transition-colors group"
-                    >
-                      <ExternalLink className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5 group-hover:text-secondary/80" />
-                      <div>
-                        <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">{resource.name}</span>
-                        <p className="text-xs text-muted-foreground">{resource.description}</p>
-                      </div>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <div className="w-full max-w-2xl mx-auto p-4 bg-secondary/5 border border-secondary/20 rounded-xl">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3">
+            <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0" />
+            <h5 className="font-semibold text-xs sm:text-sm text-foreground">Official Resources</h5>
           </div>
+          <ul className="space-y-2">
+            {step.details.officialResources.map((resource, idx) => (
+              <li key={idx}>
+                <a 
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-3 p-3 rounded-lg bg-background/60 hover:bg-background border border-border/30 transition-colors group"
+                >
+                  <ExternalLink className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5 group-hover:text-secondary/80" />
+                  <div>
+                    <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors block">{resource.name}</span>
+                    <p className="text-xs text-muted-foreground mt-0.5">{resource.description}</p>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
@@ -597,54 +593,58 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
       )}
 
       {/* Action button */}
-      <Button 
-        onClick={onToggleComplete}
-        variant={isCompleted ? "outline" : "default"}
-        className="w-full text-sm sm:text-base"
-      >
-        {isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
-      </Button>
+      <div className="w-full max-w-2xl mx-auto">
+        <Button 
+          onClick={onToggleComplete}
+          variant={isCompleted ? "outline" : "default"}
+          className="w-full text-sm sm:text-base"
+        >
+          {isCompleted ? "Mark as Incomplete" : "Mark as Complete"}
+        </Button>
+      </div>
 
       {/* FAQ and Chat Tabs */}
-      <Tabs defaultValue="faq" className="w-full mt-6">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="faq">FAQs</TabsTrigger>
-          <TabsTrigger value="chat">Community Chat</TabsTrigger>
-        </TabsList>
-        <TabsContent value="faq" className="mt-4">
-          <TaskFAQ taskId={`${step.id}-${selectedCity}`} phase="phase-2" />
-        </TabsContent>
-        <TabsContent value="chat" className="mt-4">
-          {/* External community groups */}
-          {groups.length > 0 && (
-            <div className="mb-4 p-3 bg-muted/30 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <MessageCircle className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-foreground">Join External Groups</span>
+      <div className="w-full max-w-2xl mx-auto">
+        <Tabs defaultValue="faq" className="w-full mt-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="faq">FAQs</TabsTrigger>
+            <TabsTrigger value="chat">Community Chat</TabsTrigger>
+          </TabsList>
+          <TabsContent value="faq" className="mt-4">
+            <TaskFAQ taskId={`${step.id}-${selectedCity}`} phase="phase-2" />
+          </TabsContent>
+          <TabsContent value="chat" className="mt-4">
+            {/* External community groups */}
+            {groups.length > 0 && (
+              <div className="mb-4 p-3 bg-muted/30 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <MessageCircle className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium text-foreground">Join External Groups</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {groups.map((group, idx) => (
+                    <a
+                      key={idx}
+                      href={group.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium rounded-full transition-colors"
+                    >
+                      {group.name}
+                      <span className="text-[10px] text-primary/70">({group.platform})</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  ))}
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-2">
+                  These are community-run groups. Please follow their rules.
+                </p>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {groups.map((group, idx) => (
-                  <a
-                    key={idx}
-                    href={group.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium rounded-full transition-colors"
-                  >
-                    {group.name}
-                    <span className="text-[10px] text-primary/70">({group.platform})</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                ))}
-              </div>
-              <p className="text-[10px] text-muted-foreground mt-2">
-                These are community-run groups. Please follow their rules.
-              </p>
-            </div>
-          )}
-          <TaskChat taskId={`${step.id}-${selectedCity}`} phase="phase-2" />
-        </TabsContent>
-      </Tabs>
+            )}
+            <TaskChat taskId={`${step.id}-${selectedCity}`} phase="phase-2" />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };
