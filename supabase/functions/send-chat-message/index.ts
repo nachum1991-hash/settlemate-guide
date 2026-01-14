@@ -81,14 +81,22 @@ serve(async (req) => {
     // Trim and validate message length
     const trimmedMessage = message.trim();
 
-    if (trimmedMessage.length < MIN_MESSAGE_LENGTH) {
+    // XSS sanitization: encode HTML special characters (defense-in-depth)
+    const sanitizedMessage = trimmedMessage
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;');
+
+    if (sanitizedMessage.length < MIN_MESSAGE_LENGTH) {
       return new Response(
         JSON.stringify({ error: 'Message cannot be empty' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (trimmedMessage.length > MAX_MESSAGE_LENGTH) {
+    if (sanitizedMessage.length > MAX_MESSAGE_LENGTH) {
       return new Response(
         JSON.stringify({ error: `Message must be ${MAX_MESSAGE_LENGTH} characters or less` }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -136,7 +144,7 @@ serve(async (req) => {
         task_id,
         phase,
         user_id: userId,
-        message: trimmedMessage,
+        message: sanitizedMessage,
       })
       .select()
       .single();
