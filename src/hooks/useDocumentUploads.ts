@@ -190,7 +190,13 @@ export const useDocumentUploads = (phase: string) => {
         .createSignedUrl(upload.file_path, 3600); // 1 hour expiry
 
       if (error) throw error;
-      return data.signedUrl;
+      
+      // Handle both signedUrl and signedURL keys, and ensure absolute URL
+      let url = data.signedUrl || (data as any).signedURL;
+      if (url && url.startsWith('/')) {
+        url = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1${url}`;
+      }
+      return url || null;
     } catch (error) {
       console.error('Error getting view URL:', error);
       return null;

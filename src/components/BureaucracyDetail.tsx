@@ -77,6 +77,8 @@ interface DocumentCardProps {
   onUpload: (file: File) => Promise<boolean>;
   onDelete: () => Promise<boolean>;
   onView: () => Promise<void>;
+  onDownload: () => Promise<void>;
+  onPrint: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -89,6 +91,8 @@ const DocumentCard = ({
   onUpload,
   onDelete,
   onView,
+  onDownload,
+  onPrint,
   isAuthenticated
 }: DocumentCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -292,6 +296,8 @@ const DocumentCard = ({
               onUpload={onUpload}
               onDelete={onDelete}
               onView={onView}
+              onDownload={onDownload}
+              onPrint={onPrint}
               disabled={false}
             />
           ) : (
@@ -339,6 +345,44 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
     const url = await getViewUrl(documentId);
     if (url) {
       window.open(url, '_blank');
+    } else {
+      const { toast } = await import('sonner');
+      toast.error("Couldn't generate view link. Please try again.");
+    }
+  };
+
+  const handleDownload = async (documentId: string) => {
+    const url = await getViewUrl(documentId);
+    if (url) {
+      const upload = getUpload(documentId);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = upload?.file_name || 'document';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      const { toast } = await import('sonner');
+      toast.error("Couldn't generate download link. Please try again.");
+    }
+  };
+
+  const handlePrint = async (documentId: string) => {
+    const url = await getViewUrl(documentId);
+    if (url) {
+      const printWindow = window.open(url, '_blank');
+      if (printWindow) {
+        printWindow.onload = () => {
+          printWindow.print();
+        };
+      } else {
+        const { toast } = await import('sonner');
+        toast.error("Popup blocked. Please allow popups to print documents.");
+      }
+    } else {
+      const { toast } = await import('sonner');
+      toast.error("Couldn't generate print link. Please try again.");
     }
   };
 
@@ -377,6 +421,8 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
                   onUpload={(file) => handleUpload(doc.id, file)}
                   onDelete={() => handleDelete(doc.id)}
                   onView={() => handleView(doc.id)}
+                  onDownload={() => handleDownload(doc.id)}
+                  onPrint={() => handlePrint(doc.id)}
                   isAuthenticated={!!user}
                 />
               ))}

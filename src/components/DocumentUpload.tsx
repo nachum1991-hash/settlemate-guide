@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { Upload, File, X, Loader2, Eye, Trash2, CheckCircle } from 'lucide-react';
+import { Upload, File, X, Loader2, Eye, Trash2, CheckCircle, Download, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { DocumentUpload as DocumentUploadType } from '@/hooks/useDocumentUploads';
@@ -12,6 +12,8 @@ interface DocumentUploadProps {
   onUpload: (file: File) => Promise<boolean>;
   onDelete: () => Promise<boolean>;
   onView: () => Promise<void>;
+  onDownload: () => Promise<void>;
+  onPrint: () => Promise<void>;
   disabled?: boolean;
 }
 
@@ -28,6 +30,8 @@ export const DocumentUploadComponent = ({
   onUpload,
   onDelete,
   onView,
+  onDownload,
+  onPrint,
   disabled = false,
 }: DocumentUploadProps) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -79,6 +83,14 @@ export const DocumentUploadComponent = ({
     await onView();
   };
 
+  const handleDownloadClick = async () => {
+    await onDownload();
+  };
+
+  const handlePrintClick = async () => {
+    await onPrint();
+  };
+
   if (upload) {
     // Show uploaded file
     return (
@@ -99,14 +111,33 @@ export const DocumentUploadComponent = ({
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-1 flex-shrink-0">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleViewClick}
               className="h-8 px-2"
+              title="View"
             >
               <Eye className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDownloadClick}
+              className="h-8 px-2"
+              title="Download"
+            >
+              <Download className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handlePrintClick}
+              className="h-8 px-2"
+              title="Print"
+            >
+              <Printer className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost"
@@ -114,6 +145,7 @@ export const DocumentUploadComponent = ({
               onClick={handleDelete}
               disabled={isDeleting}
               className="h-8 px-2 text-destructive hover:text-destructive"
+              title="Delete"
             >
               {isDeleting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
