@@ -855,7 +855,7 @@ const VisaWizard = () => {
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-3 max-w-2xl mx-auto">
                   {documents.map((doc) => (
                     <Card
                       key={doc.id}
@@ -921,10 +921,10 @@ const VisaWizard = () => {
                       {/* Expanded Content */}
                       {expandedDocument === doc.id && (
                         <div className="px-4 pb-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-200">
-                          <div className="pt-4 space-y-4">
+                          <div className="pt-4 space-y-4 max-w-xl mx-auto">
                             {/* Key Info */}
                             {doc.details.keyInfo && (
-                              <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
+                              <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
                                 <p className="text-sm text-foreground font-medium">
                                   {doc.details.keyInfo}
                                 </p>
@@ -933,17 +933,19 @@ const VisaWizard = () => {
 
                             {/* Acceptance Rules */}
                             {doc.details.acceptanceRules && (
-                              <div className={`grid grid-cols-1 ${doc.details.acceptanceRules.invalid ? 'md:grid-cols-2' : ''} gap-4`}>
+                              <div className="space-y-3">
                                 {/* Valid */}
-                                <div className="space-y-2 p-3 bg-success/5 rounded-lg border border-success/20">
-                                  <h5 className="text-sm font-semibold text-success flex items-center gap-2">
-                                    <Check className="w-4 h-4" />
-                                    What's Accepted
-                                  </h5>
-                                  <ul className="space-y-1.5">
+                                <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200 dark:border-green-800/50">
+                                  <div className="flex items-center gap-2 mb-3">
+                                    <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                                      <Check className="w-3.5 h-3.5 text-white" />
+                                    </div>
+                                    <span className="text-sm font-semibold text-green-800 dark:text-green-300">What's Accepted</span>
+                                  </div>
+                                  <ul className="space-y-2">
                                     {doc.details.acceptanceRules.valid.map((rule, idx) => (
-                                      <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                        <Check className="w-3 h-3 text-success flex-shrink-0 mt-0.5" />
+                                      <li key={idx} className="text-sm text-green-900 dark:text-green-200 flex items-start gap-2">
+                                        <Check className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                                         {rule}
                                       </li>
                                     ))}
@@ -952,15 +954,17 @@ const VisaWizard = () => {
 
                                 {/* Invalid - only show if exists */}
                                 {doc.details.acceptanceRules.invalid && doc.details.acceptanceRules.invalid.length > 0 && (
-                                  <div className="space-y-2 p-3 bg-destructive/5 rounded-lg border border-destructive/20">
-                                    <h5 className="text-sm font-semibold text-destructive flex items-center gap-2">
-                                      <X className="w-4 h-4" />
-                                      What's NOT Accepted
-                                    </h5>
-                                    <ul className="space-y-1.5">
+                                  <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-xl border border-red-200 dark:border-red-800/50">
+                                    <div className="flex items-center gap-2 mb-3">
+                                      <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+                                        <X className="w-3.5 h-3.5 text-white" />
+                                      </div>
+                                      <span className="text-sm font-semibold text-red-800 dark:text-red-300">NOT Accepted</span>
+                                    </div>
+                                    <ul className="space-y-2">
                                       {doc.details.acceptanceRules.invalid.map((rule, idx) => (
-                                        <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                          <X className="w-3 h-3 text-destructive flex-shrink-0 mt-0.5" />
+                                        <li key={idx} className="text-sm text-red-900 dark:text-red-200 flex items-start gap-2">
+                                          <X className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                                           {rule}
                                         </li>
                                       ))}
@@ -972,15 +976,17 @@ const VisaWizard = () => {
 
                             {/* Common Mistakes */}
                             {doc.details.commonMistakes && doc.details.commonMistakes.length > 0 && (
-                              <div className="space-y-2 p-3 bg-warning/5 rounded-lg border border-warning/20">
-                                <h5 className="text-sm font-semibold text-warning flex items-center gap-2">
-                                  <AlertTriangle className="w-4 h-4" />
-                                  Common Mistakes to Avoid
-                                </h5>
-                                <ul className="space-y-1.5">
+                              <div className="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/50">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+                                    <AlertTriangle className="w-3.5 h-3.5 text-white" />
+                                  </div>
+                                  <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">Common Mistakes to Avoid</span>
+                                </div>
+                                <ul className="space-y-2">
                                   {doc.details.commonMistakes.map((mistake, idx) => (
-                                    <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                      <AlertTriangle className="w-3 h-3 text-warning flex-shrink-0 mt-0.5" />
+                                    <li key={idx} className="text-sm text-amber-900 dark:text-amber-200 flex items-start gap-2">
+                                      <span className="text-amber-600 dark:text-amber-400 flex-shrink-0">•</span>
                                       {mistake}
                                     </li>
                                   ))}
@@ -990,12 +996,12 @@ const VisaWizard = () => {
 
                             {/* How to Obtain */}
                             {doc.details.howToObtain && (
-                              <div className="space-y-2">
-                                <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                              <div className="p-4 bg-muted/40 rounded-xl">
+                                <div className="flex items-center gap-2 mb-2">
                                   <FileText className="w-4 h-4 text-primary" />
-                                  How to Obtain
-                                </h5>
-                                <p className="text-sm text-muted-foreground pl-6">
+                                  <span className="text-sm font-semibold text-foreground">How to Obtain</span>
+                                </div>
+                                <p className="text-sm text-muted-foreground">
                                   {doc.details.howToObtain}
                                 </p>
                               </div>
@@ -1057,15 +1063,17 @@ const VisaWizard = () => {
 
                             {/* Tips */}
                             {doc.details.tips && doc.details.tips.length > 0 && (
-                              <div className="space-y-2 p-3 bg-primary/5 rounded-lg border border-primary/20">
-                                <h5 className="text-sm font-semibold text-primary flex items-center gap-2">
-                                  <Lightbulb className="w-4 h-4" />
-                                  Pro Tips
-                                </h5>
-                                <ul className="space-y-1.5">
+                              <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                                    <Lightbulb className="w-3.5 h-3.5 text-primary" />
+                                  </div>
+                                  <span className="text-sm font-semibold text-primary">Pro Tips</span>
+                                </div>
+                                <ul className="space-y-2">
                                   {doc.details.tips.map((tip, idx) => (
-                                    <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                                      <Lightbulb className="w-3 h-3 text-primary flex-shrink-0 mt-0.5" />
+                                    <li key={idx} className="text-sm text-foreground flex items-start gap-2">
+                                      <span className="text-primary flex-shrink-0">💡</span>
                                       {tip}
                                     </li>
                                   ))}
