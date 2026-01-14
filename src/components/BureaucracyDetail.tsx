@@ -15,7 +15,8 @@ import {
   X,
   Info,
   CheckCircle,
-  Upload
+  Upload,
+  Circle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -80,6 +81,8 @@ interface DocumentCardProps {
   onDownload: () => Promise<void>;
   onPrint: () => Promise<void>;
   isAuthenticated: boolean;
+  isReady: boolean;
+  onToggleReady: () => void;
 }
 
 const DocumentCard = ({ 
@@ -93,7 +96,9 @@ const DocumentCard = ({
   onView,
   onDownload,
   onPrint,
-  isAuthenticated
+  isAuthenticated,
+  isReady,
+  onToggleReady
 }: DocumentCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { details } = doc;
@@ -118,6 +123,12 @@ const DocumentCard = ({
         <div className="flex-1 min-w-0 text-left">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <h6 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h6>
+            {isReady && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-xs font-medium rounded-full flex-shrink-0">
+                <CheckCircle className="w-3 h-3" />
+                <span className="hidden sm:inline">Ready</span>
+              </span>
+            )}
             {isUploaded && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full flex-shrink-0">
                 <CheckCircle className="w-3 h-3" />
@@ -335,6 +346,30 @@ const DocumentCard = ({
               </div>
             )}
           </div>
+
+          {/* Mark as Ready Button */}
+          <div className="pt-4">
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleReady();
+              }}
+              variant={isReady ? "outline" : "default"}
+              className="w-full gap-2"
+            >
+              {isReady ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  Marked as Ready
+                </>
+              ) : (
+                <>
+                  <Circle className="w-4 h-4" />
+                  Mark as Ready
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       )}
     </div>
@@ -349,6 +384,16 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
   // Get detailed documents for this step
   const documentKey = stepToDocumentKey[step.id] || step.id;
   const detailedDocuments = getDocumentsForStep(documentKey);
+  
+  // Track document ready status (local state, like Visa Wizard)
+  const [documentReadyStatus, setDocumentReadyStatus] = useState<Record<string, boolean>>({});
+  
+  const toggleDocumentReady = (docId: string) => {
+    setDocumentReadyStatus(prev => ({
+      ...prev,
+      [docId]: !prev[docId]
+    }));
+  };
   
   // Document uploads hook
   const { 
@@ -486,6 +531,8 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
                 onDownload={() => handleDownload(doc.id)}
                 onPrint={() => handlePrint(doc.id)}
                 isAuthenticated={!!user}
+                isReady={documentReadyStatus[doc.id] || false}
+                onToggleReady={() => toggleDocumentReady(doc.id)}
               />
             ))}
           </div>
