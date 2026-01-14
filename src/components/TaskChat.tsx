@@ -184,13 +184,13 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
   }
 
   return (
-    <div className="flex flex-col h-[400px] border rounded-lg bg-card">
-      <div className="p-4 border-b bg-muted/30">
-        <h3 className="font-semibold flex items-center gap-2">
-          <MessageCircle className="w-5 h-5" />
+    <div className="flex flex-col h-[60vh] min-h-[300px] max-h-[500px] border rounded-lg bg-card">
+      <div className="p-3 sm:p-4 border-b bg-muted/30">
+        <h3 className="font-semibold flex items-center gap-2 text-sm sm:text-base">
+          <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
           Community Chat
         </h3>
-        <p className="text-sm text-muted-foreground">Ask questions and share experiences</p>
+        <p className="text-xs sm:text-sm text-muted-foreground">Ask questions and share experiences</p>
       </div>
 
       <ScrollArea className="flex-1 p-4">
@@ -225,14 +225,14 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
         </div>
       </ScrollArea>
 
-      <form onSubmit={handleSendMessage} className="p-4 border-t bg-muted/30">
+      <form onSubmit={handleSendMessage} className="p-3 sm:p-4 border-t bg-muted/30">
         <div className="flex gap-2">
           <div className="flex-1 space-y-1">
             <Textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value.slice(0, MAX_MESSAGE_LENGTH))}
               placeholder="Type your message..."
-              className="min-h-[60px] resize-none"
+              className="min-h-[60px] resize-none text-sm"
               disabled={loading}
               maxLength={MAX_MESSAGE_LENGTH}
             />
@@ -240,7 +240,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
               {newMessage.length}/{MAX_MESSAGE_LENGTH}
             </div>
           </div>
-          <Button type="submit" size="icon" disabled={loading || !newMessage.trim()}>
+          <Button type="submit" size="icon" disabled={loading || !newMessage.trim()} className="min-h-[44px] min-w-[44px] h-11 w-11 sm:h-10 sm:w-10 sm:min-h-0 sm:min-w-0">
             <Send className="w-4 h-4" />
           </Button>
         </div>

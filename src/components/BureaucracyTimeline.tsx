@@ -236,10 +236,10 @@ const BureaucracyTimeline = () => {
                               e.stopPropagation();
                               setSelectedStep(null);
                             }}
-                            className="w-8 h-8 sm:w-9 sm:h-9 min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
+                            className="w-11 h-11 min-h-[44px] min-w-[44px] lg:w-9 lg:h-9 lg:min-h-0 lg:min-w-0 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
                             aria-label="Close"
                           >
-                            <X className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
+                            <X className="w-5 h-5 lg:w-5 lg:h-5 text-muted-foreground" />
                           </button>
                         ) : (
                           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />

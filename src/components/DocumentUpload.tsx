@@ -99,7 +99,7 @@ export const DocumentUploadComponent = ({
           <CheckCircle className="h-4 w-4 text-green-500" />
           <span>Your Document</span>
         </div>
-        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-muted/50 rounded-lg gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex-shrink-0 p-2 bg-primary/10 rounded">
               <File className="h-5 w-5 text-primary" />
@@ -111,47 +111,51 @@ export const DocumentUploadComponent = ({
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1 flex-shrink-0">
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-1 flex-shrink-0">
             <Button
               variant="ghost"
               size="sm"
               onClick={handleViewClick}
-              className="h-8 px-2"
+              className="h-11 min-h-[44px] px-3 justify-start sm:justify-center sm:h-8 sm:min-h-0 sm:px-2"
               title="View"
             >
-              <Eye className="h-4 w-4" />
+              <Eye className="h-4 w-4 mr-2 sm:mr-0" />
+              <span className="sm:hidden">View</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleDownloadClick}
-              className="h-8 px-2"
+              className="h-11 min-h-[44px] px-3 justify-start sm:justify-center sm:h-8 sm:min-h-0 sm:px-2"
               title="Download"
             >
-              <Download className="h-4 w-4" />
+              <Download className="h-4 w-4 mr-2 sm:mr-0" />
+              <span className="sm:hidden">Download</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={handlePrintClick}
-              className="h-8 px-2"
+              className="h-11 min-h-[44px] px-3 justify-start sm:justify-center sm:h-8 sm:min-h-0 sm:px-2"
               title="Print"
             >
-              <Printer className="h-4 w-4" />
+              <Printer className="h-4 w-4 mr-2 sm:mr-0" />
+              <span className="sm:hidden">Print</span>
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleDelete}
               disabled={isDeleting}
-              className="h-8 px-2 text-destructive hover:text-destructive"
+              className="h-11 min-h-[44px] px-3 justify-start sm:justify-center sm:h-8 sm:min-h-0 sm:px-2 text-destructive hover:text-destructive"
               title="Delete"
             >
               {isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin mr-2 sm:mr-0" />
               ) : (
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-4 w-4 mr-2 sm:mr-0" />
               )}
+              <span className="sm:hidden">{isDeleting ? 'Deleting...' : 'Delete'}</span>
             </Button>
           </div>
         </div>
@@ -194,8 +198,11 @@ export const DocumentUploadComponent = ({
         ) : (
           <>
             <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm font-medium">Drop your file here</p>
-            <p className="text-xs text-muted-foreground mt-1">or click to browse</p>
+            <p className="text-sm font-medium">
+              <span className="hidden sm:inline">Drop your file here</span>
+              <span className="sm:hidden">Tap to select file</span>
+            </p>
+            <p className="text-xs text-muted-foreground mt-1 hidden sm:block">or click to browse</p>
             <p className="text-xs text-muted-foreground mt-2">PDF, JPG, PNG • Max 10MB</p>
           </>
         )}
