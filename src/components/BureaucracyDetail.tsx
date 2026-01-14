@@ -64,7 +64,7 @@ interface BureaucracyDetailProps {
 }
 
 // Expandable Document Card Component
-const DocumentCard = ({ doc }: { doc: ArrivalDocument }) => {
+const DocumentCard = ({ doc, selectedCity }: { doc: ArrivalDocument; selectedCity: string }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { details } = doc;
 
@@ -180,6 +180,33 @@ const DocumentCard = ({ doc }: { doc: ArrivalDocument }) => {
             </div>
           )}
 
+          {/* City-Specific Links */}
+          {details.citySpecificLinks && details.citySpecificLinks[selectedCity as keyof typeof details.citySpecificLinks] && (
+            <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <MapPin className="w-4 h-4 text-primary" />
+                <span className="text-sm font-semibold text-primary capitalize">{selectedCity} Resources</span>
+              </div>
+              <div className="grid gap-2">
+                {details.citySpecificLinks[selectedCity as keyof typeof details.citySpecificLinks]?.map((link, idx) => (
+                  <a
+                    key={idx}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-2 p-2 rounded-md bg-background/50 hover:bg-background transition-colors group"
+                  >
+                    <ExternalLink className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{link.label}</span>
+                      <p className="text-xs text-muted-foreground">{link.description}</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Official Links */}
           {details.officialLinks && details.officialLinks.length > 0 && (
             <div className="space-y-2">
@@ -263,7 +290,7 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
           {detailedDocuments.length > 0 ? (
             <div className="space-y-2">
               {detailedDocuments.map((doc) => (
-                <DocumentCard key={doc.id} doc={doc} />
+                <DocumentCard key={doc.id} doc={doc} selectedCity={selectedCity} />
               ))}
             </div>
           ) : (
