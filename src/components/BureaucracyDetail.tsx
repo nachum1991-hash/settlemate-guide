@@ -342,10 +342,23 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
   };
 
   const handleView = async (documentId: string) => {
+    // Open window immediately (synchronous with click) to avoid popup blocker
+    const newWindow = window.open('about:blank', '_blank');
+    
+    if (!newWindow) {
+      const { toast } = await import('sonner');
+      toast.error("Popup blocked. Please allow popups for this site.");
+      return;
+    }
+
+    // Show loading state in the new window
+    newWindow.document.write('<html><head><title>Loading...</title></head><body style="font-family: system-ui; padding: 20px;"><p>Loading document...</p></body></html>');
+    
     const url = await getViewUrl(documentId);
     if (url) {
-      window.open(url, '_blank');
+      newWindow.location.href = url;
     } else {
+      newWindow.close();
       const { toast } = await import('sonner');
       toast.error("Couldn't generate view link. Please try again.");
     }
@@ -353,34 +366,54 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
 
   const handleDownload = async (documentId: string) => {
     const url = await getViewUrl(documentId);
-    if (url) {
+    if (!url) {
+      const { toast } = await import('sonner');
+      toast.error("Couldn't generate download link. Please try again.");
+      return;
+    }
+
+    try {
+      // Use fetch + blob approach to avoid popup issues
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      
       const upload = getUpload(documentId);
       const link = document.createElement('a');
-      link.href = url;
+      link.href = blobUrl;
       link.download = upload?.file_name || 'document';
-      link.target = '_blank';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    } else {
+      
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
       const { toast } = await import('sonner');
-      toast.error("Couldn't generate download link. Please try again.");
+      toast.error("Couldn't download file. Please try again.");
     }
   };
 
   const handlePrint = async (documentId: string) => {
+    // Open window immediately (synchronous with click) to avoid popup blocker
+    const printWindow = window.open('about:blank', '_blank');
+    
+    if (!printWindow) {
+      const { toast } = await import('sonner');
+      toast.error("Popup blocked. Please allow popups to print documents.");
+      return;
+    }
+
+    printWindow.document.write('<html><head><title>Preparing print...</title></head><body style="font-family: system-ui; padding: 20px;"><p>Preparing document for print...</p></body></html>');
+    
     const url = await getViewUrl(documentId);
     if (url) {
-      const printWindow = window.open(url, '_blank');
-      if (printWindow) {
-        printWindow.onload = () => {
-          printWindow.print();
-        };
-      } else {
-        const { toast } = await import('sonner');
-        toast.error("Popup blocked. Please allow popups to print documents.");
-      }
+      printWindow.location.href = url;
+      // Wait for load then trigger print
+      printWindow.onload = () => {
+        setTimeout(() => printWindow.print(), 500);
+      };
     } else {
+      printWindow.close();
       const { toast } = await import('sonner');
       toast.error("Couldn't generate print link. Please try again.");
     }
