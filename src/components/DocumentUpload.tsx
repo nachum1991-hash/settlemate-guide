@@ -94,68 +94,63 @@ export const DocumentUploadComponent = ({
   if (upload) {
     // Show uploaded file
     return (
-      <div className="mt-4 border-t border-border pt-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-          <CheckCircle className="h-4 w-4 text-green-500" />
-          <span>Your Document</span>
-        </div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-muted/50 rounded-lg gap-3">
+      <div className="rounded-xl border border-border/50 bg-muted/30 overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="flex-shrink-0 p-2 bg-primary/10 rounded">
-              <File className="h-5 w-5 text-primary" />
+            <div className="flex-shrink-0 p-2.5 bg-green-100 dark:bg-green-900/30 rounded-lg">
+              <File className="h-5 w-5 text-green-600 dark:text-green-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-medium truncate">{upload.file_name}</p>
+              <div className="flex items-center gap-2 mb-0.5">
+                <p className="text-sm font-medium truncate">{upload.file_name}</p>
+                <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+              </div>
               <p className="text-xs text-muted-foreground">
                 {formatFileSize(upload.file_size)} • Uploaded {format(new Date(upload.uploaded_at), 'MMM d, yyyy')}
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 sm:gap-1 flex-shrink-0">
+          <div className="grid grid-cols-2 sm:flex sm:items-center gap-2 flex-shrink-0">
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={handleViewClick}
-              className="h-11 min-h-[44px] px-3 justify-start sm:justify-center sm:h-8 sm:min-h-0 sm:px-2"
-              title="View"
+              className="h-11 min-h-[44px] px-3 justify-center sm:h-9 sm:min-h-0 sm:px-3"
             >
-              <Eye className="h-4 w-4 mr-2 sm:mr-0" />
-              <span className="sm:hidden">View</span>
+              <Eye className="h-4 w-4 mr-2" />
+              <span>View</span>
             </Button>
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={handleDownloadClick}
-              className="h-11 min-h-[44px] px-3 justify-start sm:justify-center sm:h-8 sm:min-h-0 sm:px-2"
-              title="Download"
+              className="h-11 min-h-[44px] px-3 justify-center sm:h-9 sm:min-h-0 sm:px-3"
             >
-              <Download className="h-4 w-4 mr-2 sm:mr-0" />
-              <span className="sm:hidden">Download</span>
+              <Download className="h-4 w-4 mr-2" />
+              <span>Download</span>
             </Button>
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={handlePrintClick}
-              className="h-11 min-h-[44px] px-3 justify-start sm:justify-center sm:h-8 sm:min-h-0 sm:px-2"
-              title="Print"
+              className="h-11 min-h-[44px] px-3 justify-center sm:h-9 sm:min-h-0 sm:px-3"
             >
-              <Printer className="h-4 w-4 mr-2 sm:mr-0" />
-              <span className="sm:hidden">Print</span>
+              <Printer className="h-4 w-4 mr-2" />
+              <span>Print</span>
             </Button>
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={handleDelete}
               disabled={isDeleting}
-              className="h-11 min-h-[44px] px-3 justify-start sm:justify-center sm:h-8 sm:min-h-0 sm:px-2 text-destructive hover:text-destructive"
-              title="Delete"
+              className="h-11 min-h-[44px] px-3 justify-center sm:h-9 sm:min-h-0 sm:px-3 text-destructive hover:text-destructive border-destructive/30 hover:bg-destructive/10"
             >
               {isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2 sm:mr-0" />
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
               ) : (
-                <Trash2 className="h-4 w-4 mr-2 sm:mr-0" />
+                <Trash2 className="h-4 w-4 mr-2" />
               )}
-              <span className="sm:hidden">{isDeleting ? 'Deleting...' : 'Delete'}</span>
+              <span>{isDeleting ? 'Deleting...' : 'Delete'}</span>
             </Button>
           </div>
         </div>
@@ -165,48 +160,43 @@ export const DocumentUploadComponent = ({
 
   // Show upload zone
   return (
-    <div className="mt-4 border-t border-border pt-4">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-        <Upload className="h-4 w-4" />
-        <span>Upload Your Document</span>
-      </div>
-      <div
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={() => !disabled && !isUploading && fileInputRef.current?.click()}
-        className={cn(
-          'relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg cursor-pointer transition-colors',
-          isDragging ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-primary/50',
-          (disabled || isUploading) && 'opacity-50 cursor-not-allowed'
-        )}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".pdf,.jpg,.jpeg,.png"
-          onChange={handleFileSelect}
-          className="hidden"
-          disabled={disabled || isUploading}
-        />
-        
-        {isUploading ? (
-          <>
-            <Loader2 className="h-8 w-8 text-primary animate-spin mb-2" />
-            <p className="text-sm text-muted-foreground">Uploading...</p>
-          </>
-        ) : (
-          <>
-            <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm font-medium">
-              <span className="hidden sm:inline">Drop your file here</span>
-              <span className="sm:hidden">Tap to select file</span>
-            </p>
-            <p className="text-xs text-muted-foreground mt-1 hidden sm:block">or click to browse</p>
-            <p className="text-xs text-muted-foreground mt-2">PDF, JPG, PNG • Max 10MB</p>
-          </>
-        )}
-      </div>
+    <div
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      onClick={() => !disabled && !isUploading && fileInputRef.current?.click()}
+      className={cn(
+        'relative flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-xl cursor-pointer transition-all',
+        isDragging ? 'border-primary bg-primary/5 scale-[1.01]' : 'border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/30',
+        (disabled || isUploading) && 'opacity-50 cursor-not-allowed'
+      )}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf,.jpg,.jpeg,.png"
+        onChange={handleFileSelect}
+        className="hidden"
+        disabled={disabled || isUploading}
+      />
+      
+      {isUploading ? (
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 text-primary animate-spin mx-auto mb-3" />
+          <p className="text-sm font-medium text-muted-foreground">Uploading...</p>
+        </div>
+      ) : (
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+            <Upload className="h-6 w-6 text-primary" />
+          </div>
+          <p className="text-sm font-medium text-foreground mb-1">
+            <span className="hidden sm:inline">Drop your file here or click to browse</span>
+            <span className="sm:hidden">Tap to select file</span>
+          </p>
+          <p className="text-xs text-muted-foreground">PDF, JPG, PNG • Max 10MB</p>
+        </div>
+      )}
     </div>
   );
 };

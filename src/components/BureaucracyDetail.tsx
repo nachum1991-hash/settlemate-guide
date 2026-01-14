@@ -10,12 +10,12 @@ import {
   Building,
   MessageCircle,
   ChevronDown,
-  ChevronUp,
   AlertTriangle,
   Check,
   X,
   Info,
-  CheckCircle
+  CheckCircle,
+  Upload
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -99,82 +99,96 @@ const DocumentCard = ({
   const { details } = doc;
 
   return (
-    <div className="rounded-lg border border-border/50 overflow-hidden bg-background/50">
+    <div className="rounded-xl border border-border/60 overflow-hidden bg-card shadow-sm">
       {/* Document Header - Always Visible */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-3 sm:p-4 flex items-center gap-3 hover:bg-muted/30 transition-colors text-left"
+        className="w-full p-4 flex items-center gap-4 hover:bg-muted/40 transition-colors text-left"
       >
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
+        {/* Document Image */}
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden flex-shrink-0 bg-muted/50 flex items-center justify-center border border-border/30">
           <img 
             src={doc.image} 
             alt={doc.name}
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain p-1"
           />
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
+        
+        {/* Document Info */}
+        <div className="flex-1 min-w-0 text-left">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
             <h6 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h6>
             {isUploaded && (
-              <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full flex-shrink-0">
+                <CheckCircle className="w-3 h-3" />
+                <span className="hidden sm:inline">Uploaded</span>
+              </span>
             )}
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">{doc.description}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{doc.description}</p>
         </div>
-        <div className="flex-shrink-0">
-          {isExpanded ? (
-            <ChevronUp className="w-5 h-5 text-muted-foreground" />
-          ) : (
-            <ChevronDown className="w-5 h-5 text-muted-foreground" />
-          )}
-        </div>
+        
+        {/* Chevron */}
+        <ChevronDown className={cn(
+          "w-5 h-5 text-muted-foreground transition-transform duration-200 flex-shrink-0",
+          isExpanded && "rotate-180"
+        )} />
       </button>
 
       {/* Expanded Details */}
       {isExpanded && (
-        <div className="px-3 sm:px-4 pb-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 overflow-hidden">
-          <Separator />
+        <div className="px-4 pb-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+          <Separator className="mb-4" />
           
           {/* Key Info Box */}
           {details.keyInfo && (
-            <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
-              <div className="flex items-start gap-2">
-                <Info className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-foreground">{details.keyInfo}</p>
+            <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
+              <div className="flex gap-3">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Info className="w-4 h-4 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">Key Information</span>
+                  <p className="text-sm text-foreground mt-1">{details.keyInfo}</p>
+                </div>
               </div>
             </div>
           )}
 
-          {/* Acceptance Rules */}
+          {/* Acceptance Rules - Stacked Cards for Clarity */}
           {details.acceptanceRules && (
-            <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-3">
-              {/* What's Accepted */}
-              <div className="p-3 bg-success/5 border border-success/20 rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Check className="w-4 h-4 text-success" />
-                  <span className="text-sm font-semibold text-success">What's Accepted</span>
+            <div className="space-y-3">
+              {/* What's Accepted Card */}
+              <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/50 rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                    <Check className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="text-sm font-semibold text-green-800 dark:text-green-300">What's Accepted</span>
                 </div>
-                <ul className="space-y-1.5">
+                <ul className="space-y-2">
                   {details.acceptanceRules.valid.map((item, idx) => (
-                    <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1.5">
-                      <Check className="w-3 h-3 text-success flex-shrink-0 mt-0.5" />
+                    <li key={idx} className="flex items-start gap-2 text-sm text-green-900 dark:text-green-200">
+                      <Check className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              {/* What's NOT Accepted */}
+              {/* What's NOT Accepted Card */}
               {details.acceptanceRules.invalid && details.acceptanceRules.invalid.length > 0 && (
-                <div className="p-3 bg-destructive/5 border border-destructive/20 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <X className="w-4 h-4 text-destructive" />
-                    <span className="text-sm font-semibold text-destructive">NOT Accepted</span>
+                <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/50 rounded-xl">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+                      <X className="w-3.5 h-3.5 text-white" />
+                    </div>
+                    <span className="text-sm font-semibold text-red-800 dark:text-red-300">NOT Accepted</span>
                   </div>
-                  <ul className="space-y-1.5">
+                  <ul className="space-y-2">
                     {details.acceptanceRules.invalid.map((item, idx) => (
-                      <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1.5">
-                        <X className="w-3 h-3 text-destructive flex-shrink-0 mt-0.5" />
+                      <li key={idx} className="flex items-start gap-2 text-sm text-red-900 dark:text-red-200">
+                        <X className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -186,15 +200,17 @@ const DocumentCard = ({
 
           {/* Common Mistakes */}
           {details.commonMistakes && details.commonMistakes.length > 0 && (
-            <div className="p-3 bg-warning/5 border border-warning/20 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle className="w-4 h-4 text-warning" />
-                <span className="text-sm font-semibold text-warning">Common Mistakes to Avoid</span>
+            <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+                  <AlertTriangle className="w-3.5 h-3.5 text-white" />
+                </div>
+                <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">Common Mistakes to Avoid</span>
               </div>
-              <ul className="space-y-1.5">
+              <ul className="space-y-2">
                 {details.commonMistakes.map((mistake, idx) => (
-                  <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1.5">
-                    <span className="text-warning">•</span>
+                  <li key={idx} className="flex items-start gap-2 text-sm text-amber-900 dark:text-amber-200">
+                    <span className="text-amber-600 dark:text-amber-400 flex-shrink-0">•</span>
                     <span>{mistake}</span>
                   </li>
                 ))}
@@ -204,12 +220,14 @@ const DocumentCard = ({
 
           {/* How to Obtain */}
           {details.howToObtain && (
-            <div className="p-3 bg-muted/30 rounded-lg">
-              <div className="flex items-start gap-2">
-                <FileText className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
-                <div>
-                  <span className="text-sm font-semibold text-foreground block mb-1">How to Obtain</span>
-                  <p className="text-xs text-muted-foreground">{details.howToObtain}</p>
+            <div className="p-4 bg-muted/40 rounded-xl">
+              <div className="flex gap-3">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center">
+                  <FileText className="w-4 h-4 text-secondary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-semibold text-secondary uppercase tracking-wide">How to Obtain</span>
+                  <p className="text-sm text-muted-foreground mt-1">{details.howToObtain}</p>
                 </div>
               </div>
             </div>
@@ -217,24 +235,26 @@ const DocumentCard = ({
 
           {/* City-Specific Links */}
           {details.citySpecificLinks && details.citySpecificLinks[selectedCity as keyof typeof details.citySpecificLinks] && (
-            <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin className="w-4 h-4 text-primary" />
+            <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                  <MapPin className="w-3.5 h-3.5 text-primary" />
+                </div>
                 <span className="text-sm font-semibold text-primary capitalize">{selectedCity} Resources</span>
               </div>
-              <div className="grid gap-2">
+              <div className="space-y-2">
                 {details.citySpecificLinks[selectedCity as keyof typeof details.citySpecificLinks]?.map((link, idx) => (
                   <a
                     key={idx}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-2 p-2 rounded-md bg-background/50 hover:bg-background transition-colors group"
+                    className="flex items-start gap-3 p-3 rounded-lg bg-background/60 hover:bg-background border border-border/30 transition-colors group"
                   >
                     <ExternalLink className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{link.label}</span>
-                      <p className="text-xs text-muted-foreground">{link.description}</p>
+                    <div className="min-w-0">
+                      <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors block">{link.label}</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">{link.description}</p>
                     </div>
                   </a>
                 ))}
@@ -244,24 +264,26 @@ const DocumentCard = ({
 
           {/* Official Links */}
           {details.officialLinks && details.officialLinks.length > 0 && (
-            <div className="space-y-2">
-              <span className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <Globe className="w-4 h-4 text-secondary" />
-                Official Resources
-              </span>
-              <div className="grid gap-2">
+            <div className="p-4 bg-secondary/5 border border-secondary/20 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center">
+                  <Globe className="w-3.5 h-3.5 text-secondary" />
+                </div>
+                <span className="text-sm font-semibold text-foreground">Official Resources</span>
+              </div>
+              <div className="space-y-2">
                 {details.officialLinks.map((link, idx) => (
                   <a
                     key={idx}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-2 p-2 rounded-md bg-secondary/5 hover:bg-secondary/10 transition-colors group"
+                    className="flex items-start gap-3 p-3 rounded-lg bg-background/60 hover:bg-background border border-border/30 transition-colors group"
                   >
                     <ExternalLink className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors">{link.label}</span>
-                      <p className="text-xs text-muted-foreground">{link.description}</p>
+                    <div className="min-w-0">
+                      <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors block">{link.label}</span>
+                      <p className="text-xs text-muted-foreground mt-0.5">{link.description}</p>
                     </div>
                   </a>
                 ))}
@@ -271,15 +293,17 @@ const DocumentCard = ({
 
           {/* Pro Tips */}
           {details.tips && details.tips.length > 0 && (
-            <div className="p-3 bg-accent/5 border border-accent/20 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <Lightbulb className="w-4 h-4 text-accent" />
+            <div className="p-4 bg-accent/10 border border-accent/20 rounded-xl">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
+                  <Lightbulb className="w-3.5 h-3.5 text-accent" />
+                </div>
                 <span className="text-sm font-semibold text-accent">Pro Tips</span>
               </div>
-              <ul className="space-y-1.5">
+              <ul className="space-y-2">
                 {details.tips.map((tip, idx) => (
-                  <li key={idx} className="text-xs text-muted-foreground flex items-start gap-1.5">
-                    <span className="text-accent">💡</span>
+                  <li key={idx} className="flex items-start gap-2 text-sm text-foreground">
+                    <span className="text-accent flex-shrink-0">💡</span>
                     <span>{tip}</span>
                   </li>
                 ))}
@@ -288,25 +312,29 @@ const DocumentCard = ({
           )}
 
           {/* Document Upload Section */}
-          {isAuthenticated ? (
-            <DocumentUploadComponent
-              documentId={doc.id}
-              upload={upload}
-              isUploading={isUploading}
-              onUpload={onUpload}
-              onDelete={onDelete}
-              onView={onView}
-              onDownload={onDownload}
-              onPrint={onPrint}
-              disabled={false}
-            />
-          ) : (
-            <div className="mt-4 border-t border-border pt-4">
-              <p className="text-sm text-muted-foreground text-center">
-                Sign in to upload and track your documents
-              </p>
+          <div className="pt-4 border-t border-border">
+            <div className="flex items-center gap-2 mb-3">
+              <Upload className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-foreground">Your Upload</span>
             </div>
-          )}
+            {isAuthenticated ? (
+              <DocumentUploadComponent
+                documentId={doc.id}
+                upload={upload}
+                isUploading={isUploading}
+                onUpload={onUpload}
+                onDelete={onDelete}
+                onView={onView}
+                onDownload={onDownload}
+                onPrint={onPrint}
+                disabled={false}
+              />
+            ) : (
+              <div className="p-4 bg-muted/30 rounded-xl text-center">
+                <p className="text-sm text-muted-foreground">Sign in to upload and track your documents</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
