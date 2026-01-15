@@ -58,21 +58,22 @@ const SocialIntegration = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <section className="py-8 sm:py-12 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <div className="p-2 sm:p-3 bg-accent/10 rounded-xl">
-              <Users className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
+      <section className="py-6 sm:py-8 md:py-12 px-2 sm:px-3 md:px-6 lg:px-8">
+        <div className="w-full max-w-6xl mx-auto">
+          <Card className="p-3 sm:p-5 md:p-8 shadow-elevated border-2 border-accent/20 w-full">
+            <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 bg-accent/10 rounded-xl">
+                <Users className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">Social Integration</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Build your community and feel at home in Italy</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">Social Integration</h1>
-              <p className="text-sm sm:text-base text-muted-foreground">Build your community and feel at home in Italy</p>
-            </div>
-          </div>
-          
-          <CitySelector />
-          
-          <Tabs defaultValue="groups" className="w-full mt-6">
+            
+            <CitySelector />
+            
+            <Tabs defaultValue="groups" className="w-full mt-6">
               <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger value="groups" className="text-xs sm:text-sm">
                   <MessageCircle className="w-4 h-4 mr-1 sm:mr-2" />
@@ -442,6 +443,7 @@ const SocialIntegration = () => {
                 </div>
               </TabsContent>
             </Tabs>
+          </Card>
         </div>
       </section>
     </div>
