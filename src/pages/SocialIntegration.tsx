@@ -60,20 +60,19 @@ const SocialIntegration = () => {
       
       <section className="py-8 sm:py-12 px-4">
         <div className="container mx-auto max-w-6xl">
-          <Card className="p-4 sm:p-6 md:p-8 shadow-elevated border-2 border-accent/20">
-            <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
-              <div className="p-2 sm:p-3 bg-accent/10 rounded-xl">
-                <Users className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">Social Integration</h1>
-                <p className="text-sm sm:text-base text-muted-foreground">Build your community and feel at home in Italy</p>
-              </div>
+          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
+            <div className="p-2 sm:p-3 bg-accent/10 rounded-xl">
+              <Users className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
             </div>
-            
-            <CitySelector />
-            
-            <Tabs defaultValue="groups" className="w-full">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">Social Integration</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">Build your community and feel at home in Italy</p>
+            </div>
+          </div>
+          
+          <CitySelector />
+          
+          <Tabs defaultValue="groups" className="w-full mt-6">
               <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger value="groups" className="text-xs sm:text-sm">
                   <MessageCircle className="w-4 h-4 mr-1 sm:mr-2" />
@@ -443,7 +442,6 @@ const SocialIntegration = () => {
                 </div>
               </TabsContent>
             </Tabs>
-          </Card>
         </div>
       </section>
     </div>
