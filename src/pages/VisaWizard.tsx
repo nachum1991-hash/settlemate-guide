@@ -1228,6 +1228,25 @@ const VisaWizard = () => {
                     </div>
                   </div>
                 </Card>
+
+                {/* FAQ and Community Section - Step 3 */}
+                <Card className="p-6">
+                  <Tabs defaultValue="faq" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="faq">FAQs</TabsTrigger>
+                      <TabsTrigger value="chat">Community Chat</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="faq" className="mt-4">
+                      <TaskFAQ taskId="visa" phase="phase-1" />
+                    </TabsContent>
+                    <TabsContent value="chat" className="mt-4">
+                      <TaskChat 
+                        taskId={formData.country ? `visa-${formData.country}` : 'visa-general'} 
+                        phase="phase-1" 
+                      />
+                    </TabsContent>
+                  </Tabs>
+                </Card>
               </div>
             )}
 
@@ -1307,7 +1326,7 @@ const VisaWizard = () => {
                           <TabsTrigger value="chat">Community Chat</TabsTrigger>
                         </TabsList>
                         <TabsContent value="faq" className="mt-4">
-                          <TaskFAQ taskId={formData.country ? `visa-${formData.country}` : 'visa-general'} phase="phase-1" />
+                          <TaskFAQ taskId="visa" phase="phase-1" />
                         </TabsContent>
                         <TabsContent value="chat" className="mt-4">
                           <TaskChat taskId={formData.country ? `visa-${formData.country}` : 'visa-general'} phase="phase-1" />
