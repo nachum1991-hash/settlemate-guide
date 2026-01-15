@@ -26,98 +26,87 @@ import financialImg from "@/assets/documents/financial.png";
 import photosImg from "@/assets/documents/photos.png";
 import applicationImg from "@/assets/documents/application-form.png";
 import paymentImg from "@/assets/documents/payment.png";
-
-const countries = [
-  { 
-    value: "israel", 
-    label: "Israel", 
-    processingWeeks: "4-6", 
-    embassyUrl: "https://ambtelaviv.esteri.it/", 
-    vfsUrl: "https://visa.vfsglobal.com/isr/en/ita",
-    passportRenewalUrl: "https://www.gov.il/en/service/biometric_passport",
-    appointmentUrl: "https://prenotaonline.esteri.it/Login.aspx?cidsede=100046",
-    apostilleInfo: "Required for sponsor letters - get from Ministry of Justice",
-    paymentMethod: "Credit card or bank transfer at embassy"
-  },
-  { 
-    value: "india", 
-    label: "India", 
-    processingWeeks: "6-8", 
-    embassyUrl: "https://ambdelhi.esteri.it/", 
-    vfsUrl: "https://visa.vfsglobal.com/ind/en/ita",
-    passportRenewalUrl: "https://www.passportindia.gov.in/",
-    appointmentUrl: "https://visa.vfsglobal.com/ind/en/ita/book-an-appointment",
-    apostilleInfo: "Required - get from MEA (Ministry of External Affairs)",
-    paymentMethod: "Cash or demand draft at VFS center"
-  },
-  { 
-    value: "iran", 
-    label: "Iran", 
-    processingWeeks: "8-12", 
-    embassyUrl: "https://ambtehran.esteri.it/", 
-    vfsUrl: null,
-    passportRenewalUrl: "https://epolice.ir/",
-    appointmentUrl: "https://prenotaonline.esteri.it/",
-    apostilleInfo: "Required - get from Ministry of Foreign Affairs",
-    paymentMethod: "Check with embassy for current payment methods"
-  },
-  { 
-    value: "turkey", 
-    label: "Turkey", 
-    processingWeeks: "4-6", 
-    embassyUrl: "https://ambankara.esteri.it/", 
-    vfsUrl: "https://visa.vfsglobal.com/tur/en/ita",
-    passportRenewalUrl: "https://www.nvi.gov.tr/",
-    appointmentUrl: "https://visa.vfsglobal.com/tur/en/ita/book-an-appointment",
-    apostilleInfo: "Required - get from local notary or governorship",
-    paymentMethod: "Cash at VFS center (Turkish Lira or Euro)"
-  },
-  { 
-    value: "china", 
-    label: "China", 
-    processingWeeks: "6-10", 
-    embassyUrl: "https://ambpechino.esteri.it/", 
-    vfsUrl: "https://visa.vfsglobal.com/chn/en/ita",
-    passportRenewalUrl: "https://www.nia.gov.cn/",
-    appointmentUrl: "https://visa.vfsglobal.com/chn/en/ita/book-an-appointment",
-    apostilleInfo: "Required - get from local notary public office",
-    paymentMethod: "Online payment or cash at VFS center (CNY)"
-  },
-  { 
-    value: "brazil", 
-    label: "Brazil", 
-    processingWeeks: "5-7", 
-    embassyUrl: "https://ambbrasilia.esteri.it/", 
-    vfsUrl: null,
-    passportRenewalUrl: "https://www.gov.br/pt-br/servicos/obter-passaporte-comum",
-    appointmentUrl: "https://prenotaonline.esteri.it/",
-    apostilleInfo: "Required - get from local cartório (notary office)",
-    paymentMethod: "Bank transfer (check embassy website for details)"
-  },
-  { 
-    value: "pakistan", 
-    label: "Pakistan", 
-    processingWeeks: "8-10", 
-    embassyUrl: "https://ambislamabad.esteri.it/", 
-    vfsUrl: "https://visa.vfsglobal.com/pak/en/ita",
-    passportRenewalUrl: "https://www.dgip.gov.pk/",
-    appointmentUrl: "https://visa.vfsglobal.com/pak/en/ita/book-an-appointment",
-    apostilleInfo: "Required - get from Ministry of Foreign Affairs",
-    paymentMethod: "Cash at VFS center (PKR)"
-  },
-  { 
-    value: "other", 
-    label: "Other", 
-    processingWeeks: "6-8", 
-    embassyUrl: "https://www.esteri.it/en/ministero/la_rete_diplomatica/", 
-    vfsUrl: null,
-    passportRenewalUrl: null,
-    appointmentUrl: "https://prenotaonline.esteri.it/",
-    apostilleInfo: "Check with your local authorities for apostille requirements",
-    paymentMethod: "Check with your local embassy for payment methods"
-  }
-];
-
+const countries = [{
+  value: "israel",
+  label: "Israel",
+  processingWeeks: "4-6",
+  embassyUrl: "https://ambtelaviv.esteri.it/",
+  vfsUrl: "https://visa.vfsglobal.com/isr/en/ita",
+  passportRenewalUrl: "https://www.gov.il/en/service/biometric_passport",
+  appointmentUrl: "https://prenotaonline.esteri.it/Login.aspx?cidsede=100046",
+  apostilleInfo: "Required for sponsor letters - get from Ministry of Justice",
+  paymentMethod: "Credit card or bank transfer at embassy"
+}, {
+  value: "india",
+  label: "India",
+  processingWeeks: "6-8",
+  embassyUrl: "https://ambdelhi.esteri.it/",
+  vfsUrl: "https://visa.vfsglobal.com/ind/en/ita",
+  passportRenewalUrl: "https://www.passportindia.gov.in/",
+  appointmentUrl: "https://visa.vfsglobal.com/ind/en/ita/book-an-appointment",
+  apostilleInfo: "Required - get from MEA (Ministry of External Affairs)",
+  paymentMethod: "Cash or demand draft at VFS center"
+}, {
+  value: "iran",
+  label: "Iran",
+  processingWeeks: "8-12",
+  embassyUrl: "https://ambtehran.esteri.it/",
+  vfsUrl: null,
+  passportRenewalUrl: "https://epolice.ir/",
+  appointmentUrl: "https://prenotaonline.esteri.it/",
+  apostilleInfo: "Required - get from Ministry of Foreign Affairs",
+  paymentMethod: "Check with embassy for current payment methods"
+}, {
+  value: "turkey",
+  label: "Turkey",
+  processingWeeks: "4-6",
+  embassyUrl: "https://ambankara.esteri.it/",
+  vfsUrl: "https://visa.vfsglobal.com/tur/en/ita",
+  passportRenewalUrl: "https://www.nvi.gov.tr/",
+  appointmentUrl: "https://visa.vfsglobal.com/tur/en/ita/book-an-appointment",
+  apostilleInfo: "Required - get from local notary or governorship",
+  paymentMethod: "Cash at VFS center (Turkish Lira or Euro)"
+}, {
+  value: "china",
+  label: "China",
+  processingWeeks: "6-10",
+  embassyUrl: "https://ambpechino.esteri.it/",
+  vfsUrl: "https://visa.vfsglobal.com/chn/en/ita",
+  passportRenewalUrl: "https://www.nia.gov.cn/",
+  appointmentUrl: "https://visa.vfsglobal.com/chn/en/ita/book-an-appointment",
+  apostilleInfo: "Required - get from local notary public office",
+  paymentMethod: "Online payment or cash at VFS center (CNY)"
+}, {
+  value: "brazil",
+  label: "Brazil",
+  processingWeeks: "5-7",
+  embassyUrl: "https://ambbrasilia.esteri.it/",
+  vfsUrl: null,
+  passportRenewalUrl: "https://www.gov.br/pt-br/servicos/obter-passaporte-comum",
+  appointmentUrl: "https://prenotaonline.esteri.it/",
+  apostilleInfo: "Required - get from local cartório (notary office)",
+  paymentMethod: "Bank transfer (check embassy website for details)"
+}, {
+  value: "pakistan",
+  label: "Pakistan",
+  processingWeeks: "8-10",
+  embassyUrl: "https://ambislamabad.esteri.it/",
+  vfsUrl: "https://visa.vfsglobal.com/pak/en/ita",
+  passportRenewalUrl: "https://www.dgip.gov.pk/",
+  appointmentUrl: "https://visa.vfsglobal.com/pak/en/ita/book-an-appointment",
+  apostilleInfo: "Required - get from Ministry of Foreign Affairs",
+  paymentMethod: "Cash at VFS center (PKR)"
+}, {
+  value: "other",
+  label: "Other",
+  processingWeeks: "6-8",
+  embassyUrl: "https://www.esteri.it/en/ministero/la_rete_diplomatica/",
+  vfsUrl: null,
+  passportRenewalUrl: null,
+  appointmentUrl: "https://prenotaonline.esteri.it/",
+  apostilleInfo: "Check with your local authorities for apostille requirements",
+  paymentMethod: "Check with your local embassy for payment methods"
+}];
 interface DocumentDetails {
   keyInfo?: string;
   acceptanceRules?: {
@@ -133,7 +122,6 @@ interface DocumentDetails {
   }>;
   tips?: string[];
 }
-
 interface VisaDocument {
   id: string;
   name: string;
@@ -142,241 +130,158 @@ interface VisaDocument {
   image: string;
   details: DocumentDetails;
 }
-
-const baseDocuments: VisaDocument[] = [
-  {
-    id: "passport",
-    name: "Valid Passport",
-    description: "Must be valid for at least 3 months after visa expiry date",
-    required: true,
-    image: passportImg,
-    details: {
-      keyInfo: "Validity must extend 3+ months AFTER visa end date, not arrival date.",
-      acceptanceRules: {
-        valid: [
-          "Valid 3+ months AFTER visa expiry date",
-          "At least 2 blank pages for stamps"
-        ],
-        invalid: [
-          "Temporary/emergency travel documents"
-        ]
-      },
-      commonMistakes: [
-        "Renewal takes 4-8 weeks - start early",
-        "Validity must extend AFTER visa ends, not just after arrival"
-      ],
-      tips: [
-        "If close to expiry, renew BEFORE starting visa process"
-      ]
-    }
-  },
-  {
-    id: "admission",
-    name: "University Acceptance Letter",
-    description: "Official acceptance from your Italian university",
-    required: true,
-    image: admissionImg,
-    details: {
-      keyInfo: "Must be FINAL acceptance (not conditional) with program dates.",
-      acceptanceRules: {
-        valid: [
-          "Final (unconditional) acceptance on official letterhead",
-          "Includes program name, start date, and end date",
-          "Official stamp and/or authorized signature"
-        ],
-        invalid: [
-          "Conditional offers (pending language test, documents)",
-          "UNIVERSITALY confirmation alone (need university letter too)"
-        ]
-      },
-      howToObtain: "Download from your university portal. Politecnico: Online Services → Career → Enrollment Status → Download Documents.",
-      officialLinks: [
-        {
-          label: "UNIVERSITALY Portal",
-          url: "https://www.universitaly.it/",
-          description: "Official pre-enrollment platform"
-        }
-      ]
-    }
-  },
-  {
-    id: "application",
-    name: "Visa Application Form",
-    description: "Fill out the national D-visa application form for Italy",
-    required: true,
-    image: applicationImg,
-    details: {
-      keyInfo: "Must select Type D (National), NOT Type C (Schengen/tourist).",
-      acceptanceRules: {
-        valid: [
-          "Completed in CAPITAL LETTERS or typed",
-          "Visa type: D (National) for Study/Studio",
-          "Signed and dated in ink"
-        ],
-        invalid: [
-          "Wrong visa type (C instead of D)",
-          "Missing signature"
-        ]
-      },
-      commonMistakes: [
-        "Selecting Type C (Schengen) instead of Type D (National)",
-        "Leaving 'Address in Italy' blank - use university address if unsure"
-      ],
-      officialLinks: [
-        {
-          label: "Official MAECI Visa Portal",
-          url: "https://vistoperitalia.esteri.it/home/en",
-          description: "Download Type D visa form"
-        }
-      ]
-    }
-  },
-  {
-    id: "insurance",
-    name: "Health Insurance",
-    description: "Coverage for entire visa period (minimum €30,000)",
-    required: true,
-    image: insuranceImg,
-    details: {
-      acceptanceRules: {
-        valid: [
-          "Minimum €30,000 coverage",
-          "Covers ENTIRE visa period (entry to expiry)",
-          "Valid in Italy and all Schengen countries"
-        ],
-        invalid: [
-          "Travel insurance without medical coverage",
-          "Dates don't match visa period exactly"
-        ]
-      },
-      commonMistakes: [
-        "Coverage dates not matching visa dates exactly"
-      ],
-      officialLinks: [
-        {
-          label: "SWISSCARE",
-          url: "https://www.swisscare.com/",
-          description: "Commonly accepted for Italian visas"
-        },
-        {
-          label: "DR-WALTER EDUCARE24",
-          url: "https://www.dr-walter.com/en/educare24.html",
-          description: "Popular student choice"
-        }
-      ],
-      tips: [
-        "After arrival, enroll in SSN (Italian NHS) for €149.77/year"
-      ]
-    }
-  },
-  {
-    id: "financial",
-    name: "Proof of Financial Means",
-    description: "Bank statements showing €506/month or sponsorship letter",
-    required: true,
-    image: financialImg,
-    details: {
-      keyInfo: "Minimum €6,079.45/year (€506.62/month × 12) - 2024/2025 rates.",
-      acceptanceRules: {
-        valid: [
-          "Bank statements from last 3-6 months showing consistent balance",
-          "Scholarship letter covering full amount",
-          "Sponsor bank statement WITH notarized sponsorship letter"
-        ],
-        invalid: [
-          "Banking app screenshots",
-          "Sponsor letter without bank proof"
-        ]
-      },
-      commonMistakes: [
-        "Sponsor letter not notarized/apostilled"
-      ],
-      tips: [
-        "€506.62/month is MINIMUM - showing more improves your application"
-      ]
-    }
-  },
-  {
-    id: "accommodation",
-    name: "Proof of Accommodation",
-    description: "Rental contract, university housing letter, or declaration of hospitality",
-    required: true,
-    image: accommodationImg,
-    details: {
-      acceptanceRules: {
-        valid: [
-          "Signed rental contract with landlord details",
-          "University dormitory confirmation",
-          "Dichiarazione di Ospitalità (from Italian host)",
-          "Hotel/Airbnb for first 2-4 weeks + statement of intent"
-        ],
-        invalid: [
-          "Contracts missing landlord's codice fiscale"
-        ]
-      },
-      commonMistakes: [
-        "⚠️ SCAM: Never pay before verifying landlord/seeing property",
-        "Contract missing landlord's codice fiscale (Italian tax code)"
-      ],
-      officialLinks: [
-        {
-          label: "Spotahome",
-          url: "https://www.spotahome.com/",
-          description: "Verified rentals"
-        }
-      ],
-      tips: [
-        "University housing deadlines often May/June - apply early"
-      ]
-    }
-  },
-  {
-    id: "photos",
-    name: "Passport Photos",
-    description: "2 recent passport-sized photos (35x45mm, white background)",
-    required: true,
-    image: photosImg,
-    details: {
-      acceptanceRules: {
-        valid: [
-          "Size: 35mm × 45mm",
-          "Taken within last 6 months",
-          "White/light background",
-          "No glasses (new rule at most embassies)"
-        ]
-      },
-      tips: [
-        "Bring 4 photos (embassy keeps 2, extras for other documents)"
-      ]
-    }
-  },
-  {
-    id: "fee",
-    name: "Visa Fee Payment",
-    description: "€116 national visa fee (payment method varies by embassy)",
-    required: true,
-    image: paymentImg,
-    details: {
-      keyInfo: "€116 for National (D) visa - NON-REFUNDABLE even if denied.",
-      commonMistakes: [
-        "Bringing only card when embassy requires cash (or vice versa)",
-        "VFS centers have additional service fees (€20-30)"
-      ],
-      officialLinks: [
-        {
-          label: "Find Your Embassy",
-          url: "https://www.esteri.it/en/ministero/la_rete_diplomatica/",
-          description: "Embassy payment requirements"
-        }
-      ]
-    }
+const baseDocuments: VisaDocument[] = [{
+  id: "passport",
+  name: "Valid Passport",
+  description: "Must be valid for at least 3 months after visa expiry date",
+  required: true,
+  image: passportImg,
+  details: {
+    keyInfo: "Validity must extend 3+ months AFTER visa end date, not arrival date.",
+    acceptanceRules: {
+      valid: ["Valid 3+ months AFTER visa expiry date", "At least 2 blank pages for stamps"],
+      invalid: ["Temporary/emergency travel documents"]
+    },
+    commonMistakes: ["Renewal takes 4-8 weeks - start early", "Validity must extend AFTER visa ends, not just after arrival"],
+    tips: ["If close to expiry, renew BEFORE starting visa process"]
   }
-];
-
+}, {
+  id: "admission",
+  name: "University Acceptance Letter",
+  description: "Official acceptance from your Italian university",
+  required: true,
+  image: admissionImg,
+  details: {
+    keyInfo: "Must be FINAL acceptance (not conditional) with program dates.",
+    acceptanceRules: {
+      valid: ["Final (unconditional) acceptance on official letterhead", "Includes program name, start date, and end date", "Official stamp and/or authorized signature"],
+      invalid: ["Conditional offers (pending language test, documents)", "UNIVERSITALY confirmation alone (need university letter too)"]
+    },
+    howToObtain: "Download from your university portal. Politecnico: Online Services → Career → Enrollment Status → Download Documents.",
+    officialLinks: [{
+      label: "UNIVERSITALY Portal",
+      url: "https://www.universitaly.it/",
+      description: "Official pre-enrollment platform"
+    }]
+  }
+}, {
+  id: "application",
+  name: "Visa Application Form",
+  description: "Fill out the national D-visa application form for Italy",
+  required: true,
+  image: applicationImg,
+  details: {
+    keyInfo: "Must select Type D (National), NOT Type C (Schengen/tourist).",
+    acceptanceRules: {
+      valid: ["Completed in CAPITAL LETTERS or typed", "Visa type: D (National) for Study/Studio", "Signed and dated in ink"],
+      invalid: ["Wrong visa type (C instead of D)", "Missing signature"]
+    },
+    commonMistakes: ["Selecting Type C (Schengen) instead of Type D (National)", "Leaving 'Address in Italy' blank - use university address if unsure"],
+    officialLinks: [{
+      label: "Official MAECI Visa Portal",
+      url: "https://vistoperitalia.esteri.it/home/en",
+      description: "Download Type D visa form"
+    }]
+  }
+}, {
+  id: "insurance",
+  name: "Health Insurance",
+  description: "Coverage for entire visa period (minimum €30,000)",
+  required: true,
+  image: insuranceImg,
+  details: {
+    acceptanceRules: {
+      valid: ["Minimum €30,000 coverage", "Covers ENTIRE visa period (entry to expiry)", "Valid in Italy and all Schengen countries"],
+      invalid: ["Travel insurance without medical coverage", "Dates don't match visa period exactly"]
+    },
+    commonMistakes: ["Coverage dates not matching visa dates exactly"],
+    officialLinks: [{
+      label: "SWISSCARE",
+      url: "https://www.swisscare.com/",
+      description: "Commonly accepted for Italian visas"
+    }, {
+      label: "DR-WALTER EDUCARE24",
+      url: "https://www.dr-walter.com/en/educare24.html",
+      description: "Popular student choice"
+    }],
+    tips: ["After arrival, enroll in SSN (Italian NHS) for €149.77/year"]
+  }
+}, {
+  id: "financial",
+  name: "Proof of Financial Means",
+  description: "Bank statements showing €506/month or sponsorship letter",
+  required: true,
+  image: financialImg,
+  details: {
+    keyInfo: "Minimum €6,079.45/year (€506.62/month × 12) - 2024/2025 rates.",
+    acceptanceRules: {
+      valid: ["Bank statements from last 3-6 months showing consistent balance", "Scholarship letter covering full amount", "Sponsor bank statement WITH notarized sponsorship letter"],
+      invalid: ["Banking app screenshots", "Sponsor letter without bank proof"]
+    },
+    commonMistakes: ["Sponsor letter not notarized/apostilled"],
+    tips: ["€506.62/month is MINIMUM - showing more improves your application"]
+  }
+}, {
+  id: "accommodation",
+  name: "Proof of Accommodation",
+  description: "Rental contract, university housing letter, or declaration of hospitality",
+  required: true,
+  image: accommodationImg,
+  details: {
+    acceptanceRules: {
+      valid: ["Signed rental contract with landlord details", "University dormitory confirmation", "Dichiarazione di Ospitalità (from Italian host)", "Hotel/Airbnb for first 2-4 weeks + statement of intent"],
+      invalid: ["Contracts missing landlord's codice fiscale"]
+    },
+    commonMistakes: ["⚠️ SCAM: Never pay before verifying landlord/seeing property", "Contract missing landlord's codice fiscale (Italian tax code)"],
+    officialLinks: [{
+      label: "Spotahome",
+      url: "https://www.spotahome.com/",
+      description: "Verified rentals"
+    }],
+    tips: ["University housing deadlines often May/June - apply early"]
+  }
+}, {
+  id: "photos",
+  name: "Passport Photos",
+  description: "2 recent passport-sized photos (35x45mm, white background)",
+  required: true,
+  image: photosImg,
+  details: {
+    acceptanceRules: {
+      valid: ["Size: 35mm × 45mm", "Taken within last 6 months", "White/light background", "No glasses (new rule at most embassies)"]
+    },
+    tips: ["Bring 4 photos (embassy keeps 2, extras for other documents)"]
+  }
+}, {
+  id: "fee",
+  name: "Visa Fee Payment",
+  description: "€116 national visa fee (payment method varies by embassy)",
+  required: true,
+  image: paymentImg,
+  details: {
+    keyInfo: "€116 for National (D) visa - NON-REFUNDABLE even if denied.",
+    commonMistakes: ["Bringing only card when embassy requires cash (or vice versa)", "VFS centers have additional service fees (€20-30)"],
+    officialLinks: [{
+      label: "Find Your Embassy",
+      url: "https://www.esteri.it/en/ministero/la_rete_diplomatica/",
+      description: "Embassy payment requirements"
+    }]
+  }
+}];
 const VisaWizard = () => {
-  const { user, supabase } = useAuth();
-  const { uploads, uploading, uploadDocument, deleteDocument, getViewUrl, isUploaded, getUpload } = useDocumentUploads('visa');
-  
+  const {
+    user,
+    supabase
+  } = useAuth();
+  const {
+    uploads,
+    uploading,
+    uploadDocument,
+    deleteDocument,
+    getViewUrl,
+    isUploaded,
+    getUpload
+  } = useDocumentUploads('visa');
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -387,10 +292,8 @@ const VisaWizard = () => {
   });
   const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
-
   const totalSteps = 5;
-  const progressPercentage = (currentStep / (totalSteps - 1)) * 100;
-
+  const progressPercentage = currentStep / (totalSteps - 1) * 100;
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
   const selectedCountryData = countries.find(c => c.value === formData.country);
@@ -399,11 +302,9 @@ const VisaWizard = () => {
   const handleUpload = async (documentId: string, file: File) => {
     return await uploadDocument(documentId, file);
   };
-
   const handleDelete = async (documentId: string) => {
     return await deleteDocument(documentId);
   };
-
   const handleView = async (documentId: string) => {
     // Open a blank window immediately to avoid popup blocker
     const newWindow = window.open('about:blank', '_blank');
@@ -414,7 +315,6 @@ const VisaWizard = () => {
       newWindow.close();
     }
   };
-
   const handleDownload = async (documentId: string) => {
     const url = await getViewUrl(documentId);
     if (url) {
@@ -436,7 +336,6 @@ const VisaWizard = () => {
       }
     }
   };
-
   const handlePrint = async (documentId: string) => {
     // Open a blank window immediately to avoid popup blocker
     const printWindow = window.open('about:blank', '_blank');
@@ -460,21 +359,18 @@ const VisaWizard = () => {
       setStoredCountry(formData.country);
     }
   }, [formData.country]);
-
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
     }
   };
-
   const handlePrev = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
       window.scrollTo(0, 0);
     }
   };
-
   const toggleDocument = (docId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setDocumentStatus(prev => ({
@@ -482,7 +378,6 @@ const VisaWizard = () => {
       [docId]: !prev[docId]
     }));
   };
-
   const toggleExpanded = (docId: string) => {
     setExpandedDocument(prev => prev === docId ? null : docId);
   };
@@ -490,9 +385,11 @@ const VisaWizard = () => {
   // Generate country-specific links for each document
   const getCountrySpecificLinks = (documentId: string) => {
     if (!selectedCountryData) return [];
-    
-    const countryLinks: Array<{ label: string; url: string; description: string }> = [];
-    
+    const countryLinks: Array<{
+      label: string;
+      url: string;
+      description: string;
+    }> = [];
     switch (documentId) {
       case "passport":
         if (selectedCountryData.passportRenewalUrl) {
@@ -541,10 +438,8 @@ const VisaWizard = () => {
         }
         break;
     }
-    
     return countryLinks;
   };
-
   const canProceed = () => {
     switch (currentStep) {
       case 0:
@@ -560,17 +455,12 @@ const VisaWizard = () => {
         return false;
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-primary py-4 sm:py-6 px-4 shadow-elevated">
         <div className="container mx-auto max-w-4xl">
           <Link to="/">
-            <Button
-              variant="ghost"
-              className="mb-3 sm:mb-4 text-primary-foreground hover:bg-primary-foreground/10 text-sm sm:text-base"
-            >
+            <Button variant="ghost" className="mb-3 sm:mb-4 text-primary-foreground hover:bg-primary-foreground/10 text-sm sm:text-base">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
@@ -599,34 +489,27 @@ const VisaWizard = () => {
           
           {/* Step indicators - horizontally scrollable on mobile */}
           <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-5 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
-            {[
-              { num: 0, label: "Overview" },
-              { num: 1, label: "Personal Info" },
-              { num: 2, label: "Country" },
-              { num: 3, label: "Documents" },
-              { num: 4, label: "Timeline" }
-            ].map((step) => (
-              <div
-                key={step.num}
-                className={cn(
-                  "flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto",
-                  currentStep === step.num && "bg-primary/10",
-                  currentStep > step.num && "opacity-60"
-                )}
-              >
-                <div
-                  className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]",
-                    currentStep === step.num && "bg-primary text-primary-foreground",
-                    currentStep > step.num && "bg-success text-success-foreground",
-                    currentStep < step.num && "bg-muted text-muted-foreground"
-                  )}
-                >
+            {[{
+            num: 0,
+            label: "Overview"
+          }, {
+            num: 1,
+            label: "Personal Info"
+          }, {
+            num: 2,
+            label: "Country"
+          }, {
+            num: 3,
+            label: "Documents"
+          }, {
+            num: 4,
+            label: "Timeline"
+          }].map(step => <div key={step.num} className={cn("flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto", currentStep === step.num && "bg-primary/10", currentStep > step.num && "opacity-60")}>
+                <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]", currentStep === step.num && "bg-primary text-primary-foreground", currentStep > step.num && "bg-success text-success-foreground", currentStep < step.num && "bg-muted text-muted-foreground")}>
                   {currentStep > step.num ? <CheckCircle2 className="w-4 h-4" /> : step.num === 0 ? <Info className="w-4 h-4" /> : step.num}
                 </div>
                 <span className="text-[10px] sm:text-xs text-center font-medium leading-tight whitespace-nowrap">{step.label}</span>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </div>
@@ -636,8 +519,7 @@ const VisaWizard = () => {
         <div className="w-full max-w-6xl mx-auto">
           <Card className="p-4 sm:p-6 md:p-8 shadow-elevated">
             {/* Step 0: Overview */}
-            {currentStep === 0 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {currentStep === 0 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Understanding the Italian Student Visa</h2>
                   <p className="text-sm sm:text-base text-muted-foreground">
@@ -679,14 +561,27 @@ const VisaWizard = () => {
                 <div>
                   <h3 className="font-semibold text-foreground mb-4">The Application Process</h3>
                   <div className="space-y-3">
-                    {[
-                      { step: 1, title: "Gather Documents", desc: "Collect all required documents (admission letter, passport, insurance, etc.)" },
-                      { step: 2, title: "Book Embassy Appointment", desc: "Schedule your visa appointment at the Italian embassy/consulate" },
-                      { step: 3, title: "Attend Interview", desc: "Submit documents and provide biometrics at your appointment" },
-                      { step: 4, title: "Wait for Processing", desc: "Typical processing time is 4-12 weeks depending on your country" },
-                      { step: 5, title: "Receive Visa", desc: "Collect your passport with the visa stamp and book your flight!" }
-                    ].map((item) => (
-                      <div key={item.step} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                    {[{
+                  step: 1,
+                  title: "Gather Documents",
+                  desc: "Collect all required documents (admission letter, passport, insurance, etc.)"
+                }, {
+                  step: 2,
+                  title: "Book Embassy Appointment",
+                  desc: "Schedule your visa appointment at the Italian embassy/consulate"
+                }, {
+                  step: 3,
+                  title: "Attend Interview",
+                  desc: "Submit documents and provide biometrics at your appointment"
+                }, {
+                  step: 4,
+                  title: "Wait for Processing",
+                  desc: "Typical processing time is 4-12 weeks depending on your country"
+                }, {
+                  step: 5,
+                  title: "Receive Visa",
+                  desc: "Collect your passport with the visa stamp and book your flight!"
+                }].map(item => <div key={item.step} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                           <span className="text-sm font-bold text-primary">{item.step}</span>
                         </div>
@@ -694,8 +589,7 @@ const VisaWizard = () => {
                           <h4 className="font-medium text-foreground text-sm">{item.title}</h4>
                           <p className="text-xs text-muted-foreground">{item.desc}</p>
                         </div>
-                      </div>
-                    ))}
+                      </div>)}
                   </div>
                 </div>
 
@@ -706,12 +600,7 @@ const VisaWizard = () => {
                     Official Resources
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <a
-                      href="https://vistoperitalia.esteri.it/home/en"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
-                    >
+                    <a href="https://vistoperitalia.esteri.it/home/en" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
                       <Globe className="w-4 h-4 text-secondary" />
                       <div className="flex-1">
                         <span className="text-sm font-medium text-foreground group-hover:text-secondary">Official Visa Portal</span>
@@ -719,12 +608,7 @@ const VisaWizard = () => {
                       </div>
                       <ExternalLink className="w-3 h-3 text-muted-foreground" />
                     </a>
-                    <a
-                      href="https://www.esteri.it/en/ministero/la_rete_diplomatica/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
-                    >
+                    <a href="https://www.esteri.it/en/ministero/la_rete_diplomatica/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
                       <Globe className="w-4 h-4 text-secondary" />
                       <div className="flex-1">
                         <span className="text-sm font-medium text-foreground group-hover:text-secondary">Find Your Embassy</span>
@@ -739,12 +623,10 @@ const VisaWizard = () => {
                   Start Application Wizard
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-              </div>
-            )}
+              </div>}
 
             {/* Step 1: Personal Information */}
-            {currentStep === 1 && (
-              <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {currentStep === 1 && <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">Personal Information</h2>
                   <p className="text-sm sm:text-base text-muted-foreground">Let's start with your basic details</p>
@@ -753,28 +635,26 @@ const VisaWizard = () => {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="fullName">Full Name (as in passport)</Label>
-                    <Input
-                      id="fullName"
-                      placeholder="John Doe"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    />
+                    <Input id="fullName" placeholder="John Doe" value={formData.fullName} onChange={e => setFormData({
+                  ...formData,
+                  fullName: e.target.value
+                })} />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="your.email@example.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    />
+                    <Input id="email" type="email" placeholder="your.email@example.com" value={formData.email} onChange={e => setFormData({
+                  ...formData,
+                  email: e.target.value
+                })} />
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="university">Italian University</Label>
-                    <Select value={formData.university} onValueChange={(value) => setFormData({ ...formData, university: value })}>
+                    <Select value={formData.university} onValueChange={value => setFormData({
+                  ...formData,
+                  university: value
+                })}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select your university" />
                       </SelectTrigger>
@@ -791,20 +671,16 @@ const VisaWizard = () => {
 
                   <div className="space-y-2">
                     <Label htmlFor="arrival">Intended Arrival Date</Label>
-                    <Input
-                      id="arrival"
-                      type="date"
-                      value={formData.intendedArrival}
-                      onChange={(e) => setFormData({ ...formData, intendedArrival: e.target.value })}
-                    />
+                    <Input id="arrival" type="date" value={formData.intendedArrival} onChange={e => setFormData({
+                  ...formData,
+                  intendedArrival: e.target.value
+                })} />
                   </div>
                 </div>
-              </div>
-            )}
+              </div>}
 
             {/* Step 2: Country Selection */}
-            {currentStep === 2 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Country of Residence</h2>
                   <p className="text-muted-foreground">
@@ -814,22 +690,22 @@ const VisaWizard = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="country">Select Your Country</Label>
-                  <Select value={formData.country} onValueChange={(value) => setFormData({ ...formData, country: value })}>
+                  <Select value={formData.country} onValueChange={value => setFormData({
+                ...formData,
+                country: value
+              })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Choose your country" />
                     </SelectTrigger>
                     <SelectContent>
-                      {countries.map((country) => (
-                        <SelectItem key={country.value} value={country.value}>
+                      {countries.map(country => <SelectItem key={country.value} value={country.value}>
                           {country.label}
-                        </SelectItem>
-                      ))}
+                        </SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
 
-                {formData.country && selectedCountryData && (
-                  <>
+                {formData.country && selectedCountryData && <>
                     <Card className="p-6 bg-primary/5 border-primary/20 animate-in fade-in duration-300">
                       <div className="flex items-start gap-4">
                         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -853,12 +729,7 @@ const VisaWizard = () => {
                         Embassy & Appointment Links
                       </h3>
                       <div className="space-y-3">
-                        <a
-                          href={selectedCountryData.embassyUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
-                        >
+                        <a href={selectedCountryData.embassyUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
                           <ExternalLink className="w-4 h-4 text-secondary" />
                           <div className="flex-1">
                             <span className="text-sm font-medium text-foreground group-hover:text-secondary">
@@ -867,13 +738,7 @@ const VisaWizard = () => {
                             <p className="text-xs text-muted-foreground">Official embassy website</p>
                           </div>
                         </a>
-                        {selectedCountryData.vfsUrl && (
-                          <a
-                            href={selectedCountryData.vfsUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
-                          >
+                        {selectedCountryData.vfsUrl && <a href={selectedCountryData.vfsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
                             <ExternalLink className="w-4 h-4 text-secondary" />
                             <div className="flex-1">
                               <span className="text-sm font-medium text-foreground group-hover:text-secondary">
@@ -881,14 +746,8 @@ const VisaWizard = () => {
                               </span>
                               <p className="text-xs text-muted-foreground">Schedule your visa appointment</p>
                             </div>
-                          </a>
-                        )}
-                        <a
-                          href="https://prenotaonline.esteri.it/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group"
-                        >
+                          </a>}
+                        <a href="https://prenotaonline.esteri.it/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
                           <ExternalLink className="w-4 h-4 text-secondary" />
                           <div className="flex-1">
                             <span className="text-sm font-medium text-foreground group-hover:text-secondary">
@@ -899,14 +758,11 @@ const VisaWizard = () => {
                         </a>
                       </div>
                     </Card>
-                  </>
-                )}
-              </div>
-            )}
+                  </>}
+              </div>}
 
             {/* Step 3: Document Checklist */}
-            {currentStep === 3 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {currentStep === 3 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Document Checklist</h2>
                   <p className="text-muted-foreground">
@@ -921,90 +777,52 @@ const VisaWizard = () => {
                 </div>
 
                 <div className="space-y-3 max-w-2xl mx-auto">
-                  {documents.map((doc) => (
-                    <Card
-                      key={doc.id}
-                      className={cn(
-                        "transition-all",
-                        documentStatus[doc.id] && "bg-success/5 border-success/30",
-                        expandedDocument === doc.id && "ring-2 ring-primary/20"
-                      )}
-                    >
+                  {documents.map(doc => <Card key={doc.id} className={cn("transition-all", documentStatus[doc.id] && "bg-success/5 border-success/30", expandedDocument === doc.id && "ring-2 ring-primary/20")}>
                       {/* Card Header - Always visible */}
-                      <div
-                        className="p-3 sm:p-4 cursor-pointer hover:bg-muted/30 transition-colors"
-                        onClick={() => toggleExpanded(doc.id)}
-                      >
+                      <div className="p-3 sm:p-4 cursor-pointer hover:bg-muted/30 transition-colors" onClick={() => toggleExpanded(doc.id)}>
                         <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                           {/* Document Image */}
                           <div className="w-full sm:w-16 h-40 sm:h-16 rounded-lg overflow-hidden flex-shrink-0 bg-muted/30">
-                            <img 
-                              src={doc.image} 
-                              alt={doc.name}
-                              className="w-full h-full object-contain sm:object-cover"
-                            />
+                            <img src={doc.image} alt={doc.name} className="w-full h-full object-contain sm:object-cover" />
                           </div>
 
                           <div className="flex items-start gap-3 w-full">
-                            <div 
-                              className="flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0"
-                              onClick={(e) => toggleDocument(doc.id, e)}
-                            >
-                              <Checkbox
-                                checked={documentStatus[doc.id] || false}
-                                onCheckedChange={() => {}}
-                                className="flex-shrink-0"
-                              />
+                            <div className="flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0" onClick={e => toggleDocument(doc.id, e)}>
+                              <Checkbox checked={documentStatus[doc.id] || false} onCheckedChange={() => {}} className="flex-shrink-0" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-1 flex-wrap">
                                 <h4 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h4>
-                                {doc.required && (
-                                  <span className="text-xs px-2 py-0.5 bg-destructive/10 text-destructive rounded-full font-medium whitespace-nowrap">
+                                {doc.required && <span className="text-xs px-2 py-0.5 bg-destructive/10 text-destructive rounded-full font-medium whitespace-nowrap">
                                     Required
-                                  </span>
-                                )}
-                                {isUploaded(doc.id) && (
-                                  <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium whitespace-nowrap flex items-center gap-1">
+                                  </span>}
+                                {isUploaded(doc.id) && <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium whitespace-nowrap flex items-center gap-1">
                                     <Upload className="w-3 h-3" />
                                     Uploaded
-                                  </span>
-                                )}
+                                  </span>}
                               </div>
                               <p className="text-xs sm:text-sm text-muted-foreground">{doc.description}</p>
                             </div>
                             <div className="flex items-center gap-2 flex-shrink-0">
-                              {documentStatus[doc.id] ? (
-                                <CheckCircle2 className="w-5 h-5 text-success" />
-                              ) : (
-                                <Circle className="w-5 h-5 text-muted-foreground" />
-                              )}
-                              {expandedDocument === doc.id ? (
-                                <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                              ) : (
-                                <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                              )}
+                              {documentStatus[doc.id] ? <CheckCircle2 className="w-5 h-5 text-success" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
+                              {expandedDocument === doc.id ? <ChevronUp className="w-5 h-5 text-muted-foreground" /> : <ChevronDown className="w-5 h-5 text-muted-foreground" />}
                             </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Expanded Content */}
-                      {expandedDocument === doc.id && (
-                        <div className="px-4 pb-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-200">
+                      {expandedDocument === doc.id && <div className="px-4 pb-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-200">
                           <div className="pt-4 space-y-4 max-w-xl mx-auto">
                             {/* Key Info */}
-                            {doc.details.keyInfo && (
-                              <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
+                            {doc.details.keyInfo && <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
                                 <p className="text-sm text-foreground font-medium">
                                   {doc.details.keyInfo}
                                 </p>
-                              </div>
-                            )}
+                              </div>}
 
                             {/* Acceptance Rules */}
-                            {doc.details.acceptanceRules && (
-                              <div className="space-y-3">
+                            {doc.details.acceptanceRules && <div className="space-y-3">
                                 {/* Valid */}
                                 <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200 dark:border-green-800/50">
                                   <div className="flex items-center gap-2 mb-3">
@@ -1014,18 +832,15 @@ const VisaWizard = () => {
                                     <span className="text-sm font-semibold text-green-800 dark:text-green-300">What's Accepted</span>
                                   </div>
                                   <ul className="space-y-2">
-                                    {doc.details.acceptanceRules.valid.map((rule, idx) => (
-                                      <li key={idx} className="text-sm text-green-900 dark:text-green-200 flex items-start gap-2">
+                                    {doc.details.acceptanceRules.valid.map((rule, idx) => <li key={idx} className="text-sm text-green-900 dark:text-green-200 flex items-start gap-2">
                                         <Check className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                                         {rule}
-                                      </li>
-                                    ))}
+                                      </li>)}
                                   </ul>
                                 </div>
 
                                 {/* Invalid - only show if exists */}
-                                {doc.details.acceptanceRules.invalid && doc.details.acceptanceRules.invalid.length > 0 && (
-                                  <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-xl border border-red-200 dark:border-red-800/50">
+                                {doc.details.acceptanceRules.invalid && doc.details.acceptanceRules.invalid.length > 0 && <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-xl border border-red-200 dark:border-red-800/50">
                                     <div className="flex items-center gap-2 mb-3">
                                       <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
                                         <X className="w-3.5 h-3.5 text-white" />
@@ -1033,21 +848,16 @@ const VisaWizard = () => {
                                       <span className="text-sm font-semibold text-red-800 dark:text-red-300">NOT Accepted</span>
                                     </div>
                                     <ul className="space-y-2">
-                                      {doc.details.acceptanceRules.invalid.map((rule, idx) => (
-                                        <li key={idx} className="text-sm text-red-900 dark:text-red-200 flex items-start gap-2">
+                                      {doc.details.acceptanceRules.invalid.map((rule, idx) => <li key={idx} className="text-sm text-red-900 dark:text-red-200 flex items-start gap-2">
                                           <X className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                                           {rule}
-                                        </li>
-                                      ))}
+                                        </li>)}
                                     </ul>
-                                  </div>
-                                )}
-                              </div>
-                            )}
+                                  </div>}
+                              </div>}
 
                             {/* Common Mistakes */}
-                            {doc.details.commonMistakes && doc.details.commonMistakes.length > 0 && (
-                              <div className="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/50">
+                            {doc.details.commonMistakes && doc.details.commonMistakes.length > 0 && <div className="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/50">
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
                                     <AlertTriangle className="w-3.5 h-3.5 text-white" />
@@ -1055,19 +865,15 @@ const VisaWizard = () => {
                                   <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">Common Mistakes to Avoid</span>
                                 </div>
                                 <ul className="space-y-2">
-                                  {doc.details.commonMistakes.map((mistake, idx) => (
-                                    <li key={idx} className="text-sm text-amber-900 dark:text-amber-200 flex items-start gap-2">
+                                  {doc.details.commonMistakes.map((mistake, idx) => <li key={idx} className="text-sm text-amber-900 dark:text-amber-200 flex items-start gap-2">
                                       <span className="text-amber-600 dark:text-amber-400 flex-shrink-0">•</span>
                                       {mistake}
-                                    </li>
-                                  ))}
+                                    </li>)}
                                 </ul>
-                              </div>
-                            )}
+                              </div>}
 
                             {/* How to Obtain */}
-                            {doc.details.howToObtain && (
-                              <div className="p-4 bg-muted/40 rounded-xl">
+                            {doc.details.howToObtain && <div className="p-4 bg-muted/40 rounded-xl">
                                 <div className="flex items-center gap-2 mb-2">
                                   <FileText className="w-4 h-4 text-primary" />
                                   <span className="text-sm font-semibold text-foreground">How to Obtain</span>
@@ -1075,48 +881,27 @@ const VisaWizard = () => {
                                 <p className="text-sm text-muted-foreground">
                                   {doc.details.howToObtain}
                                 </p>
-                              </div>
-                            )}
+                              </div>}
 
                             {/* Official Links */}
                             {(() => {
-                              const countryLinks = getCountrySpecificLinks(doc.id);
-                              const allLinks = [...countryLinks, ...(doc.details.officialLinks || [])];
-                              
-                              if (allLinks.length === 0) return null;
-                              
-                              return (
-                                <div className="space-y-2">
+                      const countryLinks = getCountrySpecificLinks(doc.id);
+                      const allLinks = [...countryLinks, ...(doc.details.officialLinks || [])];
+                      if (allLinks.length === 0) return null;
+                      return <div className="space-y-2">
                                   <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
                                     <ExternalLink className="w-4 h-4 text-secondary" />
                                     Official Links & Resources
-                                    {countryLinks.length > 0 && selectedCountryData && (
-                                      <span className="text-xs font-normal text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                                    {countryLinks.length > 0 && selectedCountryData && <span className="text-xs font-normal text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                                         {selectedCountryData.label}
-                                      </span>
-                                    )}
+                                      </span>}
                                   </h5>
-                                  {!formData.country && (
-                                    <p className="text-xs text-muted-foreground pl-6 italic">
+                                  {!formData.country && <p className="text-xs text-muted-foreground pl-6 italic">
                                       Select your country in Step 2 to see country-specific links
-                                    </p>
-                                  )}
+                                    </p>}
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6">
-                                    {allLinks.map((link, idx) => (
-                                      <a
-                                        key={idx}
-                                        href={link.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={cn(
-                                          "flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors group text-xs",
-                                          idx < countryLinks.length ? "bg-primary/5 border border-primary/20" : "bg-muted/30"
-                                        )}
-                                      >
-                                        <ExternalLink className={cn(
-                                          "w-3 h-3 flex-shrink-0",
-                                          idx < countryLinks.length ? "text-primary" : "text-secondary"
-                                        )} />
+                                    {allLinks.map((link, idx) => <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className={cn("flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors group text-xs", idx < countryLinks.length ? "bg-primary/5 border border-primary/20" : "bg-muted/30")}>
+                                        <ExternalLink className={cn("w-3 h-3 flex-shrink-0", idx < countryLinks.length ? "text-primary" : "text-secondary")} />
                                         <div className="flex-1 min-w-0">
                                           <span className="font-medium text-foreground group-hover:text-secondary block truncate">
                                             {link.label}
@@ -1125,16 +910,13 @@ const VisaWizard = () => {
                                             {link.description}
                                           </span>
                                         </div>
-                                      </a>
-                                    ))}
+                                      </a>)}
                                   </div>
-                                </div>
-                              );
-                            })()}
+                                </div>;
+                    })()}
 
                             {/* Tips */}
-                            {doc.details.tips && doc.details.tips.length > 0 && (
-                              <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
+                            {doc.details.tips && doc.details.tips.length > 0 && <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
                                 <div className="flex items-center gap-2 mb-3">
                                   <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
                                     <Lightbulb className="w-3.5 h-3.5 text-primary" />
@@ -1142,15 +924,12 @@ const VisaWizard = () => {
                                   <span className="text-sm font-semibold text-primary">Pro Tips</span>
                                 </div>
                                 <ul className="space-y-2">
-                                  {doc.details.tips.map((tip, idx) => (
-                                    <li key={idx} className="text-sm text-foreground flex items-start gap-2">
+                                  {doc.details.tips.map((tip, idx) => <li key={idx} className="text-sm text-foreground flex items-start gap-2">
                                       <span className="text-primary flex-shrink-0">💡</span>
                                       {tip}
-                                    </li>
-                                  ))}
+                                    </li>)}
                                 </ul>
-                              </div>
-                            )}
+                              </div>}
 
                             {/* Document Upload Section */}
                             <div className="space-y-3">
@@ -1158,52 +937,28 @@ const VisaWizard = () => {
                                 <Upload className="w-4 h-4 text-primary" />
                                 Your Upload
                               </h5>
-                              {user ? (
-                                <DocumentUploadComponent
-                                  documentId={doc.id}
-                                  upload={getUpload(doc.id)}
-                                  isUploading={uploading === doc.id}
-                                  onUpload={(file) => handleUpload(doc.id, file)}
-                                  onDelete={() => handleDelete(doc.id)}
-                                  onView={() => handleView(doc.id)}
-                                  onDownload={() => handleDownload(doc.id)}
-                                  onPrint={() => handlePrint(doc.id)}
-                                />
-                              ) : (
-                                <div className="p-4 bg-muted/30 rounded-xl border border-border/50 text-center">
+                              {user ? <DocumentUploadComponent documentId={doc.id} upload={getUpload(doc.id)} isUploading={uploading === doc.id} onUpload={file => handleUpload(doc.id, file)} onDelete={() => handleDelete(doc.id)} onView={() => handleView(doc.id)} onDownload={() => handleDownload(doc.id)} onPrint={() => handlePrint(doc.id)} /> : <div className="p-4 bg-muted/30 rounded-xl border border-border/50 text-center">
                                   <p className="text-sm text-muted-foreground">
                                     Sign in to upload and track your documents
                                   </p>
-                                </div>
-                              )}
+                                </div>}
                             </div>
 
                             {/* Mark as Ready Button */}
                             <div className="pt-2">
-                              <Button
-                                variant={documentStatus[doc.id] ? "outline" : "default"}
-                                size="sm"
-                                onClick={(e) => toggleDocument(doc.id, e)}
-                                className="w-full sm:w-auto"
-                              >
-                                {documentStatus[doc.id] ? (
-                                  <>
+                              <Button variant={documentStatus[doc.id] ? "outline" : "default"} size="sm" onClick={e => toggleDocument(doc.id, e)} className="w-full sm:w-auto">
+                                {documentStatus[doc.id] ? <>
                                     <CheckCircle2 className="w-4 h-4 mr-2" />
                                     Marked as Ready
-                                  </>
-                                ) : (
-                                  <>
+                                  </> : <>
                                     <Circle className="w-4 h-4 mr-2" />
                                     Mark as Ready
-                                  </>
-                                )}
+                                  </>}
                               </Button>
                             </div>
                           </div>
-                        </div>
-                      )}
-                    </Card>
-                  ))}
+                        </div>}
+                    </Card>)}
                 </div>
 
                 <Card className="p-6 bg-accent/5 border-accent/20">
@@ -1230,29 +985,11 @@ const VisaWizard = () => {
                 </Card>
 
                 {/* FAQ and Community Section - Step 3 */}
-                <Card className="p-6">
-                  <Tabs defaultValue="faq" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="faq">FAQs</TabsTrigger>
-                      <TabsTrigger value="chat">Community Chat</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="faq" className="mt-4">
-                      <TaskFAQ taskId="visa" phase="phase-1" />
-                    </TabsContent>
-                    <TabsContent value="chat" className="mt-4">
-                      <TaskChat 
-                        taskId={formData.country ? `visa-${formData.country}` : 'visa-general'} 
-                        phase="phase-1" 
-                      />
-                    </TabsContent>
-                  </Tabs>
-                </Card>
-              </div>
-            )}
+                
+              </div>}
 
             {/* Step 4: Timeline & Next Steps */}
-            {currentStep === 4 && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {currentStep === 4 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Your Visa Timeline</h2>
                   <p className="text-muted-foreground">
@@ -1341,54 +1078,32 @@ const VisaWizard = () => {
                     </div>
                   </div>
                 </Card>
-              </div>
-            )}
+              </div>}
 
             {/* Navigation Buttons */}
             <div className="flex items-center justify-between mt-6 sm:mt-8 pt-6 sm:pt-8 border-t gap-3">
-              <Button
-                variant="outline"
-                onClick={handlePrev}
-                disabled={currentStep === 0}
-                className="text-sm sm:text-base"
-              >
+              <Button variant="outline" onClick={handlePrev} disabled={currentStep === 0} className="text-sm sm:text-base">
                 <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                 <span className="hidden sm:inline">Previous</span>
                 <span className="sm:hidden">Back</span>
               </Button>
 
-              {currentStep < totalSteps - 1 ? (
-                <Button
-                  onClick={handleNext}
-                  disabled={!canProceed()}
-                  className="text-sm sm:text-base"
-                >
+              {currentStep < totalSteps - 1 ? <Button onClick={handleNext} disabled={!canProceed()} className="text-sm sm:text-base">
                   <span className="hidden sm:inline">{currentStep === 0 ? "Start" : "Next Step"}</span>
                   <span className="sm:hidden">Next</span>
                   <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
-                </Button>
-              ) : (
-                <Link to="/">
+                </Button> : <Link to="/">
                   <Button className="text-sm sm:text-base">
                     Finish
                     <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
                   </Button>
-                </Link>
-              )}
+                </Link>}
             </div>
           </Card>
         </div>
       </div>
 
-      {formData.country && (
-        <FloatingChat 
-          taskId={`visa-${formData.country}`} 
-          phase="phase-1"
-          label={`${countries.find(c => c.value === formData.country)?.label || formData.country} Community`}
-        />
-      )}
-    </div>
-  );
+      {formData.country && <FloatingChat taskId={`visa-${formData.country}`} phase="phase-1" label={`${countries.find(c => c.value === formData.country)?.label || formData.country} Community`} />}
+    </div>;
 };
-
 export default VisaWizard;
