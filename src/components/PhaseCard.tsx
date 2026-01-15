@@ -31,13 +31,13 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
     <Card
       onClick={onClick}
       className={cn(
-        "p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 min-h-[44px] w-full",
+        "p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 min-h-[44px] w-full lg:aspect-square lg:flex-1 relative",
         isActive ? "shadow-elevated border-2" : "shadow-soft hover:shadow-elevated border",
         isActive ? colorClasses[phase.color as keyof typeof colorClasses] : "border-border bg-card"
       )}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="flex items-center gap-4 sm:gap-6">
+      <div className="flex items-center gap-4 sm:gap-6 lg:flex-col lg:items-center lg:justify-center lg:h-full lg:text-center">
         <div className={cn(
           "p-3 sm:p-4 rounded-2xl transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0",
           isActive ? colorClasses[phase.color as keyof typeof colorClasses] : "bg-muted/50"
@@ -48,7 +48,7 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
           )} />
         </div>
         
-        <div className="flex-1 text-left">
+        <div className="flex-1 text-left lg:text-center lg:flex-none">
           <h3 className={cn(
             "text-base sm:text-lg font-bold mb-1 transition-colors duration-300",
             isActive ? "text-foreground" : "text-muted-foreground"
@@ -61,7 +61,7 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
         </div>
 
         {phase.status === "locked" && !isActive && (
-          <span className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-muted text-muted-foreground shrink-0">
+          <span className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-muted text-muted-foreground shrink-0 lg:absolute lg:top-3 lg:right-3">
             Coming Soon
           </span>
         )}
