@@ -31,15 +31,15 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
     <Card
       onClick={onClick}
       className={cn(
-        "p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 hover:scale-105 animate-in fade-in slide-in-from-bottom-4 min-h-[44px]",
+        "p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 min-h-[44px] w-full",
         isActive ? "shadow-elevated border-2" : "shadow-soft hover:shadow-elevated border",
         isActive ? colorClasses[phase.color as keyof typeof colorClasses] : "border-border bg-card"
       )}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
+      <div className="flex items-center gap-4 sm:gap-6">
         <div className={cn(
-          "p-3 sm:p-4 rounded-2xl transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center",
+          "p-3 sm:p-4 rounded-2xl transition-all duration-300 min-h-[44px] min-w-[44px] flex items-center justify-center shrink-0",
           isActive ? colorClasses[phase.color as keyof typeof colorClasses] : "bg-muted/50"
         )}>
           <Icon className={cn(
@@ -48,9 +48,9 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
           )} />
         </div>
         
-        <div>
+        <div className="flex-1 text-left">
           <h3 className={cn(
-            "text-base sm:text-lg font-bold mb-1.5 sm:mb-2 transition-colors duration-300",
+            "text-base sm:text-lg font-bold mb-1 transition-colors duration-300",
             isActive ? "text-foreground" : "text-muted-foreground"
           )}>
             {phase.title}
@@ -61,7 +61,7 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
         </div>
 
         {phase.status === "locked" && !isActive && (
-          <span className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-muted text-muted-foreground">
+          <span className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-muted text-muted-foreground shrink-0">
             Coming Soon
           </span>
         )}

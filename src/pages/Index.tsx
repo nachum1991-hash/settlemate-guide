@@ -158,7 +158,7 @@ const Index = () => {
           </div>
 
           {/* Phase Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          <div className="flex flex-col gap-4 sm:gap-6">
             {phases.map((phase, index) => (
               <PhaseCard
                 key={phase.id}
