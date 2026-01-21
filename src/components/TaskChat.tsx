@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, MessageCircle } from 'lucide-react';
+import { Send, MessageCircle, Reply, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -13,8 +13,13 @@ interface Message {
   message: string;
   created_at: string;
   user_id: string;
+  reply_to_id: string | null;
   profiles: {
     full_name: string | null;
+  };
+  replyToMessage?: {
+    message: string;
+    profiles: { full_name: string | null };
   };
 }
 
@@ -29,6 +34,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   const { user, supabase: authSupabase } = useAuth();
   const { toast } = useToast();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -105,10 +111,31 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
       })
     );
 
-    const messagesWithProfiles = (data as any[]).map((msg: any) => ({
-      ...msg,
-      profiles: profileMap.get(msg.user_id) || { full_name: null },
-    }));
+    // Create a map of messages for quick lookup of replies
+    const messageMap = new Map<string, any>();
+    (data as any[]).forEach((msg: any) => {
+      messageMap.set(msg.id, msg);
+    });
+
+    const messagesWithProfiles = (data as any[]).map((msg: any) => {
+      const baseMessage = {
+        ...msg,
+        profiles: profileMap.get(msg.user_id) || { full_name: null },
+      };
+
+      // Add reply context if this message is a reply
+      if (msg.reply_to_id) {
+        const replyToMsg = messageMap.get(msg.reply_to_id);
+        if (replyToMsg) {
+          baseMessage.replyToMessage = {
+            message: replyToMsg.message,
+            profiles: profileMap.get(replyToMsg.user_id) || { full_name: null },
+          };
+        }
+      }
+
+      return baseMessage;
+    });
 
     setMessages(messagesWithProfiles as Message[]);
   };
@@ -145,6 +172,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
         task_id: taskId,
         phase: phase,
         message: trimmedMessage,
+        reply_to_id: replyingTo?.id || null,
       },
     });
 
@@ -172,6 +200,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
     }
 
     setNewMessage('');
+    setReplyingTo(null);
   };
 
   if (!user) {
@@ -201,21 +230,39 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
             </div>
           ) : (
             messages.map((message) => (
-              <div key={message.id} className="flex gap-3">
-                <Avatar className="w-8 h-8">
+              <div key={message.id} className="flex gap-3 group">
+                <Avatar className="w-8 h-8 flex-shrink-0">
                   <AvatarFallback className="text-xs">
                     {message.profiles.full_name?.[0]?.toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-baseline gap-2">
+                <div className="flex-1 space-y-1 min-w-0">
+                  <div className="flex items-baseline gap-2 flex-wrap">
                     <span className="font-medium text-sm">
                       {message.profiles.full_name || 'Anonymous User'}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {formatDistanceToNow(new Date(message.created_at), { addSuffix: true })}
                     </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-5 px-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => setReplyingTo(message)}
+                    >
+                      <Reply className="w-3 h-3" />
+                    </Button>
                   </div>
+                  {message.replyToMessage && (
+                    <div className="text-xs bg-muted/50 rounded px-2 py-1 border-l-2 border-primary/50">
+                      <span className="font-medium text-muted-foreground">
+                        {message.replyToMessage.profiles.full_name || 'Anonymous User'}
+                      </span>
+                      <p className="text-muted-foreground truncate">
+                        {message.replyToMessage.message}
+                      </p>
+                    </div>
+                  )}
                   <p className="text-sm text-foreground/90">{message.message}</p>
                 </div>
               </div>
@@ -225,13 +272,33 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
         </div>
       </ScrollArea>
 
+      {replyingTo && (
+        <div className="px-3 sm:px-4 py-2 bg-muted/50 border-t flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-sm min-w-0 flex-1">
+            <Reply className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <span className="text-muted-foreground flex-shrink-0">Replying to</span>
+            <span className="font-medium truncate">
+              {replyingTo.profiles.full_name || 'Anonymous User'}
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 w-6 p-0 flex-shrink-0"
+            onClick={() => setReplyingTo(null)}
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+      )}
+
       <form onSubmit={handleSendMessage} className="p-3 sm:p-4 border-t bg-muted/30">
         <div className="flex gap-2">
           <div className="flex-1 space-y-1">
             <Textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value.slice(0, MAX_MESSAGE_LENGTH))}
-              placeholder="Type your message..."
+              placeholder={replyingTo ? "Type your reply..." : "Type your message..."}
               className="min-h-[60px] resize-none text-sm"
               disabled={loading}
               maxLength={MAX_MESSAGE_LENGTH}

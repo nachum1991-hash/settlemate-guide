@@ -116,6 +116,7 @@ export type Database = {
           id: string
           message: string
           phase: string
+          reply_to_id: string | null
           task_id: string
           user_id: string
         }
@@ -124,6 +125,7 @@ export type Database = {
           id?: string
           message: string
           phase: string
+          reply_to_id?: string | null
           task_id: string
           user_id: string
         }
@@ -132,10 +134,19 @@ export type Database = {
           id?: string
           message?: string
           phase?: string
+          reply_to_id?: string | null
           task_id?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "task_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "task_messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_progress: {
         Row: {
