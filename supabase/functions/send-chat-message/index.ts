@@ -54,7 +54,7 @@ serve(async (req) => {
 
     // Parse and validate request body
     const body = await req.json();
-    const { task_id, phase, message } = body;
+    const { task_id, phase, message, reply_to_id } = body;
 
     // Validate required fields
     if (!task_id || typeof task_id !== 'string') {
@@ -137,6 +137,48 @@ serve(async (req) => {
       );
     }
 
+    // Validate reply_to_id if provided
+    let validatedReplyToId: string | null = null;
+    if (reply_to_id !== undefined && reply_to_id !== null && reply_to_id !== '') {
+      if (typeof reply_to_id !== 'string') {
+        return new Response(
+          JSON.stringify({ error: 'reply_to_id must be a string' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      // Verify the referenced message exists and is in the same task
+      const { data: replyToMessage, error: replyError } = await serviceClient
+        .from('task_messages')
+        .select('id, task_id')
+        .eq('id', reply_to_id)
+        .maybeSingle();
+
+      if (replyError) {
+        console.error('Error checking reply_to message:', replyError);
+        return new Response(
+          JSON.stringify({ error: 'Failed to validate reply' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (!replyToMessage) {
+        return new Response(
+          JSON.stringify({ error: 'Message being replied to does not exist' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      if (replyToMessage.task_id !== task_id) {
+        return new Response(
+          JSON.stringify({ error: 'Cannot reply to a message from a different context' }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      validatedReplyToId = reply_to_id;
+    }
+
     // Insert the message using service role (bypasses RLS for insert)
     const { data: insertedMessage, error: insertError } = await serviceClient
       .from('task_messages')
@@ -145,6 +187,7 @@ serve(async (req) => {
         phase,
         user_id: userId,
         message: sanitizedMessage,
+        reply_to_id: validatedReplyToId,
       })
       .select()
       .single();
