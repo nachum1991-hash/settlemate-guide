@@ -7,6 +7,13 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Send, MessageCircle, Reply, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
+import { MessageReactions } from './MessageReactions';
+
+interface Reaction {
+  emoji: string;
+  count: number;
+  userReacted: boolean;
+}
 
 interface Message {
   id: string;
@@ -21,6 +28,7 @@ interface Message {
     message: string;
     profiles: { full_name: string | null };
   };
+  reactions: Reaction[];
 }
 
 interface TaskChatProps {
@@ -29,6 +37,7 @@ interface TaskChatProps {
 }
 
 const MAX_MESSAGE_LENGTH = 2000;
+const ALLOWED_EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🎉'];
 
 export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -111,6 +120,34 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
       })
     );
 
+    // Fetch reactions for all messages
+    const messageIds = (data as any[]).map((m: any) => m.id);
+    const { data: reactionsData } = await authSupabase
+      .from('message_reactions')
+      .select('message_id, emoji, user_id')
+      .in('message_id', messageIds);
+
+    // Group reactions by message
+    const reactionsMap = new Map<string, Map<string, { count: number; userReacted: boolean }>>();
+    
+    if (reactionsData) {
+      (reactionsData as any[]).forEach((reaction: any) => {
+        if (!reactionsMap.has(reaction.message_id)) {
+          reactionsMap.set(reaction.message_id, new Map());
+        }
+        const messageReactions = reactionsMap.get(reaction.message_id)!;
+        
+        if (!messageReactions.has(reaction.emoji)) {
+          messageReactions.set(reaction.emoji, { count: 0, userReacted: false });
+        }
+        const emojiData = messageReactions.get(reaction.emoji)!;
+        emojiData.count++;
+        if (reaction.user_id === user?.id) {
+          emojiData.userReacted = true;
+        }
+      });
+    }
+
     // Create a map of messages for quick lookup of replies
     const messageMap = new Map<string, any>();
     (data as any[]).forEach((msg: any) => {
@@ -118,9 +155,21 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
     });
 
     const messagesWithProfiles = (data as any[]).map((msg: any) => {
+      // Build reactions array for this message
+      const messageReactionsMap = reactionsMap.get(msg.id);
+      const reactions: Reaction[] = ALLOWED_EMOJIS.map(emoji => {
+        const data = messageReactionsMap?.get(emoji);
+        return {
+          emoji,
+          count: data?.count || 0,
+          userReacted: data?.userReacted || false,
+        };
+      });
+
       const baseMessage = {
         ...msg,
         profiles: profileMap.get(msg.user_id) || { full_name: null },
+        reactions,
       };
 
       // Add reply context if this message is a reply
@@ -142,6 +191,40 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
 
   const scrollToBottom = () => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleReactionToggle = async (messageId: string, emoji: string) => {
+    if (!user) return;
+
+    const { error } = await authSupabase.functions.invoke('toggle-reaction', {
+      body: { message_id: messageId, emoji },
+    });
+
+    if (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update reaction',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Optimistically update UI
+    setMessages(prev => prev.map(msg => {
+      if (msg.id !== messageId) return msg;
+      
+      const updatedReactions = msg.reactions.map(r => {
+        if (r.emoji !== emoji) return r;
+        
+        if (r.userReacted) {
+          return { ...r, count: r.count - 1, userReacted: false };
+        } else {
+          return { ...r, count: r.count + 1, userReacted: true };
+        }
+      });
+      
+      return { ...msg, reactions: updatedReactions };
+    }));
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -264,6 +347,11 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
                     </div>
                   )}
                   <p className="text-sm text-foreground/90">{message.message}</p>
+                  <MessageReactions
+                    messageId={message.id}
+                    reactions={message.reactions}
+                    onReactionToggle={handleReactionToggle}
+                  />
                 </div>
               </div>
             ))
