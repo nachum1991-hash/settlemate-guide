@@ -17,11 +17,13 @@ import {
   Heart,
   MapPin,
   Clock,
-  CheckCircle2
+  CheckCircle2,
+  MessagesSquare
 } from "lucide-react";
 import CitySelector from "@/components/CitySelector";
 import { useCity } from "@/contexts/CityContext";
 import { universityGroupsByCity, eventsByCity, cityData } from "@/data/cityData";
+import { TaskChat } from "@/components/TaskChat";
 
 // Nationality groups (same across all cities) - Links to official embassy/consulate student pages and verified Facebook groups
 const nationalityGroups = [
@@ -74,7 +76,7 @@ const SocialIntegration = () => {
             <CitySelector />
             
             <Tabs defaultValue="groups" className="w-full mt-6">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
+              <TabsList className="grid w-full grid-cols-4 mb-6">
                 <TabsTrigger value="groups" className="text-xs sm:text-sm">
                   <MessageCircle className="w-4 h-4 mr-1 sm:mr-2" />
                   <span className="hidden sm:inline">Groups</span>
@@ -86,6 +88,10 @@ const SocialIntegration = () => {
                 <TabsTrigger value="events" className="text-xs sm:text-sm">
                   <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
                   <span className="hidden sm:inline">Events</span>
+                </TabsTrigger>
+                <TabsTrigger value="community" className="text-xs sm:text-sm">
+                  <MessagesSquare className="w-4 h-4 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Community</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -441,6 +447,26 @@ const SocialIntegration = () => {
                     </a>
                   </div>
                 </div>
+              </TabsContent>
+
+              {/* Community Chat Tab */}
+              <TabsContent value="community" className="space-y-4">
+                <div className="text-center mb-4">
+                  <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <MessagesSquare className="w-8 h-8 text-accent" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">Community Chat - {cityInfo.name}</h3>
+                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                    Connect with other students in {cityInfo.name}. Share tips, ask questions, and build your network!
+                  </p>
+                </div>
+                
+                <Card className="border-2 border-accent/20 overflow-hidden" style={{ height: '500px' }}>
+                  <TaskChat 
+                    taskId={`social-${selectedCity}`} 
+                    phase="social-integration" 
+                  />
+                </Card>
               </TabsContent>
             </Tabs>
           </Card>
