@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Crown, Check } from 'lucide-react';
+import { Crown, Check, X } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -15,17 +15,25 @@ interface PaymentModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const freeBenefits = [
-  'Complete visa application wizard',
-  'Step-by-step document guidance',
-  'Country-specific resources',
-];
+interface JourneyFeature {
+  label: string;
+  freeAccess: boolean;
+}
 
-const premiumBenefits = [
-  'Everything in Free, plus:',
-  'Complete arrival guide with bureaucracy steps',
-  'Verified service providers (SIM, banks, accommodation)',
-  'City-specific community chats',
+const journeyFeatures: JourneyFeature[] = [
+  // Phase 1 - Free
+  { label: 'Complete visa application wizard', freeAccess: true },
+  { label: 'Step-by-step document guidance', freeAccess: true },
+  { label: 'Country-specific resources', freeAccess: true },
+  // Phase 2 - Premium
+  { label: 'Arrival guide with bureaucracy steps', freeAccess: false },
+  { label: 'Verified SIM & bank providers', freeAccess: false },
+  { label: 'Accommodation recommendations', freeAccess: false },
+  // Phase 3 - Premium
+  { label: 'University groups finder', freeAccess: false },
+  { label: 'Find a Buddy matching program', freeAccess: false },
+  { label: 'Events & communities calendar', freeAccess: false },
+  { label: 'City-specific community chat', freeAccess: false },
 ];
 
 const PaymentModal = ({ open, onOpenChange }: PaymentModalProps) => {
@@ -68,12 +76,20 @@ const PaymentModal = ({ open, onOpenChange }: PaymentModalProps) => {
             </div>
 
             <div className="space-y-2.5 mb-5">
-              {freeBenefits.map((benefit, index) => (
+              {journeyFeatures.map((feature, index) => (
                 <div key={index} className="flex items-start gap-2.5">
-                  <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-muted">
-                    <Check className="h-2.5 w-2.5 text-muted-foreground" />
-                  </div>
-                  <span className="text-sm text-muted-foreground">{benefit}</span>
+                  {feature.freeAccess ? (
+                    <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-500/20">
+                      <Check className="h-2.5 w-2.5 text-green-600" />
+                    </div>
+                  ) : (
+                    <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-destructive/20">
+                      <X className="h-2.5 w-2.5 text-destructive" />
+                    </div>
+                  )}
+                  <span className={`text-sm ${feature.freeAccess ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
+                    {feature.label}
+                  </span>
                 </div>
               ))}
             </div>
@@ -105,14 +121,12 @@ const PaymentModal = ({ open, onOpenChange }: PaymentModalProps) => {
             </div>
 
             <div className="space-y-2.5 mb-5">
-              {premiumBenefits.map((benefit, index) => (
+              {journeyFeatures.map((feature, index) => (
                 <div key={index} className="flex items-start gap-2.5">
-                  <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/20">
-                    <Check className="h-2.5 w-2.5 text-primary" />
+                  <div className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-500/20">
+                    <Check className="h-2.5 w-2.5 text-green-600" />
                   </div>
-                  <span className={`text-sm ${index === 0 ? 'font-medium text-foreground' : 'text-muted-foreground'}`}>
-                    {benefit}
-                  </span>
+                  <span className="text-sm text-foreground">{feature.label}</span>
                 </div>
               ))}
             </div>
