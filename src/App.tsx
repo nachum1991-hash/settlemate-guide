@@ -16,7 +16,7 @@ import ArrivalItaly from "./pages/ArrivalItaly";
 import SocialIntegration from "./pages/SocialIntegration";
 import Install from "./pages/Install";
 import ProtectedRoute from "./components/ProtectedRoute";
-import PremiumRoute from "./components/PremiumRoute";
+
 
 const queryClient = new QueryClient();
 
@@ -33,8 +33,8 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/install" element={<Install />} />
               <Route path="/home-country" element={<ProtectedRoute><HomeCountry /></ProtectedRoute>} />
-              <Route path="/arrival-italy" element={<PremiumRoute><ArrivalItaly /></PremiumRoute>} />
-              <Route path="/social-integration" element={<PremiumRoute><SocialIntegration /></PremiumRoute>} />
+              <Route path="/arrival-italy" element={<ProtectedRoute><ArrivalItaly /></ProtectedRoute>} />
+              <Route path="/social-integration" element={<ProtectedRoute><SocialIntegration /></ProtectedRoute>} />
               <Route path="/visa-wizard" element={<ProtectedRoute><VisaWizard /></ProtectedRoute>} />
               <Route path="/pre-departure" element={<ProtectedRoute><PreDepartureChecklist /></ProtectedRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
