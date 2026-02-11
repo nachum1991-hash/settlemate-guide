@@ -15,11 +15,7 @@ const Index = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   const handleStartJourney = () => {
-    if (user) {
-      navigate('/home-country');
-    } else {
-      navigate('/auth');
-    }
+    navigate('/home-country');
   };
 
   const generatePDF = () => {
@@ -182,15 +178,9 @@ const Index = () => {
             Create your personalized timeline and never miss a deadline
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {user ? (
-              <Button size="lg" className="shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto px-8" onClick={handleStartJourney}>
-                Continue Your Journey
-              </Button>
-            ) : (
-              <Button size="lg" asChild className="shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto px-8">
-                <Link to="/auth">Create Free Account</Link>
-              </Button>
-            )}
+            <Button size="lg" className="shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto px-8" onClick={handleStartJourney}>
+              Start Your Journey
+            </Button>
             <Button size="lg" variant="outline" className="w-full sm:w-auto px-8" onClick={generatePDF}>
               Download PDF Checklist
             </Button>
