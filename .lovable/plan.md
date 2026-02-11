@@ -1,90 +1,39 @@
 
-# Payment Gate Modal for Premium Phases
+
+# Remove Registration Requirement
 
 ## Overview
-Create a UI-only payment modal that appears when users attempt to access the **Arrival in Italy** (Phase 2) or **Social Integration** (Phase 3) pages. The modal will display the subscription cost and benefits without actual payment processing.
+Make all pages accessible without needing to sign up or log in. Users can browse the full app freely.
 
-## What You'll Get
+## Changes
 
-When trying to enter Phase 2 or Phase 3, users will see a popup explaining:
-- **Cost**: 20 EUR per year
-- **Benefits**:
-  - Complete arrival guide (bureaucracy steps, documents, timelines)
-  - Verified service providers (SIM cards, banks, accommodation)
-  - City-specific community chats
+### 1. Remove ProtectedRoute wrappers (src/App.tsx)
+Remove the `ProtectedRoute` wrapper from all routes so every page loads directly without an auth check.
 
-The modal will include a "Subscribe Now" button (placeholder for future payment integration) and a "Maybe Later" option to close.
+### 2. Make hooks and components handle anonymous users
+Several hooks and components use `useAuth()` to get the current user. They need to gracefully handle the case where `user` is `null`:
 
----
+- **`src/hooks/useUserProgress.ts`** -- Skip database calls when no user; progress won't persist for anonymous users
+- **`src/hooks/useDocumentUploads.ts`** -- Skip upload/fetch when no user; document uploads require auth
+- **`src/components/TaskChat.tsx`** -- Show a "sign in to chat" message instead of the chat input when not logged in
+- **`src/components/MessageReactions.tsx`** -- Disable reactions for anonymous users
+- **`src/components/BureaucracyDetail.tsx`** -- Hide upload sections for anonymous users
+- **`src/pages/VisaWizard.tsx`** -- Skip database persistence when no user
 
-## Technical Implementation
+### 3. Update Navbar (src/components/Navbar.tsx)
+Keep the Sign In button visible for anonymous users so they can optionally log in (e.g., to save progress or use chat).
 
-### 1. Create Payment Modal Component
+### 4. Update Index page (src/pages/Index.tsx)
+Remove the auth check from "Start Your Journey" -- always navigate directly to `/home-country` instead of redirecting to `/auth`.
 
-**New file**: `src/components/PaymentModal.tsx`
+### 5. Keep Auth infrastructure
+The `AuthProvider`, `Auth` page, and `ProtectedRoute` component will remain in the codebase. Users can still optionally sign in to unlock features like progress saving, document uploads, and community chat.
 
-A reusable dialog component featuring:
-- Attractive header with lock/crown icon
-- Price display (20 EUR/year)
-- Benefits list with checkmarks:
-  - Step-by-step arrival guide
-  - Trusted service providers  
-  - Community chat access
-- Two buttons:
-  - **Subscribe Now** - placeholder (shows toast for now)
-  - **Maybe Later** - closes modal and returns to homepage
+## What stays locked behind login
+- Saving progress to the cloud
+- Document uploads
+- Posting in community chats
+- Message reactions
 
-### 2. Create Premium Route Wrapper
+Everything else (reading guides, browsing steps, viewing FAQs) will be fully open.
 
-**New file**: `src/components/PremiumRoute.tsx`
-
-A wrapper component that:
-- Wraps the existing `ProtectedRoute` (keeps auth requirement)
-- Checks if user has premium access (for now, always shows modal)
-- Displays `PaymentModal` when premium access is not detected
-- Passes through to children when access is granted
-
-### 3. Update App Router
-
-**File**: `src/App.tsx`
-
-Replace `ProtectedRoute` with `PremiumRoute` for:
-- `/arrival-italy` route
-- `/social-integration` route
-
-Phase 1 (`/home-country`) remains free with just `ProtectedRoute`.
-
----
-
-## User Flow
-
-```text
-User clicks Phase 2 or Phase 3
-          |
-          v
-    Is user logged in?
-      /         \
-    No           Yes
-     |            |
-     v            v
-  Go to       Show Payment
-  /auth         Modal
-                  |
-          +-------+-------+
-          |               |
-    Subscribe Now    Maybe Later
-          |               |
-          v               v
-    (Toast shown)   Navigate to
-    "Coming soon"    homepage
-```
-
----
-
-## Files to Create/Modify
-
-| File | Action |
-|------|--------|
-| `src/components/PaymentModal.tsx` | Create - Modal with pricing and benefits |
-| `src/components/PremiumRoute.tsx` | Create - Route wrapper with payment gate |
-| `src/App.tsx` | Modify - Use PremiumRoute for Phase 2 & 3 |
