@@ -20,6 +20,8 @@ import {
   Circle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "./TaskChat";
@@ -108,287 +110,268 @@ const DocumentCard = ({
   const { details } = doc;
 
   return (
-    <div className="rounded-xl border border-border/60 overflow-hidden bg-card shadow-sm">
-      {/* Document Header - Always Visible */}
-      <button
-        onClick={onToggle}
-        className="w-full p-4 flex items-center gap-4 hover:bg-muted/40 transition-colors text-left"
-      >
-        {/* Document Image */}
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden flex-shrink-0 bg-muted/50 flex items-center justify-center border border-border/30">
-          <img 
-            src={doc.image} 
-            alt={doc.name}
-            className="w-full h-full object-contain p-1"
-          />
-        </div>
-        
-        {/* Document Info */}
-        <div className="flex-1 min-w-0 text-left">
-          <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <h6 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h6>
-            {isReady && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary text-xs font-medium rounded-full flex-shrink-0">
-                <CheckCircle className="w-3 h-3" />
-                <span className="hidden sm:inline">Ready</span>
-              </span>
-            )}
-            {isUploaded && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full flex-shrink-0">
-                <CheckCircle className="w-3 h-3" />
-                <span className="hidden sm:inline">Uploaded</span>
-              </span>
-            )}
+    <Card className={cn(
+      "transition-all",
+      isReady && "bg-success/5 border-success/30",
+      isExpanded && "ring-2 ring-primary/20"
+    )}>
+      {/* Card Header - Always visible */}
+      <div className="p-3 sm:p-4 cursor-pointer hover:bg-muted/30 transition-colors" onClick={onToggle}>
+        <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+          {/* Document Image - full width on mobile, small on desktop */}
+          <div className="w-full sm:w-16 h-40 sm:h-16 rounded-lg overflow-hidden flex-shrink-0 bg-muted/30">
+            <img src={doc.image} alt={doc.name} className="w-full h-full object-contain sm:object-cover" />
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{doc.description}</p>
-        </div>
-        
-        {/* Chevron */}
-        <ChevronDown className={cn(
-          "w-5 h-5 text-muted-foreground transition-transform duration-200 flex-shrink-0",
-          isExpanded && "rotate-180"
-        )} />
-      </button>
 
-      {/* Expanded Details */}
-      {isExpanded && (
-        <div className="px-4 pb-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <Separator className="mb-4" />
-          
-          {/* Key Info Box */}
-          {details.keyInfo && (
-            <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Info className="w-4 h-4 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">Key Information</span>
-                  <p className="text-sm text-foreground mt-1">{details.keyInfo}</p>
-                </div>
-              </div>
+          <div className="flex items-start gap-3 w-full">
+            <div className="flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0" onClick={(e) => { e.stopPropagation(); onToggleReady(); }}>
+              <Checkbox checked={isReady} onCheckedChange={() => {}} className="flex-shrink-0" />
             </div>
-          )}
-
-          {/* Acceptance Rules - Stacked Cards for Clarity */}
-          {details.acceptanceRules && (
-            <div className="space-y-3">
-              {/* What's Accepted Card */}
-              <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800/50 rounded-xl">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                    <Check className="w-3.5 h-3.5 text-white" />
-                  </div>
-                  <span className="text-sm font-semibold text-green-800 dark:text-green-300">What's Accepted</span>
-                </div>
-                <ul className="space-y-2">
-                  {details.acceptanceRules.valid.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-green-900 dark:text-green-200">
-                      <Check className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <h6 className="font-semibold text-sm sm:text-base text-foreground">{doc.name}</h6>
+                <span className="text-xs px-2 py-0.5 bg-destructive/10 text-destructive rounded-full font-medium whitespace-nowrap">
+                  Required
+                </span>
+                {isUploaded && (
+                  <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium whitespace-nowrap flex items-center gap-1">
+                    <Upload className="w-3 h-3" />
+                    Uploaded
+                  </span>
+                )}
               </div>
+              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{doc.description}</p>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {isReady ? <CheckCircle2 className="w-5 h-5 text-success" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
+              {isExpanded ? <ChevronUp className="w-5 h-5 text-muted-foreground" /> : <ChevronDown className="w-5 h-5 text-muted-foreground" />}
+            </div>
+          </div>
+        </div>
+      </div>
 
-              {/* What's NOT Accepted Card */}
-              {details.acceptanceRules.invalid && details.acceptanceRules.invalid.length > 0 && (
-                <div className="p-4 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/50 rounded-xl">
+      {/* Expanded Content */}
+      {isExpanded && (
+        <div className="px-4 pb-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-200">
+          <div className="pt-4 space-y-4 max-w-xl mx-auto">
+            {/* Key Info */}
+            {details.keyInfo && (
+              <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Info className="w-4 h-4 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-primary uppercase tracking-wide">Key Information</span>
+                    <p className="text-sm text-foreground mt-1">{details.keyInfo}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Acceptance Rules */}
+            {details.acceptanceRules && (
+              <div className="space-y-3">
+                <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200 dark:border-green-800/50">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
-                      <X className="w-3.5 h-3.5 text-white" />
+                    <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                      <Check className="w-3.5 h-3.5 text-white" />
                     </div>
-                    <span className="text-sm font-semibold text-red-800 dark:text-red-300">NOT Accepted</span>
+                    <span className="text-sm font-semibold text-green-800 dark:text-green-300">What's Accepted</span>
                   </div>
                   <ul className="space-y-2">
-                    {details.acceptanceRules.invalid.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-red-900 dark:text-red-200">
-                        <X className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                    {details.acceptanceRules.valid.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm text-green-900 dark:text-green-200">
+                        <Check className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-              )}
-            </div>
-          )}
 
-          {/* Common Mistakes */}
-          {details.commonMistakes && details.commonMistakes.length > 0 && (
-            <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
-                  <AlertTriangle className="w-3.5 h-3.5 text-white" />
-                </div>
-                <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">Common Mistakes to Avoid</span>
-              </div>
-              <ul className="space-y-2">
-                {details.commonMistakes.map((mistake, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-amber-900 dark:text-amber-200">
-                    <span className="text-amber-600 dark:text-amber-400 flex-shrink-0">•</span>
-                    <span>{mistake}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* How to Obtain */}
-          {details.howToObtain && (
-            <div className="p-4 bg-muted/40 rounded-xl">
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center">
-                  <FileText className="w-4 h-4 text-secondary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-xs font-semibold text-secondary uppercase tracking-wide">How to Obtain</span>
-                  <p className="text-sm text-muted-foreground mt-1">{details.howToObtain}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* City-Specific Links */}
-          {details.citySpecificLinks && details.citySpecificLinks[selectedCity as keyof typeof details.citySpecificLinks] && (
-            <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                  <MapPin className="w-3.5 h-3.5 text-primary" />
-                </div>
-                <span className="text-sm font-semibold text-primary capitalize">{selectedCity} Resources</span>
-              </div>
-              <div className="space-y-2">
-                {details.citySpecificLinks[selectedCity as keyof typeof details.citySpecificLinks]?.map((link, idx) => (
-                  <a
-                    key={idx}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-start gap-3 p-3 rounded-lg bg-background/60 hover:bg-background border border-border/30 transition-colors group"
-                  >
-                    <ExternalLink className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                    <div className="min-w-0">
-                      <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors block">{link.label}</span>
-                      <p className="text-xs text-muted-foreground mt-0.5">{link.description}</p>
+                {details.acceptanceRules.invalid && details.acceptanceRules.invalid.length > 0 && (
+                  <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-xl border border-red-200 dark:border-red-800/50">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+                        <X className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <span className="text-sm font-semibold text-red-800 dark:text-red-300">NOT Accepted</span>
                     </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Official Links */}
-          {details.officialLinks && details.officialLinks.length > 0 && (
-            <div className="p-4 bg-secondary/5 border border-secondary/20 rounded-xl">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center">
-                  <Globe className="w-3.5 h-3.5 text-secondary" />
-                </div>
-                <span className="text-sm font-semibold text-foreground">Official Resources</span>
-              </div>
-              <div className="space-y-2">
-                {details.officialLinks.map((link, idx) => (
-                  <a
-                    key={idx}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-start gap-3 p-3 rounded-lg bg-background/60 hover:bg-background border border-border/30 transition-colors group"
-                  >
-                    <ExternalLink className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
-                    <div className="min-w-0">
-                      <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors block">{link.label}</span>
-                      <p className="text-xs text-muted-foreground mt-0.5">{link.description}</p>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Pro Tips */}
-          {details.tips && details.tips.length > 0 && (
-            <div className="p-4 bg-accent/10 border border-accent/20 rounded-xl">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center">
-                  <Lightbulb className="w-3.5 h-3.5 text-accent" />
-                </div>
-                <span className="text-sm font-semibold text-accent">Pro Tips</span>
-              </div>
-              <ul className="space-y-2">
-                {details.tips.map((tip, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-sm text-foreground">
-                    <span className="text-accent flex-shrink-0">💡</span>
-                    <span>{tip}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Document Upload Section */}
-          <div className="pt-4 border-t border-border">
-            <div className="flex items-center gap-2 mb-3">
-              <Upload className="w-4 h-4 text-primary" />
-              <span className="text-sm font-semibold text-foreground">Your Upload</span>
-            </div>
-            {isAuthenticated ? (
-              <DocumentUploadComponent
-                documentId={doc.id}
-                upload={upload}
-                isUploading={isUploading}
-                onUpload={onUpload}
-                onDelete={onDelete}
-                onView={onView}
-                onDownload={onDownload}
-                onPrint={onPrint}
-                disabled={false}
-              />
-            ) : (
-              <div className="p-4 bg-muted/30 rounded-xl text-center">
-                <p className="text-sm text-muted-foreground">Sign in to upload and track your documents</p>
+                    <ul className="space-y-2">
+                      {details.acceptanceRules.invalid.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-sm text-red-900 dark:text-red-200">
+                          <X className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
-          </div>
 
-          {/* Mark as Ready Button */}
-          <div className="pt-4">
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleReady();
-              }}
-              variant={isReady ? "outline" : "default"}
-              className="w-full gap-2"
-            >
-              {isReady ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4" />
-                  Marked as Ready
-                </>
+            {/* Common Mistakes */}
+            {details.commonMistakes && details.commonMistakes.length > 0 && (
+              <div className="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/50">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+                    <AlertTriangle className="w-3.5 h-3.5 text-white" />
+                  </div>
+                  <span className="text-sm font-semibold text-amber-800 dark:text-amber-300">Common Mistakes to Avoid</span>
+                </div>
+                <ul className="space-y-2">
+                  {details.commonMistakes.map((mistake, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-amber-900 dark:text-amber-200">
+                      <span className="text-amber-600 dark:text-amber-400 flex-shrink-0">•</span>
+                      <span>{mistake}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* How to Obtain */}
+            {details.howToObtain && (
+              <div className="p-4 bg-muted/40 rounded-xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-semibold text-foreground">How to Obtain</span>
+                </div>
+                <p className="text-sm text-muted-foreground">{details.howToObtain}</p>
+              </div>
+            )}
+
+            {/* City-Specific Links */}
+            {details.citySpecificLinks && details.citySpecificLinks[selectedCity as keyof typeof details.citySpecificLinks] && (
+              <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                    <MapPin className="w-3.5 h-3.5 text-primary" />
+                  </div>
+                  <span className="text-sm font-semibold text-primary capitalize">{selectedCity} Resources</span>
+                </div>
+                <div className="space-y-2">
+                  {details.citySpecificLinks[selectedCity as keyof typeof details.citySpecificLinks]?.map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3 p-3 rounded-lg bg-background/60 hover:bg-background border border-border/30 transition-colors group"
+                    >
+                      <ExternalLink className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                      <div className="min-w-0">
+                        <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors block">{link.label}</span>
+                        <p className="text-xs text-muted-foreground mt-0.5">{link.description}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Official Links */}
+            {details.officialLinks && details.officialLinks.length > 0 && (
+              <div className="p-4 bg-secondary/5 border border-secondary/20 rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center">
+                    <Globe className="w-3.5 h-3.5 text-secondary" />
+                  </div>
+                  <span className="text-sm font-semibold text-foreground">Official Resources</span>
+                </div>
+                <div className="space-y-2">
+                  {details.officialLinks.map((link, idx) => (
+                    <a
+                      key={idx}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-3 p-3 rounded-lg bg-background/60 hover:bg-background border border-border/30 transition-colors group"
+                    >
+                      <ExternalLink className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
+                      <div className="min-w-0">
+                        <span className="text-sm font-medium text-foreground group-hover:text-secondary transition-colors block">{link.label}</span>
+                        <p className="text-xs text-muted-foreground mt-0.5">{link.description}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Pro Tips */}
+            {details.tips && details.tips.length > 0 && (
+              <div className="p-4 bg-primary/5 rounded-xl border border-primary/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                    <Lightbulb className="w-3.5 h-3.5 text-primary" />
+                  </div>
+                  <span className="text-sm font-semibold text-primary">Pro Tips</span>
+                </div>
+                <ul className="space-y-2">
+                  {details.tips.map((tip, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-foreground">
+                      <span className="text-primary flex-shrink-0">💡</span>
+                      <span>{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Document Upload Section */}
+            <div className="space-y-3">
+              <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Upload className="w-4 h-4 text-primary" />
+                Your Upload
+              </h5>
+              {isAuthenticated ? (
+                <DocumentUploadComponent
+                  documentId={doc.id}
+                  upload={upload}
+                  isUploading={isUploading}
+                  onUpload={onUpload}
+                  onDelete={onDelete}
+                  onView={onView}
+                  onDownload={onDownload}
+                  onPrint={onPrint}
+                  disabled={false}
+                />
               ) : (
-                <>
-                  <Circle className="w-4 h-4" />
-                  Mark as Ready
-                </>
+                <div className="p-4 bg-muted/30 rounded-xl border border-border/50 text-center">
+                  <p className="text-sm text-muted-foreground">Sign in to upload and track your documents</p>
+                </div>
               )}
-            </Button>
-          </div>
+            </div>
 
-          {/* Close Button */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggle();
-            }}
-            className="w-full mt-3 py-2 text-sm text-muted-foreground hover:text-foreground flex items-center justify-center gap-2 transition-colors border-t border-border/50 pt-4"
-          >
-            <ChevronUp className="w-4 h-4" />
-            Close
-          </button>
+            {/* Mark as Ready Button */}
+            <div className="pt-2">
+              <Button
+                variant={isReady ? "outline" : "default"}
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleReady();
+                }}
+                className="w-full sm:w-auto"
+              >
+                {isReady ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Marked as Ready
+                  </>
+                ) : (
+                  <>
+                    <Circle className="w-4 h-4 mr-2" />
+                    Mark as Ready
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 };
 
