@@ -1,39 +1,33 @@
 
 
-# Remove Registration Requirement
+# Align Arrival Phase Document Checklist with Visa Phase Style
 
 ## Overview
-Make all pages accessible without needing to sign up or log in. Users can browse the full app freely.
+Update the document cards in the Arrival Phase (BureaucracyDetail) to match the visual style used in the Visa Wizard's document checklist (Step 3).
 
-## Changes
+## Key Style Differences to Fix
 
-### 1. Remove ProtectedRoute wrappers (src/App.tsx)
-Remove the `ProtectedRoute` wrapper from all routes so every page loads directly without an auth check.
+| Element | Current Arrival Style | Target (Visa Style) |
+|---|---|---|
+| Card wrapper | Custom `rounded-xl border` div | `Card` component with success/ring states |
+| Document image | Small fixed 14x14/16x16 | Full-width on mobile, 16x16 on desktop |
+| Ready indicator | Pill badge in header | Checkbox + status icon (CheckCircle2/Circle) |
+| "Required" badge | Not shown | Red "Required" pill |
+| Expanded content width | Full width | Constrained with `max-w-xl mx-auto` |
+| Close mechanism | Dedicated "Close" button at bottom | Click header to toggle (no separate close button) |
+| Header layout | Single row with chevron | Image above on mobile, beside on desktop; checkbox + chevron + status icon |
 
-### 2. Make hooks and components handle anonymous users
-Several hooks and components use `useAuth()` to get the current user. They need to gracefully handle the case where `user` is `null`:
+## Technical Changes
 
-- **`src/hooks/useUserProgress.ts`** -- Skip database calls when no user; progress won't persist for anonymous users
-- **`src/hooks/useDocumentUploads.ts`** -- Skip upload/fetch when no user; document uploads require auth
-- **`src/components/TaskChat.tsx`** -- Show a "sign in to chat" message instead of the chat input when not logged in
-- **`src/components/MessageReactions.tsx`** -- Disable reactions for anonymous users
-- **`src/components/BureaucracyDetail.tsx`** -- Hide upload sections for anonymous users
-- **`src/pages/VisaWizard.tsx`** -- Skip database persistence when no user
+### 1. Update `DocumentCard` in `src/components/BureaucracyDetail.tsx`
+- Replace the custom div wrapper with the `Card` component, adding conditional `bg-success/5 border-success/30` when ready and `ring-2 ring-primary/20` when expanded
+- Change document image to be full-width (h-40) on mobile, 16x16 on desktop -- matching the visa wizard layout
+- Replace the "Ready" pill and "Mark as Ready" button with a checkbox (same `Checkbox` component from the visa wizard) plus a `CheckCircle2`/`Circle` status icon
+- Add a red "Required" pill badge (all arrival documents are required)
+- Wrap expanded content in `max-w-xl mx-auto` for centered readability
+- Remove the standalone "Close" button at the bottom -- toggling is handled by clicking the header
+- Keep all existing content sections (Key Info, Acceptance Rules, Common Mistakes, etc.) as they already match the visa wizard's style
 
-### 3. Update Navbar (src/components/Navbar.tsx)
-Keep the Sign In button visible for anonymous users so they can optionally log in (e.g., to save progress or use chat).
-
-### 4. Update Index page (src/pages/Index.tsx)
-Remove the auth check from "Start Your Journey" -- always navigate directly to `/home-country` instead of redirecting to `/auth`.
-
-### 5. Keep Auth infrastructure
-The `AuthProvider`, `Auth` page, and `ProtectedRoute` component will remain in the codebase. Users can still optionally sign in to unlock features like progress saving, document uploads, and community chat.
-
-## What stays locked behind login
-- Saving progress to the cloud
-- Document uploads
-- Posting in community chats
-- Message reactions
-
-Everything else (reading guides, browsing steps, viewing FAQs) will be fully open.
+### 2. No data changes needed
+The `ArrivalDocument` interface and data in `arrivalDocuments.ts` already have the same fields (keyInfo, acceptanceRules, commonMistakes, tips, etc.) so no data restructuring is required.
 
