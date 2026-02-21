@@ -34,7 +34,7 @@ export const FloatingChat = ({ taskId, phase, label }: FloatingChatProps) => {
       {/* Floating Button */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg hover:scale-105 transition-transform"
+        className="fixed bottom-20 right-6 z-50 h-14 w-14 rounded-full shadow-lg hover:scale-105 transition-transform"
         size="icon"
       >
         <MessageCircle className="h-6 w-6" />
