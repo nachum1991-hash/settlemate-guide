@@ -1,33 +1,31 @@
 
 
-# Align Arrival Phase Document Checklist with Visa Phase Style
+# Generate Complete Project Documentation for NotebookLM
 
-## Overview
-Update the document cards in the Arrival Phase (BureaucracyDetail) to match the visual style used in the Visa Wizard's document checklist (Step 3).
+I've read every single file in the project. I'll generate a comprehensive markdown document covering every detail -- architecture, routes, components, data, database schema, edge functions, design system, and all content -- and save it to `/mnt/documents/` for you to download.
 
-## Key Style Differences to Fix
+## What the document will contain
 
-| Element | Current Arrival Style | Target (Visa Style) |
-|---|---|---|
-| Card wrapper | Custom `rounded-xl border` div | `Card` component with success/ring states |
-| Document image | Small fixed 14x14/16x16 | Full-width on mobile, 16x16 on desktop |
-| Ready indicator | Pill badge in header | Checkbox + status icon (CheckCircle2/Circle) |
-| "Required" badge | Not shown | Red "Required" pill |
-| Expanded content width | Full width | Constrained with `max-w-xl mx-auto` |
-| Close mechanism | Dedicated "Close" button at bottom | Click header to toggle (no separate close button) |
-| Header layout | Single row with chevron | Image above on mobile, beside on desktop; checkbox + chevron + status icon |
+1. **Project Overview** - Name, purpose, tech stack, dependencies
+2. **Architecture** - Provider hierarchy, routing, navigation model, three-phase journey structure
+3. **Design System** - Complete CSS variables (light/dark), color tokens, typography, shadows, Tailwind config
+4. **All Routes** - Every route with full component logic described
+5. **All Pages** - Complete content and behavior for Index, Auth, HomeCountry, VisaWizard (all 5 steps with all 8 documents and country data for 8 countries), PreDepartureChecklist (all 14 items with subtasks), ArrivalItaly, SocialIntegration (all 4 tabs with all data), Install, NotFound
+6. **All Components** - Every component with props, behavior, and rendering logic: Navbar, PhaseCard, BureaucracyTimeline (2 steps with full city-specific details), BureaucracyDetail (with DocumentCard), TaskChat, TaskFAQ, FloatingChat, DocumentUpload, MessageReactions, CitySelector, IntroVideoModal, InstallPrompt, ProtectedRoute
+7. **All Data Files** - Complete arrivalDocuments.ts (codiceFiscaleDocuments + residencePermitDocuments with all city-specific links), cityData.ts (all 4 cities with questura, transport, university groups, events, ESN chapters, neighborhoods)
+8. **All Hooks** - useUserProgress, useDocumentUploads, usePWAInstall, use-mobile, use-toast
+9. **All Contexts** - AuthContext (sessionStorage strategy), CityContext (localStorage persistence, 4 cities)
+10. **Database Schema** - All 6 tables with columns, types, defaults, constraints, RLS policies, foreign keys, indexes, triggers, functions (handle_new_user, update_updated_at_column, get_profile_display_info), all seeded FAQ data
+11. **Storage** - user-documents bucket with RLS policies
+12. **Edge Functions** - send-chat-message (rate limiting, XSS sanitization, reply validation) and toggle-reaction (emoji whitelist, toggle logic)
+13. **PWA Configuration** - Manifest, service worker, icons, caching strategies
+14. **Authentication Flow** - Sign up/in forms, sessionStorage auth, profile auto-creation trigger, email verification
+15. **All Migration SQL** - Complete migration history in order
 
-## Technical Changes
+## Technical approach
 
-### 1. Update `DocumentCard` in `src/components/BureaucracyDetail.tsx`
-- Replace the custom div wrapper with the `Card` component, adding conditional `bg-success/5 border-success/30` when ready and `ring-2 ring-primary/20` when expanded
-- Change document image to be full-width (h-40) on mobile, 16x16 on desktop -- matching the visa wizard layout
-- Replace the "Ready" pill and "Mark as Ready" button with a checkbox (same `Checkbox` component from the visa wizard) plus a `CheckCircle2`/`Circle` status icon
-- Add a red "Required" pill badge (all arrival documents are required)
-- Wrap expanded content in `max-w-xl mx-auto` for centered readability
-- Remove the standalone "Close" button at the bottom -- toggling is handled by clicking the header
-- Keep all existing content sections (Key Info, Acceptance Rules, Common Mistakes, etc.) as they already match the visa wizard's style
-
-### 2. No data changes needed
-The `ArrivalDocument` interface and data in `arrivalDocuments.ts` already have the same fields (keyInfo, acceptanceRules, commonMistakes, tips, etc.) so no data restructuring is required.
+- Generate a single markdown file using `lov-exec`
+- Write to `/mnt/documents/settlemate-complete-hld.md`
+- Include every piece of content, every data entry, every URL, every configuration value
+- No summaries or abbreviations -- full detail for NotebookLM ingestion
 
