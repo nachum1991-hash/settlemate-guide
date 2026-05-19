@@ -32,8 +32,6 @@ export function InstallPrompt() {
   }, [isInstallable, isInstalled, isIOS, eligible]);
 
 
-    return () => clearTimeout(timer);
-  }, [isInstallable, isInstalled, isIOS]);
 
   const handleDismiss = () => {
     setShowPrompt(false);
