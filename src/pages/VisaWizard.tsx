@@ -16,6 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
 import { FloatingChat, setStoredCountry } from "@/components/FloatingChat";
+import { useProfile } from "@/hooks/useProfile";
+
 
 // Import document images
 import passportImg from "@/assets/documents/passport.png";
