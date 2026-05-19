@@ -84,27 +84,39 @@ export type Database = {
       }
       profiles: {
         Row: {
+          arrival_date: string | null
           avatar_url: string | null
           created_at: string
           email: string
           full_name: string | null
           id: string
+          onboarding_completed: boolean
+          origin_country: string | null
+          university: string | null
           updated_at: string
         }
         Insert: {
+          arrival_date?: string | null
           avatar_url?: string | null
           created_at?: string
           email: string
           full_name?: string | null
           id: string
+          onboarding_completed?: boolean
+          origin_country?: string | null
+          university?: string | null
           updated_at?: string
         }
         Update: {
+          arrival_date?: string | null
           avatar_url?: string | null
           created_at?: string
           email?: string
           full_name?: string | null
           id?: string
+          onboarding_completed?: boolean
+          origin_country?: string | null
+          university?: string | null
           updated_at?: string
         }
         Relationships: []
