@@ -18,6 +18,10 @@ interface FloatingChatProps {
 
 const COUNTRY_STORAGE_KEY = "settlemate-selected-country";
 
+/**
+ * Returns the user's country preference. Prefers the authenticated profile,
+ * falls back to a localStorage value for anonymous users.
+ */
 export const getStoredCountry = (): string | null => {
   return localStorage.getItem(COUNTRY_STORAGE_KEY);
 };
@@ -25,6 +29,7 @@ export const getStoredCountry = (): string | null => {
 export const setStoredCountry = (country: string) => {
   localStorage.setItem(COUNTRY_STORAGE_KEY, country);
 };
+
 
 export const FloatingChat = ({ taskId, phase, label }: FloatingChatProps) => {
   const [isOpen, setIsOpen] = useState(false);

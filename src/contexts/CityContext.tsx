@@ -24,10 +24,14 @@ interface CityContextType {
 const CityContext = createContext<CityContextType | undefined>(undefined);
 
 export const CityProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedCity, setSelectedCity] = useState<City>(() => {
+  const [selectedCity, setSelectedCityState] = useState<City>(() => {
     const stored = localStorage.getItem('selectedCity');
     return (stored as City) || 'milano';
   });
+
+  const setSelectedCity = (city: City) => {
+    setSelectedCityState(city);
+  };
 
   useEffect(() => {
     localStorage.setItem('selectedCity', selectedCity);
