@@ -16,6 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
 import { FloatingChat, setStoredCountry } from "@/components/FloatingChat";
+import { useProfile } from "@/hooks/useProfile";
+
 
 // Import document images
 import passportImg from "@/assets/documents/passport.png";
@@ -282,6 +284,7 @@ const VisaWizard = () => {
     isUploaded,
     getUpload
   } = useDocumentUploads('visa');
+  const { profile } = useProfile();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -290,6 +293,20 @@ const VisaWizard = () => {
     university: "polimi",
     intendedArrival: ""
   });
+
+  // Prefill from profile (set during onboarding)
+  useEffect(() => {
+    if (!profile) return;
+    setFormData((prev) => ({
+      ...prev,
+      fullName: prev.fullName || profile.full_name || "",
+      email: prev.email || profile.email || "",
+      country: prev.country || profile.origin_country || "",
+      university: profile.university || prev.university,
+      intendedArrival: prev.intendedArrival || profile.arrival_date || "",
+    }));
+  }, [profile]);
+
   const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
   const totalSteps = 5;

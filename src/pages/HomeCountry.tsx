@@ -6,14 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Plane, CheckCircle2, Circle } from "lucide-react";
 import { IntroVideoModal } from "@/components/IntroVideoModal";
 import { FloatingChat, getStoredCountry } from "@/components/FloatingChat";
+import { useProfile } from "@/hooks/useProfile";
 
 const HomeCountry = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const { profile } = useProfile();
 
   useEffect(() => {
-    setSelectedCountry(getStoredCountry());
-  }, []);
+    setSelectedCountry(profile?.origin_country ?? getStoredCountry());
+  }, [profile]);
+
 
   return (
     <div className="min-h-screen bg-background">

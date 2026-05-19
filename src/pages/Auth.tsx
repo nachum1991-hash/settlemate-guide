@@ -29,11 +29,11 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${window.location.origin}/onboarding`,
         data: {
           full_name: fullName,
         },
@@ -48,14 +48,22 @@ const Auth = () => {
         description: error.message,
         variant: 'destructive',
       });
-    } else {
+    } else if (data.session) {
+      // Email confirmation disabled — user is auto-signed in
       toast({
-        title: 'Success!',
-        description: 'Account created successfully. You can now sign in.',
+        title: 'Welcome! 🎉',
+        description: "Let's personalize your journey.",
       });
-      navigate('/');
+      navigate('/onboarding');
+    } else {
+      // Email confirmation required
+      toast({
+        title: 'Check your inbox 📬',
+        description: `We sent a confirmation link to ${email}. Click it to activate your account.`,
+      });
     }
   };
+
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
