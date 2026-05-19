@@ -2,26 +2,35 @@ import { useState, useEffect } from "react";
 import { X, Download, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
 
 export function InstallPrompt() {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
+  const { user } = useAuth();
+  const { profile } = useProfile();
   const [showPrompt, setShowPrompt] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
+  const eligible = !user || (profile?.onboarding_completed ?? false);
+
   useEffect(() => {
-    // Check if user has dismissed the prompt before
     const hasDismissed = localStorage.getItem("pwa-prompt-dismissed");
     if (hasDismissed) {
       setDismissed(true);
       return;
     }
+    if (!eligible) return;
 
-    // Show prompt after a delay for better UX
     const timer = setTimeout(() => {
       if ((isInstallable || isIOS) && !isInstalled) {
         setShowPrompt(true);
       }
-    }, 30000); // Show after 30 seconds
+    }, 30000);
+
+    return () => clearTimeout(timer);
+  }, [isInstallable, isInstalled, isIOS, eligible]);
+
 
     return () => clearTimeout(timer);
   }, [isInstallable, isInstalled, isIOS]);
