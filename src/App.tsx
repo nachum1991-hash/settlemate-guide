@@ -15,8 +15,8 @@ import HomeCountry from "./pages/HomeCountry";
 import ArrivalItaly from "./pages/ArrivalItaly";
 import SocialIntegration from "./pages/SocialIntegration";
 import Install from "./pages/Install";
-import ProtectedRoute from "./components/ProtectedRoute";
-
+import Onboarding from "./pages/Onboarding";
+import OnboardingGate from "./components/OnboardingGate";
 
 const queryClient = new QueryClient();
 
@@ -29,14 +29,15 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/install" element={<Install />} />
-              <Route path="/home-country" element={<HomeCountry />} />
-              <Route path="/arrival-italy" element={<ArrivalItaly />} />
-              <Route path="/social-integration" element={<SocialIntegration />} />
-              <Route path="/visa-wizard" element={<VisaWizard />} />
-              <Route path="/pre-departure" element={<PreDepartureChecklist />} />
+              <Route path="/" element={<OnboardingGate><Index /></OnboardingGate>} />
+              <Route path="/home-country" element={<OnboardingGate><HomeCountry /></OnboardingGate>} />
+              <Route path="/arrival-italy" element={<OnboardingGate><ArrivalItaly /></OnboardingGate>} />
+              <Route path="/social-integration" element={<OnboardingGate><SocialIntegration /></OnboardingGate>} />
+              <Route path="/visa-wizard" element={<OnboardingGate><VisaWizard /></OnboardingGate>} />
+              <Route path="/pre-departure" element={<OnboardingGate><PreDepartureChecklist /></OnboardingGate>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
