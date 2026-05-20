@@ -469,7 +469,7 @@ const PreDepartureChecklist = () => {
                                       <TaskFAQ taskId={item.id} phase="phase-1" />
                                     </TabsContent>
                                     <TabsContent value="chat" className="mt-3">
-                                      <TaskChat taskId={item.id} phase="phase-1" />
+                                      <TaskChat taskId={selectedCountry ? `${item.id}-${selectedCountry}` : item.id} phase="phase-1" />
                                     </TabsContent>
                                   </Tabs>
                                 </div>
