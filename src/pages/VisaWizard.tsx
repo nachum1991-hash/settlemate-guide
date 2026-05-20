@@ -300,7 +300,7 @@ const VisaWizard = () => {
     setFormData((prev) => ({
       ...prev,
       fullName: prev.fullName || profile.full_name || "",
-      email: prev.email || profile.email || "",
+      email: prev.email || user?.email || "",
       country: prev.country || profile.origin_country || "",
       university: profile.university || prev.university,
       intendedArrival: prev.intendedArrival || profile.arrival_date || "",

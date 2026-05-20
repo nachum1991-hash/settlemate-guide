@@ -87,7 +87,6 @@ export type Database = {
           arrival_date: string | null
           avatar_url: string | null
           created_at: string
-          email: string
           full_name: string | null
           id: string
           onboarding_completed: boolean
@@ -99,7 +98,6 @@ export type Database = {
           arrival_date?: string | null
           avatar_url?: string | null
           created_at?: string
-          email: string
           full_name?: string | null
           id: string
           onboarding_completed?: boolean
@@ -111,7 +109,6 @@ export type Database = {
           arrival_date?: string | null
           avatar_url?: string | null
           created_at?: string
-          email?: string
           full_name?: string | null
           id?: string
           onboarding_completed?: boolean
@@ -230,6 +227,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_read_chat_room: { Args: { _task_id: string }; Returns: boolean }
       get_profile_display_info: {
         Args: { profile_user_id: string }
         Returns: {
