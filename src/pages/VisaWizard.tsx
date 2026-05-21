@@ -287,29 +287,21 @@ const VisaWizard = () => {
   const { profile } = useProfile();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
     country: "",
-    university: "polimi",
-    intendedArrival: ""
   });
 
-  // Prefill from profile (set during onboarding)
+  // Prefill country from profile (set during onboarding)
   useEffect(() => {
     if (!profile) return;
     setFormData((prev) => ({
       ...prev,
-      fullName: prev.fullName || profile.full_name || "",
-      email: prev.email || user?.email || "",
       country: prev.country || profile.origin_country || "",
-      university: profile.university || prev.university,
-      intendedArrival: prev.intendedArrival || profile.arrival_date || "",
     }));
   }, [profile]);
 
   const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
-  const totalSteps = 5;
+  const totalSteps = 4;
   const progressPercentage = currentStep / (totalSteps - 1) * 100;
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
