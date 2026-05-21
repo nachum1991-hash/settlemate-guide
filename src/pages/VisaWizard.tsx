@@ -5,7 +5,6 @@ import { useDocumentUploads } from "@/hooks/useDocumentUploads";
 import DocumentUploadComponent from "@/components/DocumentUpload";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -287,29 +286,21 @@ const VisaWizard = () => {
   const { profile } = useProfile();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
     country: "",
-    university: "polimi",
-    intendedArrival: ""
   });
 
-  // Prefill from profile (set during onboarding)
+  // Prefill country from profile (set during onboarding)
   useEffect(() => {
     if (!profile) return;
     setFormData((prev) => ({
       ...prev,
-      fullName: prev.fullName || profile.full_name || "",
-      email: prev.email || user?.email || "",
       country: prev.country || profile.origin_country || "",
-      university: profile.university || prev.university,
-      intendedArrival: prev.intendedArrival || profile.arrival_date || "",
     }));
   }, [profile]);
 
   const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
-  const totalSteps = 5;
+  const totalSteps = 4;
   const progressPercentage = currentStep / (totalSteps - 1) * 100;
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
@@ -462,11 +453,9 @@ const VisaWizard = () => {
       case 0:
         return true;
       case 1:
-        return formData.fullName && formData.email;
-      case 2:
         return formData.country;
+      case 2:
       case 3:
-      case 4:
         return true;
       default:
         return false;
@@ -505,21 +494,18 @@ const VisaWizard = () => {
           <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
           {/* Step indicators - horizontally scrollable on mobile */}
-          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-5 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             {[{
             num: 0,
             label: "Overview"
           }, {
             num: 1,
-            label: "Personal Info"
-          }, {
-            num: 2,
             label: "Country"
           }, {
-            num: 3,
+            num: 2,
             label: "Documents"
           }, {
-            num: 4,
+            num: 3,
             label: "Timeline"
           }].map(step => <div key={step.num} className={cn("flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto", currentStep === step.num && "bg-primary/10", currentStep > step.num && "opacity-60")}>
                 <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]", currentStep === step.num && "bg-primary text-primary-foreground", currentStep > step.num && "bg-success text-success-foreground", currentStep < step.num && "bg-muted text-muted-foreground")}>
@@ -642,62 +628,8 @@ const VisaWizard = () => {
                 </Button>
               </div>}
 
-            {/* Step 1: Personal Information */}
-            {currentStep === 1 && <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">Personal Information</h2>
-                  <p className="text-sm sm:text-base text-muted-foreground">Let's start with your basic details</p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name (as in passport)</Label>
-                    <Input id="fullName" placeholder="John Doe" value={formData.fullName} onChange={e => setFormData({
-                  ...formData,
-                  fullName: e.target.value
-                })} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" placeholder="your.email@example.com" value={formData.email} onChange={e => setFormData({
-                  ...formData,
-                  email: e.target.value
-                })} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="university">Italian University</Label>
-                    <Select value={formData.university} onValueChange={value => setFormData({
-                  ...formData,
-                  university: value
-                })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your university" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="polimi">Politecnico di Milano</SelectItem>
-                        <SelectItem value="unimi">University of Milano</SelectItem>
-                        <SelectItem value="bocconi">Bocconi University</SelectItem>
-                        <SelectItem value="sapienza">Sapienza University of Rome</SelectItem>
-                        <SelectItem value="polito">Politecnico di Torino</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="arrival">Intended Arrival Date</Label>
-                    <Input id="arrival" type="date" value={formData.intendedArrival} onChange={e => setFormData({
-                  ...formData,
-                  intendedArrival: e.target.value
-                })} />
-                  </div>
-                </div>
-              </div>}
-
-            {/* Step 2: Country Selection */}
-            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 1: Country Selection */}
+            {currentStep === 1 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Country of Residence</h2>
                   <p className="text-muted-foreground">
@@ -778,8 +710,8 @@ const VisaWizard = () => {
                   </>}
               </div>}
 
-            {/* Step 3: Document Checklist */}
-            {currentStep === 3 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 2: Document Checklist */}
+            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Document Checklist</h2>
                   <p className="text-muted-foreground">
@@ -914,7 +846,7 @@ const VisaWizard = () => {
                                       </span>}
                                   </h5>
                                   {!formData.country && <p className="text-xs text-muted-foreground pl-6 italic">
-                                      Select your country in Step 2 to see country-specific links
+                                      Select your country in Step 1 to see country-specific links
                                     </p>}
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6">
                                     {allLinks.map((link, idx) => <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className={cn("flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors group text-xs", idx < countryLinks.length ? "bg-primary/5 border border-primary/20" : "bg-muted/30")}>
@@ -1005,8 +937,8 @@ const VisaWizard = () => {
                 
               </div>}
 
-            {/* Step 4: Timeline & Next Steps */}
-            {currentStep === 4 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 3: Timeline & Next Steps */}
+            {currentStep === 3 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Your Visa Timeline</h2>
                   <p className="text-muted-foreground">
