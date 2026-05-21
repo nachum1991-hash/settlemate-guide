@@ -454,11 +454,9 @@ const VisaWizard = () => {
       case 0:
         return true;
       case 1:
-        return formData.fullName && formData.email;
-      case 2:
         return formData.country;
+      case 2:
       case 3:
-      case 4:
         return true;
       default:
         return false;
@@ -497,21 +495,18 @@ const VisaWizard = () => {
           <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
           {/* Step indicators - horizontally scrollable on mobile */}
-          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-5 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             {[{
             num: 0,
             label: "Overview"
           }, {
             num: 1,
-            label: "Personal Info"
-          }, {
-            num: 2,
             label: "Country"
           }, {
-            num: 3,
+            num: 2,
             label: "Documents"
           }, {
-            num: 4,
+            num: 3,
             label: "Timeline"
           }].map(step => <div key={step.num} className={cn("flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto", currentStep === step.num && "bg-primary/10", currentStep > step.num && "opacity-60")}>
                 <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]", currentStep === step.num && "bg-primary text-primary-foreground", currentStep > step.num && "bg-success text-success-foreground", currentStep < step.num && "bg-muted text-muted-foreground")}>
@@ -770,8 +765,8 @@ const VisaWizard = () => {
                   </>}
               </div>}
 
-            {/* Step 3: Document Checklist */}
-            {currentStep === 3 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 2: Document Checklist */}
+            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Document Checklist</h2>
                   <p className="text-muted-foreground">
@@ -906,7 +901,7 @@ const VisaWizard = () => {
                                       </span>}
                                   </h5>
                                   {!formData.country && <p className="text-xs text-muted-foreground pl-6 italic">
-                                      Select your country in Step 2 to see country-specific links
+                                      Select your country in Step 1 to see country-specific links
                                     </p>}
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6">
                                     {allLinks.map((link, idx) => <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className={cn("flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors group text-xs", idx < countryLinks.length ? "bg-primary/5 border border-primary/20" : "bg-muted/30")}>
@@ -997,8 +992,8 @@ const VisaWizard = () => {
                 
               </div>}
 
-            {/* Step 4: Timeline & Next Steps */}
-            {currentStep === 4 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 3: Timeline & Next Steps */}
+            {currentStep === 3 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Your Visa Timeline</h2>
                   <p className="text-muted-foreground">
