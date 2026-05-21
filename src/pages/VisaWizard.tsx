@@ -629,62 +629,8 @@ const VisaWizard = () => {
                 </Button>
               </div>}
 
-            {/* Step 1: Personal Information */}
-            {currentStep === 1 && <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">Personal Information</h2>
-                  <p className="text-sm sm:text-base text-muted-foreground">Let's start with your basic details</p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name (as in passport)</Label>
-                    <Input id="fullName" placeholder="John Doe" value={formData.fullName} onChange={e => setFormData({
-                  ...formData,
-                  fullName: e.target.value
-                })} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" placeholder="your.email@example.com" value={formData.email} onChange={e => setFormData({
-                  ...formData,
-                  email: e.target.value
-                })} />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="university">Italian University</Label>
-                    <Select value={formData.university} onValueChange={value => setFormData({
-                  ...formData,
-                  university: value
-                })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your university" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="polimi">Politecnico di Milano</SelectItem>
-                        <SelectItem value="unimi">University of Milano</SelectItem>
-                        <SelectItem value="bocconi">Bocconi University</SelectItem>
-                        <SelectItem value="sapienza">Sapienza University of Rome</SelectItem>
-                        <SelectItem value="polito">Politecnico di Torino</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="arrival">Intended Arrival Date</Label>
-                    <Input id="arrival" type="date" value={formData.intendedArrival} onChange={e => setFormData({
-                  ...formData,
-                  intendedArrival: e.target.value
-                })} />
-                  </div>
-                </div>
-              </div>}
-
-            {/* Step 2: Country Selection */}
-            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 1: Country Selection */}
+            {currentStep === 1 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Country of Residence</h2>
                   <p className="text-muted-foreground">
