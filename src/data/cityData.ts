@@ -220,7 +220,7 @@ export const eventsByCity: Record<City, Array<{
   milano: [
     {
       name: "ESN Welcome Week Milan",
-      date: "September 2024",
+      date: "Welcome Week (early September each year)",
       location: "Various locations, Milan",
       type: "Social",
       free: true,
@@ -249,7 +249,7 @@ export const eventsByCity: Record<City, Array<{
   roma: [
     {
       name: "ESN Roma Welcome Week",
-      date: "September 2024",
+      date: "Welcome Week (early September each year)",
       location: "Various locations, Rome",
       type: "Social",
       free: true,
@@ -269,7 +269,7 @@ export const eventsByCity: Record<City, Array<{
   torino: [
     {
       name: "ESN Torino Welcome Week",
-      date: "September 2024",
+      date: "Welcome Week (early September each year)",
       location: "Various locations, Turin",
       type: "Social",
       free: true,
@@ -289,7 +289,7 @@ export const eventsByCity: Record<City, Array<{
   pavia: [
     {
       name: "ESN Pavia Welcome Week",
-      date: "September 2024",
+      date: "Welcome Week (early September each year)",
       location: "Università di Pavia",
       type: "Social",
       free: true,
