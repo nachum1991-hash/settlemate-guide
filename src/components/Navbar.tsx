@@ -26,7 +26,7 @@ export const Navbar = () => {
   };
 
   const navLinks = [
-    { to: '/', label: 'Home' },
+    { to: '/dashboard', label: 'Home' },
     { to: '/visa-wizard', label: 'Visa' },
     { to: '/arrival-italy', label: 'Arrival' },
     { to: '/social-integration', label: 'Social' },
@@ -38,7 +38,7 @@ export const Navbar = () => {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to={user ? '/dashboard' : '/'} className="flex items-center space-x-2">
             <span className="text-xl font-bold text-primary">SettleMate</span>
           </Link>
 
