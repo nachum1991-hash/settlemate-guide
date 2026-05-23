@@ -216,7 +216,7 @@ const baseDocuments: VisaDocument[] = [{
   required: true,
   image: financialImg,
   details: {
-    keyInfo: "Minimum €6,079.45/year (€506.62/month × 12) - 2024/2025 rates.",
+    keyInfo: "Approximately €6,079.45/year (€506.62/month × 12) per recent published rates. Amounts are indicative — confirm current minimum on the official MAECI visa portal.",
     acceptanceRules: {
       valid: ["Bank statements from last 3-6 months showing consistent balance", "Scholarship letter covering full amount", "Sponsor bank statement WITH notarized sponsorship letter"],
       invalid: ["Banking app screenshots", "Sponsor letter without bank proof"]
@@ -262,7 +262,7 @@ const baseDocuments: VisaDocument[] = [{
   required: true,
   image: paymentImg,
   details: {
-    keyInfo: "€116 for National (D) visa - NON-REFUNDABLE even if denied.",
+    keyInfo: "€116 for National (D) visa is the commonly published fee — NON-REFUNDABLE even if denied. Amount is indicative; confirm current fee with your embassy.",
     commonMistakes: ["Bringing only card when embassy requires cash (or vice versa)", "VFS centers have additional service fees (€20-30)"],
     officialLinks: [{
       label: "Find Your Embassy",
