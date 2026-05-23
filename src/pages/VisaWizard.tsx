@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle, ExternalLink, Info, Globe, ChevronDown, ChevronUp, Check, X, AlertTriangle, FileText, Lightbulb, Upload } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDocumentUploads } from "@/hooks/useDocumentUploads";
@@ -16,6 +16,8 @@ import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
 import { FloatingChat, setStoredCountry } from "@/components/FloatingChat";
 import { useProfile } from "@/hooks/useProfile";
+import { Disclaimer } from "@/components/Disclaimer";
+import { Footer } from "@/components/Footer";
 
 
 // Import document images
@@ -214,7 +216,7 @@ const baseDocuments: VisaDocument[] = [{
   required: true,
   image: financialImg,
   details: {
-    keyInfo: "Minimum €6,079.45/year (€506.62/month × 12) - 2024/2025 rates.",
+    keyInfo: "Approximately €6,079.45/year (€506.62/month × 12) per recent published rates. Amounts are indicative — confirm current minimum on the official MAECI visa portal.",
     acceptanceRules: {
       valid: ["Bank statements from last 3-6 months showing consistent balance", "Scholarship letter covering full amount", "Sponsor bank statement WITH notarized sponsorship letter"],
       invalid: ["Banking app screenshots", "Sponsor letter without bank proof"]
@@ -260,7 +262,7 @@ const baseDocuments: VisaDocument[] = [{
   required: true,
   image: paymentImg,
   details: {
-    keyInfo: "€116 for National (D) visa - NON-REFUNDABLE even if denied.",
+    keyInfo: "€116 for National (D) visa is the commonly published fee — NON-REFUNDABLE even if denied. Amount is indicative; confirm current fee with your embassy.",
     commonMistakes: ["Bringing only card when embassy requires cash (or vice versa)", "VFS centers have additional service fees (€20-30)"],
     officialLinks: [{
       label: "Find Your Embassy",
@@ -284,19 +286,35 @@ const VisaWizard = () => {
     getUpload
   } = useDocumentUploads('visa');
   const { profile } = useProfile();
-  const [currentStep, setCurrentStep] = useState(0);
+  const STEP_STORAGE_KEY = "settlemate-visa-wizard-step";
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    const stored = sessionStorage.getItem(STEP_STORAGE_KEY);
+    const n = stored ? parseInt(stored, 10) : 0;
+    return Number.isFinite(n) && n >= 0 && n <= 3 ? n : 0;
+  });
+  const [maxStepReached, setMaxStepReached] = useState<number>(currentStep);
   const [formData, setFormData] = useState({
     country: "",
   });
+  const hasPrefilled = useRef(false);
 
-  // Prefill country from profile (set during onboarding)
+  // Prefill country from profile ONCE (set during onboarding). Guarded to never
+  // reset currentStep or overwrite a country the user just picked.
   useEffect(() => {
-    if (!profile) return;
+    if (!profile || hasPrefilled.current) return;
+    hasPrefilled.current = true;
     setFormData((prev) => ({
       ...prev,
       country: prev.country || profile.origin_country || "",
     }));
   }, [profile]);
+
+  // Persist step + max-step-reached
+  useEffect(() => {
+    try { sessionStorage.setItem(STEP_STORAGE_KEY, String(currentStep)); } catch {}
+    setMaxStepReached((m) => Math.max(m, currentStep));
+  }, [currentStep]);
 
   const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
@@ -461,11 +479,11 @@ const VisaWizard = () => {
         return false;
     }
   };
-  return <div className="min-h-screen bg-background">
+  return <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
       <header className="bg-primary py-4 sm:py-6 px-4 shadow-elevated">
         <div className="container mx-auto max-w-4xl">
-          <Link to="/">
+          <Link to="/dashboard">
             <Button variant="ghost" className="mb-3 sm:mb-4 text-primary-foreground hover:bg-primary-foreground/10 text-sm sm:text-base">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
@@ -480,6 +498,11 @@ const VisaWizard = () => {
         </div>
       </header>
 
+      <div className="px-4 pt-4 max-w-4xl mx-auto w-full">
+        <Disclaimer />
+      </div>
+
+
       {/* Progress Bar */}
       <div className="bg-muted/50 py-4 sm:py-6 px-4">
         <div className="container mx-auto max-w-4xl">
@@ -493,29 +516,47 @@ const VisaWizard = () => {
           </div>
           <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
-          {/* Step indicators - horizontally scrollable on mobile */}
+          {/* Step indicators - clickable for steps already reached */}
           <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
-            {[{
-            num: 0,
-            label: "Overview"
-          }, {
-            num: 1,
-            label: "Country"
-          }, {
-            num: 2,
-            label: "Documents"
-          }, {
-            num: 3,
-            label: "Timeline"
-          }].map(step => <div key={step.num} className={cn("flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto", currentStep === step.num && "bg-primary/10", currentStep > step.num && "opacity-60")}>
-                <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]", currentStep === step.num && "bg-primary text-primary-foreground", currentStep > step.num && "bg-success text-success-foreground", currentStep < step.num && "bg-muted text-muted-foreground")}>
-                  {currentStep > step.num ? <CheckCircle2 className="w-4 h-4" /> : step.num === 0 ? <Info className="w-4 h-4" /> : step.num}
-                </div>
-                <span className="text-[10px] sm:text-xs text-center font-medium leading-tight whitespace-nowrap">{step.label}</span>
-              </div>)}
+            {[
+              { num: 0, label: "Overview" },
+              { num: 1, label: "Country" },
+              { num: 2, label: "Documents" },
+              { num: 3, label: "Timeline" },
+            ].map(step => {
+              const reached = step.num <= maxStepReached;
+              const isCurrent = currentStep === step.num;
+              return (
+                <button
+                  key={step.num}
+                  type="button"
+                  onClick={() => { if (reached) { setCurrentStep(step.num); window.scrollTo(0, 0); } }}
+                  disabled={!reached}
+                  aria-current={isCurrent ? "step" : undefined}
+                  className={cn(
+                    "flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto text-left",
+                    isCurrent && "bg-primary/10",
+                    reached && !isCurrent && "hover:bg-muted cursor-pointer",
+                    !reached && "opacity-40 cursor-not-allowed",
+                  )}
+                >
+                  <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]",
+                    isCurrent && "bg-primary text-primary-foreground",
+                    !isCurrent && reached && step.num < currentStep && "bg-success text-success-foreground",
+                    !isCurrent && reached && step.num >= currentStep && "bg-primary/20 text-primary",
+                    !reached && "bg-muted text-muted-foreground")}>
+                    {!isCurrent && reached && step.num < currentStep
+                      ? <CheckCircle2 className="w-4 h-4" />
+                      : step.num === 0 ? <Info className="w-4 h-4" /> : step.num}
+                  </div>
+                  <span className="text-[10px] sm:text-xs text-center font-medium leading-tight whitespace-nowrap">{step.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
+
 
       {/* Main Content */}
       <div className="py-6 sm:py-8 md:py-12 px-2 sm:px-3 md:px-6 lg:px-8">
@@ -753,7 +794,6 @@ const VisaWizard = () => {
                               <p className="text-xs sm:text-sm text-muted-foreground">{doc.description}</p>
                             </div>
                             <div className="flex items-center gap-2 flex-shrink-0">
-                              {documentStatus[doc.id] ? <CheckCircle2 className="w-5 h-5 text-success" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
                               {expandedDocument === doc.id ? <ChevronUp className="w-5 h-5 text-muted-foreground" /> : <ChevronDown className="w-5 h-5 text-muted-foreground" />}
                             </div>
                           </div>
@@ -1053,6 +1093,7 @@ const VisaWizard = () => {
       </div>
 
       {formData.country && <FloatingChat taskId={`visa-${formData.country}`} phase="phase-1" label={`${countries.find(c => c.value === formData.country)?.label || formData.country} Community`} />}
+      <Footer />
     </div>;
 };
 export default VisaWizard;

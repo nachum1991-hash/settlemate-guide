@@ -1,4 +1,4 @@
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -30,10 +30,13 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
   return (
     <Card
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } }}
       className={cn(
-        "p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 min-h-[44px] w-full lg:aspect-square lg:flex-1 relative",
+        "group p-4 sm:p-5 md:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 animate-in fade-in slide-in-from-bottom-4 min-h-[44px] w-full lg:aspect-square lg:flex-1 relative",
         isActive ? "shadow-elevated border-2" : "shadow-soft hover:shadow-elevated border",
-        isActive ? colorClasses[phase.color as keyof typeof colorClasses] : "border-border bg-card"
+        isActive ? colorClasses[phase.color as keyof typeof colorClasses] : "border-border bg-card hover:border-primary/40"
       )}
       style={{ animationDelay: `${delay}ms` }}
     >
@@ -51,13 +54,17 @@ const PhaseCard = ({ phase, isActive, onClick, delay = 0 }: PhaseCardProps) => {
         <div className="flex-1 text-left lg:text-center lg:flex-none">
           <h3 className={cn(
             "text-base sm:text-lg font-bold mb-1 transition-colors duration-300",
-            isActive ? "text-foreground" : "text-muted-foreground"
+            isActive ? "text-foreground" : "text-foreground"
           )}>
             {phase.title}
           </h3>
-          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-3">
             {phase.description}
           </p>
+          <span className="inline-flex items-center gap-1 text-xs sm:text-sm font-medium text-primary group-hover:underline">
+            View phase
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+          </span>
         </div>
 
         {phase.status === "locked" && !isActive && (

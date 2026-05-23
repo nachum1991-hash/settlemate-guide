@@ -1,4 +1,6 @@
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+import { Disclaimer } from "@/components/Disclaimer";
 import { Card } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import BureaucracyTimeline from "@/components/BureaucracyTimeline";
@@ -6,11 +8,12 @@ import CitySelector from "@/components/CitySelector";
 
 const ArrivalItaly = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      
-      <section className="py-6 sm:py-8 md:py-12 px-2 sm:px-3 md:px-6 lg:px-8">
-        <div className="w-full max-w-6xl mx-auto">
+
+      <section className="py-6 sm:py-8 md:py-12 px-2 sm:px-3 md:px-6 lg:px-8 flex-1">
+        <div className="w-full max-w-6xl mx-auto space-y-4">
+          <Disclaimer />
           <Card className="p-3 sm:p-5 md:p-8 shadow-elevated border-2 border-secondary/20 w-full">
             <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="p-2 sm:p-3 bg-secondary/10 rounded-xl">
@@ -21,12 +24,14 @@ const ArrivalItaly = () => {
                 <p className="text-sm sm:text-base text-muted-foreground">Essential bureaucracy steps - complete within 1-4 weeks</p>
               </div>
             </div>
-            
+
             <CitySelector />
             <BureaucracyTimeline />
           </Card>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 };

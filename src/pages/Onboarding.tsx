@@ -44,7 +44,7 @@ const Onboarding = () => {
   }, [authLoading, user, navigate]);
 
   useEffect(() => {
-    if (profile?.onboarding_completed) navigate('/', { replace: true });
+    if (profile?.onboarding_completed) navigate('/dashboard', { replace: true });
   }, [profile, navigate]);
 
   const totalSteps = 3;
@@ -77,7 +77,7 @@ const Onboarding = () => {
     const city = universityToCity(university);
     if (city) setSelectedCity(city);
     toast({ title: 'All set! 🎉', description: 'Your personalized journey is ready.' });
-    navigate('/', { replace: true });
+    navigate('/visa-wizard', { replace: true });
   };
 
   if (authLoading || profileLoading) {

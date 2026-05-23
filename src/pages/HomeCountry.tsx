@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plane, CheckCircle2, Circle } from "lucide-react";
-import { IntroVideoModal } from "@/components/IntroVideoModal";
 import { FloatingChat, getStoredCountry } from "@/components/FloatingChat";
 import { useProfile } from "@/hooks/useProfile";
 
+
 const HomeCountry = () => {
-  const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const { profile } = useProfile();
 
@@ -18,9 +18,11 @@ const HomeCountry = () => {
   }, [profile]);
 
 
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
+
       
       <section className="py-8 sm:py-12 px-4">
         <div className="container mx-auto max-w-6xl">
@@ -42,9 +44,6 @@ const HomeCountry = () => {
               <Link to="/pre-departure">
                 <ChecklistItem title="Pre-Departure Checklist" description="Book flights, translate documents, prepare essentials" />
               </Link>
-              <div onClick={() => setVideoModalOpen(true)} className="cursor-pointer">
-                <ChecklistItem title="Watch Orientation Video" description="Learn what to expect when you arrive in Italy" />
-              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
@@ -63,15 +62,16 @@ const HomeCountry = () => {
         </div>
       </section>
 
-      <IntroVideoModal open={videoModalOpen} onOpenChange={setVideoModalOpen} />
+
       
       {selectedCountry && (
-        <FloatingChat 
-          taskId={`visa-${selectedCountry}`} 
+        <FloatingChat
+          taskId={`visa-${selectedCountry}`}
           phase="phase-1"
           label={`${selectedCountry.charAt(0).toUpperCase() + selectedCountry.slice(1)} Community`}
         />
       )}
+      <Footer />
     </div>
   );
 };
