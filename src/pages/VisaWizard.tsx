@@ -794,7 +794,6 @@ const VisaWizard = () => {
                               <p className="text-xs sm:text-sm text-muted-foreground">{doc.description}</p>
                             </div>
                             <div className="flex items-center gap-2 flex-shrink-0">
-                              {documentStatus[doc.id] ? <CheckCircle2 className="w-5 h-5 text-success" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
                               {expandedDocument === doc.id ? <ChevronUp className="w-5 h-5 text-muted-foreground" /> : <ChevronDown className="w-5 h-5 text-muted-foreground" />}
                             </div>
                           </div>
