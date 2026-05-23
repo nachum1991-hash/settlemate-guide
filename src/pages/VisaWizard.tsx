@@ -1093,6 +1093,7 @@ const VisaWizard = () => {
       </div>
 
       {formData.country && <FloatingChat taskId={`visa-${formData.country}`} phase="phase-1" label={`${countries.find(c => c.value === formData.country)?.label || formData.country} Community`} />}
+      <Footer />
     </div>;
 };
 export default VisaWizard;
