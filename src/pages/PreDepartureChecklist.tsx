@@ -286,11 +286,12 @@ const PreDepartureChecklist = () => {
   const categories = Array.from(new Set(checklistItems.map(item => item.category)));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
+      <Disclaimer className="m-4" />
       {/* Header */}
       <header className="bg-gradient-to-br from-primary to-accent py-4 sm:py-6 px-4 shadow-elevated">
         <div className="container mx-auto max-w-4xl">
-          <Link to="/">
+          <Link to="/dashboard">
             <Button
               variant="ghost"
               className="mb-3 sm:mb-4 text-primary-foreground hover:bg-primary-foreground/10 text-sm sm:text-base"
@@ -505,12 +506,13 @@ const PreDepartureChecklist = () => {
       </div>
 
       {selectedCountry && (
-        <FloatingChat 
-          taskId={`pre-departure-${selectedCountry}`} 
+        <FloatingChat
+          taskId={`pre-departure-${selectedCountry}`}
           phase="phase-1"
           label={`${selectedCountry.charAt(0).toUpperCase() + selectedCountry.slice(1)} Community`}
         />
       )}
+      <Footer />
     </div>
   );
 };
