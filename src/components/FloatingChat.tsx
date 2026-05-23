@@ -36,11 +36,12 @@ export const FloatingChat = ({ taskId, phase, label }: FloatingChatProps) => {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button — sits above content; on mobile, raised to clear bottom bars/keyboards */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 right-6 z-50 h-14 w-14 rounded-full shadow-lg hover:scale-105 transition-transform"
+        className="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-40 h-14 w-14 rounded-full shadow-lg hover:scale-105 transition-transform"
         size="icon"
+        aria-label="Open community chat"
       >
         <MessageCircle className="h-6 w-6" />
       </Button>

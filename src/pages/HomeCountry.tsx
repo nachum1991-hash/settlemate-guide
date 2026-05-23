@@ -63,8 +63,6 @@ const HomeCountry = () => {
       </section>
 
 
-
-      <IntroVideoModal open={videoModalOpen} onOpenChange={setVideoModalOpen} />
       
       {selectedCountry && (
         <FloatingChat
