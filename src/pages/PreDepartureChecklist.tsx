@@ -11,6 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
 import { FloatingChat, getStoredCountry } from "@/components/FloatingChat";
+import { Disclaimer } from "@/components/Disclaimer";
+import { Footer } from "@/components/Footer";
 
 interface ChecklistItem {
   id: string;
