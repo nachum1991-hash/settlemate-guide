@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,10 +58,11 @@ const SocialIntegration = () => {
   const currentCityData = cityData[selectedCity];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      
-      <section className="py-6 sm:py-8 md:py-12 px-2 sm:px-3 md:px-6 lg:px-8">
+
+      <section className="py-6 sm:py-8 md:py-12 px-2 sm:px-3 md:px-6 lg:px-8 flex-1">
+
         <div className="w-full max-w-6xl mx-auto">
           <Card className="p-3 sm:p-5 md:p-8 shadow-elevated border-2 border-accent/20 w-full">
             <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
@@ -460,18 +462,29 @@ const SocialIntegration = () => {
                     Connect with other students in {cityInfo.name}. Share tips, ask questions, and build your network!
                   </p>
                 </div>
-                
+
+                <Card className="p-4 bg-accent/5 border-accent/20 mb-4">
+                  <p className="text-sm text-foreground font-medium mb-2">👋 New here? Try starting with:</p>
+                  <ul className="text-sm text-muted-foreground space-y-1 list-disc pl-5">
+                    <li>"Hi everyone, I'm starting at {cityInfo.name} this semester — any tips?"</li>
+                    <li>"Looking for a flatmate / housing recs near campus"</li>
+                    <li>"Anyone want to meet up for coffee or an aperitivo this week?"</li>
+                  </ul>
+                </Card>
+
                 <Card className="border-2 border-accent/20 overflow-hidden" style={{ height: '500px' }}>
-                  <TaskChat 
-                    taskId={`social-${selectedCity}`} 
-                    phase="social-integration" 
+                  <TaskChat
+                    taskId={`social-${selectedCity}`}
+                    phase="social-integration"
                   />
                 </Card>
               </TabsContent>
+
             </Tabs>
           </Card>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
