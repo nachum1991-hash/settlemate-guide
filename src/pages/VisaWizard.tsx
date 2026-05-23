@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle, ExternalLink, Info, Globe, ChevronDown, ChevronUp, Check, X, AlertTriangle, FileText, Lightbulb, Upload } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDocumentUploads } from "@/hooks/useDocumentUploads";
@@ -16,6 +16,8 @@ import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
 import { FloatingChat, setStoredCountry } from "@/components/FloatingChat";
 import { useProfile } from "@/hooks/useProfile";
+import { Disclaimer } from "@/components/Disclaimer";
+import { Footer } from "@/components/Footer";
 
 
 // Import document images
@@ -284,19 +286,35 @@ const VisaWizard = () => {
     getUpload
   } = useDocumentUploads('visa');
   const { profile } = useProfile();
-  const [currentStep, setCurrentStep] = useState(0);
+  const STEP_STORAGE_KEY = "settlemate-visa-wizard-step";
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    const stored = sessionStorage.getItem(STEP_STORAGE_KEY);
+    const n = stored ? parseInt(stored, 10) : 0;
+    return Number.isFinite(n) && n >= 0 && n <= 3 ? n : 0;
+  });
+  const [maxStepReached, setMaxStepReached] = useState<number>(currentStep);
   const [formData, setFormData] = useState({
     country: "",
   });
+  const hasPrefilled = useRef(false);
 
-  // Prefill country from profile (set during onboarding)
+  // Prefill country from profile ONCE (set during onboarding). Guarded to never
+  // reset currentStep or overwrite a country the user just picked.
   useEffect(() => {
-    if (!profile) return;
+    if (!profile || hasPrefilled.current) return;
+    hasPrefilled.current = true;
     setFormData((prev) => ({
       ...prev,
       country: prev.country || profile.origin_country || "",
     }));
   }, [profile]);
+
+  // Persist step + max-step-reached
+  useEffect(() => {
+    try { sessionStorage.setItem(STEP_STORAGE_KEY, String(currentStep)); } catch {}
+    setMaxStepReached((m) => Math.max(m, currentStep));
+  }, [currentStep]);
 
   const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
