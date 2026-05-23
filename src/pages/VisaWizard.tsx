@@ -479,11 +479,11 @@ const VisaWizard = () => {
         return false;
     }
   };
-  return <div className="min-h-screen bg-background">
+  return <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
       <header className="bg-primary py-4 sm:py-6 px-4 shadow-elevated">
         <div className="container mx-auto max-w-4xl">
-          <Link to="/">
+          <Link to="/dashboard">
             <Button variant="ghost" className="mb-3 sm:mb-4 text-primary-foreground hover:bg-primary-foreground/10 text-sm sm:text-base">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
@@ -498,6 +498,11 @@ const VisaWizard = () => {
         </div>
       </header>
 
+      <div className="px-4 pt-4 max-w-4xl mx-auto w-full">
+        <Disclaimer />
+      </div>
+
+
       {/* Progress Bar */}
       <div className="bg-muted/50 py-4 sm:py-6 px-4">
         <div className="container mx-auto max-w-4xl">
@@ -511,29 +516,47 @@ const VisaWizard = () => {
           </div>
           <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
-          {/* Step indicators - horizontally scrollable on mobile */}
+          {/* Step indicators - clickable for steps already reached */}
           <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
-            {[{
-            num: 0,
-            label: "Overview"
-          }, {
-            num: 1,
-            label: "Country"
-          }, {
-            num: 2,
-            label: "Documents"
-          }, {
-            num: 3,
-            label: "Timeline"
-          }].map(step => <div key={step.num} className={cn("flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto", currentStep === step.num && "bg-primary/10", currentStep > step.num && "opacity-60")}>
-                <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]", currentStep === step.num && "bg-primary text-primary-foreground", currentStep > step.num && "bg-success text-success-foreground", currentStep < step.num && "bg-muted text-muted-foreground")}>
-                  {currentStep > step.num ? <CheckCircle2 className="w-4 h-4" /> : step.num === 0 ? <Info className="w-4 h-4" /> : step.num}
-                </div>
-                <span className="text-[10px] sm:text-xs text-center font-medium leading-tight whitespace-nowrap">{step.label}</span>
-              </div>)}
+            {[
+              { num: 0, label: "Overview" },
+              { num: 1, label: "Country" },
+              { num: 2, label: "Documents" },
+              { num: 3, label: "Timeline" },
+            ].map(step => {
+              const reached = step.num <= maxStepReached;
+              const isCurrent = currentStep === step.num;
+              return (
+                <button
+                  key={step.num}
+                  type="button"
+                  onClick={() => { if (reached) { setCurrentStep(step.num); window.scrollTo(0, 0); } }}
+                  disabled={!reached}
+                  aria-current={isCurrent ? "step" : undefined}
+                  className={cn(
+                    "flex flex-col items-center gap-1 sm:gap-2 p-2 rounded-lg transition-all min-h-[44px] flex-shrink-0 w-[72px] sm:w-auto text-left",
+                    isCurrent && "bg-primary/10",
+                    reached && !isCurrent && "hover:bg-muted cursor-pointer",
+                    !reached && "opacity-40 cursor-not-allowed",
+                  )}
+                >
+                  <div className={cn("w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all min-h-[44px] min-w-[44px]",
+                    isCurrent && "bg-primary text-primary-foreground",
+                    !isCurrent && reached && step.num < currentStep && "bg-success text-success-foreground",
+                    !isCurrent && reached && step.num >= currentStep && "bg-primary/20 text-primary",
+                    !reached && "bg-muted text-muted-foreground")}>
+                    {!isCurrent && reached && step.num < currentStep
+                      ? <CheckCircle2 className="w-4 h-4" />
+                      : step.num === 0 ? <Info className="w-4 h-4" /> : step.num}
+                  </div>
+                  <span className="text-[10px] sm:text-xs text-center font-medium leading-tight whitespace-nowrap">{step.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
+
 
       {/* Main Content */}
       <div className="py-6 sm:py-8 md:py-12 px-2 sm:px-3 md:px-6 lg:px-8">
