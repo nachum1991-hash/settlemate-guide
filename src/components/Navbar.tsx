@@ -1,9 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback } from './ui/avatar';
-import { Menu, X, Settings } from 'lucide-react';
+import { Menu, X, Settings, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { EditProfileDialog } from './EditProfileDialog';
@@ -17,6 +18,7 @@ import {
 
 export const Navbar = () => {
   const { user } = useAuth();
+  const { isAdmin } = useIsAdmin();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -78,6 +80,14 @@ export const Navbar = () => {
                     <Settings className="mr-2 h-4 w-4" />
                     Edit my details
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">
+                        <ShieldCheck className="mr-2 h-4 w-4" />
+                        Admin console
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut}>Sign Out</DropdownMenuItem>
                 </DropdownMenuContent>

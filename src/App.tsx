@@ -21,6 +21,8 @@ import OnboardingGate from "./components/OnboardingGate";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import About from "./pages/About";
+import Admin from "./pages/Admin";
+import { AdminRoute } from "./components/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +53,9 @@ const App = () => (
               <Route path="/social-integration" element={<OnboardingGate><SocialIntegration /></OnboardingGate>} />
               <Route path="/visa-wizard" element={<OnboardingGate><VisaWizard /></OnboardingGate>} />
               <Route path="/pre-departure" element={<OnboardingGate><PreDepartureChecklist /></OnboardingGate>} />
+
+              {/* Admin-only */}
+              <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
