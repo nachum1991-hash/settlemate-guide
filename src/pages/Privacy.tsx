@@ -23,7 +23,7 @@ const Privacy = () => {
               <li><strong>Account data:</strong> email address and authentication credentials.</li>
               <li><strong>Profile data:</strong> country of origin, intended university, planned arrival date.</li>
               <li><strong>Progress data:</strong> tasks marked complete, documents marked ready.</li>
-              <li><strong>Uploaded documents:</strong> files you choose to upload (passport scans, admission letters, etc.). Stored in a private, encrypted bucket and accessible only to you.</li>
+              <li><strong>Uploaded documents:</strong> Verification documents you submit during the student verification process — including acceptance letters and identification documents (such as passports or national ID cards). These are stored temporarily in a private, encrypted bucket, accessible only to SettleMate administrators for the purpose of verifying your student status. They are permanently and irreversibly deleted immediately upon approval or rejection of your verification request. No verification documents are retained after the decision is made.</li>
               <li><strong>Community chat messages:</strong> messages you post in country/city-scoped chat rooms, visible to other members of those rooms.</li>
             </ul>
           </section>
