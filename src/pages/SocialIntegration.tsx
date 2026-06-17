@@ -406,7 +406,7 @@ const SocialIntegration = () => {
                           <p className="text-xs text-muted-foreground">Student hub with Telegram groups and Discord</p>
                         </a>
                         <a
-                          href="https://www.uniroma1.it/en/pagina/student-life"
+                          href="https://www.uniroma1.it/en/pagina/hello-international-student-help-desk"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-4 bg-accent/5 border border-accent/20 rounded-lg hover:bg-accent/10 transition-colors group"

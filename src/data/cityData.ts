@@ -43,12 +43,12 @@ export const cityData: Record<City, CityBureaucracyInfo> = {
       cardName: "ATM Card",
       website: "https://www.atm.it/",
       studentPrice: "€200/year (under 27)",
-      studentPassUrl: "https://www.atm.it/it/ViasperATM/Abbonamenti/Pagine/Under27.aspx"
+      studentPassUrl: "https://www.atm.it/IT/VIAGGIACONNOI/ABBONAMENTI/Pagine/Tipologie.aspx"
     },
     universities: ["Politecnico di Milano", "Università degli Studi di Milano", "Bocconi University", "Cattolica"],
     esnChapter: {
       name: "ESN Milano",
-      url: "https://esn.it/it/sezioni?city=Milano"
+      url: "https://milanopolitecnico.esn.it/"
     },
     neighborhoods: ["Città Studi", "Navigli", "Porta Romana", "Isola", "Lambrate"]
   },
@@ -73,7 +73,7 @@ export const cityData: Record<City, CityBureaucracyInfo> = {
     universities: ["Sapienza Università di Roma", "LUISS Guido Carli", "Roma Tre", "Tor Vergata"],
     esnChapter: {
       name: "ESN Roma",
-      url: "https://esn.it/it/sezioni?city=Roma"
+      url: "https://romaase.esn.it/"
     },
     neighborhoods: ["San Lorenzo", "Trastevere", "Pigneto", "Testaccio", "Monteverde"]
   },
@@ -93,7 +93,7 @@ export const cityData: Record<City, CityBureaucracyInfo> = {
       cardName: "GTT Card",
       website: "https://www.gtt.to.it/",
       studentPrice: "€180/year",
-      studentPassUrl: "https://www.gtt.to.it/cms/biglietti-e-abbonamenti/abbonamenti"
+      studentPassUrl: "https://www.gtt.to.it/cms/biglietti-abbonamenti/7326-abbonamenti-under-26"
     },
     universities: ["Politecnico di Torino", "Università degli Studi di Torino"],
     esnChapter: {
@@ -224,7 +224,7 @@ export const eventsByCity: Record<City, Array<{
       location: "Various locations, Milan",
       type: "Social",
       free: true,
-      url: "https://milan.esn.it/",
+      url: "https://milanopolitecnico.esn.it/",
       description: "Welcome activities, city tours, and parties for new international students"
     },
     {
@@ -233,7 +233,7 @@ export const eventsByCity: Record<City, Array<{
       location: "Navigli, Milan",
       type: "Social",
       free: false,
-      url: "https://milan.esn.it/events",
+      url: "https://milanopolitecnico.esn.it/events",
       description: "Weekly social meetup with ESN - €5 includes drink"
     },
     {
@@ -242,7 +242,7 @@ export const eventsByCity: Record<City, Array<{
       location: "Piazza Duomo, Milan",
       type: "Cultural",
       free: true,
-      url: "https://www.neweuropetours.eu/milan/",
+      url: "https://www.neweuropetours.eu/milan-walking-tours/",
       description: "Discover Milan's history and landmarks with local guides"
     }
   ],
@@ -253,7 +253,7 @@ export const eventsByCity: Record<City, Array<{
       location: "Various locations, Rome",
       type: "Social",
       free: true,
-      url: "https://roma.esn.it/",
+      url: "https://romaase.esn.it/",
       description: "Welcome activities and orientation for new students in Rome"
     },
     {
@@ -262,7 +262,7 @@ export const eventsByCity: Record<City, Array<{
       location: "Piazza Navona, Rome",
       type: "Cultural",
       free: true,
-      url: "https://www.neweuropetours.eu/rome/",
+      url: "https://www.neweuropetours.eu/sandemans-tours/rome/rome-city-centre-free-tour/",
       description: "Explore ancient Rome with expert local guides"
     }
   ],
@@ -282,7 +282,7 @@ export const eventsByCity: Record<City, Array<{
       location: "Piazza Castello, Turin",
       type: "Cultural",
       free: true,
-      url: "https://www.neweuropetours.eu/turin/",
+      url: "https://www.freetourturin.com/",
       description: "Discover Turin's royal history and architecture"
     }
   ],

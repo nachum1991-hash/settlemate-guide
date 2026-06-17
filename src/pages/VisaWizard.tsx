@@ -85,7 +85,7 @@ const countries = [{
   processingWeeks: "5-7",
   embassyUrl: "https://ambbrasilia.esteri.it/",
   vfsUrl: null,
-  passportRenewalUrl: "https://www.gov.br/pt-br/servicos/obter-passaporte-comum",
+  passportRenewalUrl: "https://www.gov.br/pt-br/servicos/obter-passaporte-comum-para-brasileiro",
   appointmentUrl: "https://prenotaonline.esteri.it/",
   apostilleInfo: "Required - get from local cartório (notary office)",
   paymentMethod: "Bank transfer (check embassy website for details)"
@@ -182,7 +182,7 @@ const baseDocuments: VisaDocument[] = [{
     commonMistakes: ["Selecting Type C (Schengen) instead of Type D (National)", "Leaving 'Address in Italy' blank - use university address if unsure"],
     officialLinks: [{
       label: "Official MAECI Visa Portal",
-      url: "https://vistoperitalia.esteri.it/home/en",
+      url: "https://vistoperitalia.esteri.it/?lang=en_US",
       description: "Download Type D visa form"
     }]
   }
@@ -204,7 +204,7 @@ const baseDocuments: VisaDocument[] = [{
       description: "Commonly accepted for Italian visas"
     }, {
       label: "DR-WALTER EDUCARE24",
-      url: "https://www.dr-walter.com/en/educare24.html",
+      url: "https://www.dr-walter.com/en/insurances/educare24/",
       description: "Popular student choice"
     }],
     tips: ["After arrival, enroll in SSN (Italian NHS) for €149.77/year"]
@@ -644,7 +644,7 @@ const VisaWizard = () => {
                     Official Resources
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <a href="https://vistoperitalia.esteri.it/home/en" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
+                    <a href="https://vistoperitalia.esteri.it/?lang=en_US" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
                       <Globe className="w-4 h-4 text-secondary" />
                       <div className="flex-1">
                         <span className="text-sm font-medium text-foreground group-hover:text-secondary">Official Visa Portal</span>
