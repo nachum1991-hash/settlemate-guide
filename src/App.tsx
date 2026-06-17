@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import VisaWizard from "./pages/VisaWizard";
 import PreDepartureChecklist from "./pages/PreDepartureChecklist";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import HomeCountry from "./pages/HomeCountry";
 import ArrivalItaly from "./pages/ArrivalItaly";
@@ -40,6 +41,7 @@ const App = () => (
 
               {/* Public pages */}
               <Route path="/auth" element={<Auth />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/install" element={<Install />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
