@@ -37,42 +37,42 @@ export interface ArrivalDocument {
 // City-specific resources for documents
 const cityResources = {
   milano: {
-    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/web/guest/contatta/uffici-territoriali/lombardia',
+    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/trova-l-ufficio',
     questura: 'https://questure.poliziadistato.it/Milano',
     aslHealth: 'https://www.ats-milano.it/',
-    postOffice: 'https://www.poste.it/cerca/uffici-postali.html#/search?regione=LOMBARDIA&citta=MILANO',
+    postOffice: 'https://ufficipostali.poste.it/',
     universities: [
-      { name: 'Politecnico di Milano - Segreteria', url: 'https://www.polimi.it/studenti-iscritti/segreterie-studenti/', description: 'Student services and certificates' },
+      { name: 'Politecnico di Milano - Segreteria', url: 'https://www.polimi.it/studenti/contatti', description: 'Student services and certificates' },
       { name: 'Università degli Studi di Milano', url: 'https://www.unimi.it/it/studiare/frequentare-un-corso-di-laurea/iscriversi/segreterie-studenti', description: 'Enrollment certificates' },
       { name: 'Bocconi Student Services', url: 'https://www.unibocconi.it/wps/wcm/connect/bocconi/sitopubblico_it/albero+di+navigazione/home/corsi+di+studio/studenti+iscritti/', description: 'Student desk services' }
     ]
   },
   roma: {
-    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/web/guest/contatta/uffici-territoriali/lazio',
+    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/trova-l-ufficio',
     questura: 'https://questure.poliziadistato.it/Roma',
     aslHealth: 'https://www.aslroma1.it/',
-    postOffice: 'https://www.poste.it/cerca/uffici-postali.html#/search?regione=LAZIO&citta=ROMA',
+    postOffice: 'https://ufficipostali.poste.it/',
     universities: [
       { name: 'Sapienza - Student Services', url: 'https://www.uniroma1.it/it/pagina/segreterie-studenti', description: 'Enrollment certificates and student services' },
       { name: 'LUISS Student Office', url: 'https://www.luiss.it/studenti', description: 'Student administration' },
-      { name: 'Roma Tre Segreteria', url: 'https://www.uniroma3.it/servizi/segreterie-studenti/', description: 'Student secretariat' }
+      { name: 'Roma Tre Segreteria', url: 'https://portalestudente.uniroma3.it/chi-siamo/area-studenti/', description: 'Student secretariat' }
     ]
   },
   torino: {
-    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/web/guest/contatta/uffici-territoriali/piemonte',
+    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/trova-l-ufficio',
     questura: 'https://questure.poliziadistato.it/Torino',
     aslHealth: 'https://www.aslcittaditorino.it/',
-    postOffice: 'https://www.poste.it/cerca/uffici-postali.html#/search?regione=PIEMONTE&citta=TORINO',
+    postOffice: 'https://ufficipostali.poste.it/',
     universities: [
-      { name: 'Politecnico di Torino - Segreteria', url: 'https://www.polito.it/didattica/segreteria_studenti', description: 'Student services and certificates' },
+      { name: 'Politecnico di Torino - Segreteria', url: 'https://www.polito.it/contatti/contatti-per-studenti-e-laureati', description: 'Student services and certificates' },
       { name: 'Università di Torino', url: 'https://www.unito.it/servizi/lo-studio/segreterie-studenti', description: 'Enrollment certificates' }
     ]
   },
   pavia: {
-    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/web/guest/contatta/uffici-territoriali/lombardia',
+    agenziaEntrate: 'https://www.agenziaentrate.gov.it/portale/trova-l-ufficio',
     questura: 'https://questure.poliziadistato.it/Pavia',
     aslHealth: 'https://www.asst-pavia.it/',
-    postOffice: 'https://www.poste.it/cerca/uffici-postali.html#/search?regione=LOMBARDIA&citta=PAVIA',
+    postOffice: 'https://ufficipostali.poste.it/',
     universities: [
       { name: 'Università di Pavia - Segreteria', url: 'https://portale.unipv.it/it/didattica/segreterie-studenti', description: 'Student services and certificates' }
     ]
@@ -208,7 +208,7 @@ export const residencePermitDocuments: ArrivalDocument[] = [
       officialLinks: [
         {
           label: 'Poste Italiane Kit Info',
-          url: 'https://www.poste.it/prodotti/permesso-di-soggiorno.html',
+          url: 'https://www.poste.it/guide-to-obtaining-and-renewing-residence-permits',
           description: 'Official information about the residence permit kit'
         }
       ],
@@ -294,7 +294,7 @@ export const residencePermitDocuments: ArrivalDocument[] = [
       officialLinks: [
         {
           label: 'Agenzia delle Entrate',
-          url: 'https://www.agenziaentrate.gov.it/portale/web/guest/servizi/istanze-e-richieste/richiesta-di-attribuzione-del-codice-fiscale',
+          url: 'https://www.agenziaentrate.gov.it/portale/codice-fiscale-e-tessera-sanitaria/che-cos-cittadini',
           description: 'Official tax agency - request Codice Fiscale online'
         }
       ],

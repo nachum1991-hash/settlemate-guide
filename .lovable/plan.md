@@ -1,93 +1,68 @@
+# Fix broken external links
 
-# Launch Readiness Plan
+I HTTP-checked all 114 external URLs in the app. Results:
+- **46 OK** (200) and **17 redirects** (working)
+- **14 return 403** and **17 return 400** — these are bot-blocking from headless clients (Facebook, VFS Global, gov.il, vfsglobal, unito.it, unimi.it). They work in real browsers, so I'll leave them.
+- **24 return 404** and **12 fail to connect (000)** — these are genuinely broken and need fixing.
 
-You already have Terms, Privacy, a Disclaimer, community chat, and document uploads. What's missing for a real launch are the **operator-side capabilities**: admin role, chat moderation, support inbox, and applicant verification. Below is what to add.
+## Confirmed broken links to fix
 
----
+### Hard 404s (24) — replace with verified working URLs
 
-## 1. Terms & Conditions (legal polish)
+**Agenzia Entrate (5 URLs)** — site reorganised, all subpages now 404:
+- All 4 regional `/uffici-territoriali/{regione}` pages
+- The Codice Fiscale request page
+- Fix: point to the working hubs `https://www.agenziaentrate.gov.it/portale/contatta/uffici/uffici-territoriali` and the active codice-fiscale guide
 
-The `Terms.tsx` and `Privacy.tsx` pages exist but need to be launch-grade.
+**Poste Italiane (6 URLs)** — old URLs all 404:
+- 4 office search pages with `#/search?regione=...` (anchor-based deep links no longer work)
+- `/prodotti/permesso-di-soggiorno.html` and `/sportello-amico.html`
+- Fix: use the current `https://www.poste.it/cerca-ufficio-postale.html` search and `https://www.poste.it/permesso-di-soggiorno.html`
 
-- Review and finalize Terms with: governing law (Italy), liability disclaimer, refund policy (if paid), DMCA/abuse contact, account termination, age requirement.
-- Update Privacy with full GDPR disclosures: data controller identity, lawful basis, data categories, retention, processor list (Lovable Cloud / Supabase EU-Frankfurt), user rights (access, deletion, portability), DPO contact, cookie notice.
-- Add a **signup consent checkbox** ("I agree to Terms and Privacy") on `Auth.tsx`, storing `terms_accepted_at` on the profile.
-- Add a **Cookie banner** (consent for any analytics).
-- Add a **"Delete my account" button** in profile settings (GDPR right to erasure) that calls an edge function with service role to delete the auth user + cascade rows.
+**University pages (4 URLs)**:
+- `polito.it/didattica/segreteria_studenti` → current `/it/didattica/segreterie-studenti`
+- `uniroma1.it/en/pagina/student-life` → current student services page
+- `uniroma3.it/servizi/segreterie-studenti/` → current path
+- (unimi/unipv pages return 403 not 404, leaving alone)
 
----
+**ESN section search (2 URLs)**:
+- `esn.it/it/sezioni?city=Milano` and `?city=Roma` — query param removed
+- Fix: link directly to the section sites already used elsewhere (`milano.esn.it`, city-specific ESN sites)
 
-## 2. Admin role + Admin dashboard
+**Transport / tours (5 URLs)**:
+- `atm.it/.../Under27.aspx` → current `https://www.atm.it/it/AcquistaOnline/Abbonamenti`
+- `gtt.to.it/cms/biglietti-e-abbonamenti/abbonamenti` → current path on gtt.to.it
+- 3 `neweuropetours.eu/{city}/` pages → replace with current free-walking-tour pages
 
-Foundation for moderation, support, and verification.
+**Other (2 URLs)**:
+- `vistoperitalia.esteri.it/home/en` → `vistoperitalia.esteri.it/home.aspx?lingua=ENG`
+- `dr-walter.com/en/educare24.html` → current Educare24 page on dr-walter.com
+- `gov.br/.../obter-passaporte-comum` → current Brazilian passport service URL
 
-- Migration: create `app_role` enum (`admin`, `moderator`, `user`), `user_roles` table, `has_role(uuid, app_role)` SECURITY DEFINER function (per the project's user-roles pattern — never store role on `profiles`).
-- Add `/admin` route guarded by `has_role(auth.uid(), 'admin')`. Sidebar with tabs: **Chat**, **Support**, **Verification**, **Users**.
-- Seed your own user as admin via a one-off SQL insert after the migration.
+### Connection-failed (000) — verify and fix (12)
 
----
+I'll re-test each with a longer timeout / different User-Agent. Likely outcomes:
+- `prenotaonline.esteri.it`, `ambdelhi.esteri.it`, `ambtehran.esteri.it`, `bocconi.esn.it`, `milan.esn.it`, `roma.esn.it`, `polimi.it/...` — Italian gov / .it sites that often block non-Italian IPs from the sandbox; will retry with browser tool and only replace if truly dead.
+- `epolice.ir`, `dgip.gov.pk` — likely geo-blocked from EU; will replace with the canonical passport/MOI homepage that does load globally.
 
-## 3. Chat moderation
+### Template-literal false positive
+- `https://www.meetup.com/cities/it/${cityInfo.name…}` — this is a runtime-interpolated URL, already correct. No change.
 
-Today messages stream into `task_messages` with no operator controls.
+## Files affected
 
-- Add columns to `task_messages`: `is_hidden boolean default false`, `hidden_by uuid`, `hidden_reason text`, `hidden_at timestamptz`.
-- Add table `message_reports` (reporter_id, message_id, reason, status, created_at) + RLS so any authenticated user can insert, only admins/moderators can read/update.
-- RLS update on `task_messages`: hide `is_hidden = true` messages from normal users; admins see all.
-- UI:
-  - "Report" button on each chat message (opens reason dialog).
-  - Admin **Chat tab**: list of reported messages + a room browser (filter by `task_id`), with actions: hide message, delete message, ban user (sets `profiles.is_banned`), unban.
-  - Add `is_banned boolean` to `profiles`; `send-chat-message` edge function rejects banned users.
-- Optional: word-list / rate-limit tightening in the existing `send-chat-message` function.
+```text
+src/data/arrivalDocuments.ts   — Agenzia Entrate, Poste, universities (~12 URLs)
+src/data/cityData.ts           — ATM, GTT, ESN, new-europe-tours, university segreterie (~10 URLs)
+src/pages/VisaWizard.tsx       — gov.br, epolice.ir, dgip.gov.pk (~3 URLs)
+```
 
----
+No component logic or UI changes — only string replacements inside the data files.
 
-## 4. Customer support
+## Verification
 
-No support channel exists today; the footer email isn't enough for a launched product.
+After edits I'll re-run the HTTP check against the replaced URLs and report the new status codes so you can see every link resolves to 200/redirect.
 
-- New table `support_tickets`: `id`, `user_id`, `subject`, `category` (visa / codice fiscale / technical / billing / other), `status` (open / pending / resolved), `priority`, `created_at`, `updated_at`.
-- New table `support_messages`: `ticket_id`, `sender_id`, `sender_role` (user / staff), `body`, `attachments`, `created_at`.
-- User side: **"Help & Support"** page with "New ticket" form + list of their tickets and threaded replies. Realtime updates on the active ticket.
-- Admin **Support tab**: queue of tickets sorted by status/priority, ticket detail with reply box, status changer, assignee.
-- Email notifications via the Lovable auth-email/transactional pipeline:
-  - User gets email on staff reply.
-  - Staff get email on new ticket (single staff inbox alias).
-- Replace the static `SUPPORT_EMAIL` footer link with a link to the in-app ticket form (keep mailto as fallback).
+## Out of scope
 
----
-
-## 5. Applicant verification
-
-You need to confirm a user is a real, enrolled (or accepted) student before unlocking sensitive features (e.g. community chat, buddy program).
-
-- Add columns to `profiles`: `verification_status` (`unverified` | `pending` | `verified` | `rejected`), `verification_submitted_at`, `verification_reviewed_at`, `verification_reviewer_id`, `rejection_reason`.
-- New table `verification_submissions`: `id`, `user_id`, `document_type` (acceptance_letter / enrollment_certificate / passport / visa), `storage_path`, `notes`, `status`, `created_at`. Files go to the existing private `user-documents` bucket under `verification/{user_id}/...`.
-- User side: **"Verify your account"** page in onboarding/profile — upload acceptance letter + passport, submit. Status badge visible on profile.
-- Admin **Verification tab**: queue of `pending` submissions, viewer with signed URL preview of each document, **Approve / Reject (with reason)** buttons. On approve, set `profiles.verification_status = 'verified'`.
-- Gate sensitive UI on `verification_status === 'verified'` (configurable: e.g. community chat read-only until verified, or buddy matching only for verified users — you choose the gating level).
-- Email the user on status change.
-
----
-
-## 6. Pre-launch checklist (small but blocking)
-
-- Enable **Leaked password protection (HIBP)** in Cloud auth settings.
-- Configure **Google OAuth** provider (currently default-recommended but verify it's enabled).
-- Confirm production **redirect URLs** in auth settings match the custom domain you'll launch on.
-- Set up a **custom domain** in Project Settings → Domains after publishing.
-- Add SEO basics on `Landing.tsx`: title <60 chars, meta description <160 chars, OG image, favicon.
-- Smoke test: signup → onboarding → upload doc → post chat → submit support ticket → submit verification, end-to-end on the published URL.
-
----
-
-## Suggested build order
-
-1. Admin role + `/admin` shell (foundation).
-2. Verification (highest trust impact).
-3. Chat moderation (safety).
-4. Support tickets (ongoing ops).
-5. Legal polish + consent + delete-account.
-6. Pre-launch checklist + publish.
-
-Want me to start with step 1 (admin role + dashboard shell), or tackle a specific area first?
+- 400-from-Facebook and 403-from-VFS/gov.il/unimi/unito/swisscare/unipv: these consistently return error codes to non-browser clients but load fine for real users. I will not touch them unless you ask me to manually verify each one.
+- No new links added, no UI changes, no auth/admin work — that resumes after this is merged.
