@@ -1,89 +1,93 @@
 
-# SettleMate Pre-Launch Fixes
+# Launch Readiness Plan
 
-Implementation will go in three waves: P0 launch blockers, P1 broken functionality, P2 polish. After each wave I'll smoke-test in the preview.
+You already have Terms, Privacy, a Disclaimer, community chat, and document uploads. What's missing for a real launch are the **operator-side capabilities**: admin role, chat moderation, support inbox, and applicant verification. Below is what to add.
 
-## P0 — Launch blockers
+---
 
-### 1. Public landing page at `/`
-- Rename current `Index.tsx` → `Dashboard.tsx` (stays gated by `OnboardingGate`).
-- Create new `pages/Landing.tsx`: hero, 3-phase explainer (Visa → Arrival → Social), feature highlights, "Sign Up" / "Log In" CTAs, FAQ, footer.
-- In `App.tsx`: route `/` → if `user` then `<Dashboard>` (via `OnboardingGate`), else `<Landing>`. Implement with a small `RootRoute` wrapper that reads `useAuth()`.
-- Landing uses public `Navbar` variant (Sign In / Sign Up) and no auth required.
+## 1. Terms & Conditions (legal polish)
 
-### 2. Global footer + legal pages
-- New `components/Footer.tsx` rendered on every page (landing, dashboard, all gated pages). Sections: About blurb, Quick links, Legal (Privacy / Terms), Contact (`support@settlemate.app` placeholder — will confirm with user).
-- New pages `/privacy` (GDPR-aware Privacy Policy: data collected — email, name, country, university, uploaded docs in private storage, chat messages; retention; user rights; contact) and `/terms` (informational service, no legal advice, account rules, IP, liability disclaimer).
-- New `/about` page (brief mission + team placeholder).
-- Footer also shown on `/auth`, `/onboarding`, `/install`.
-- Include cookie/data-use note (no third-party analytics currently — note essential cookies only).
+The `Terms.tsx` and `Privacy.tsx` pages exist but need to be launch-grade.
 
-### 3. Remove Lovable badge
-- Call `publish_settings--set_badge_visibility { hide_badge: true }` (requires user approval; pro plan).
+- Review and finalize Terms with: governing law (Italy), liability disclaimer, refund policy (if paid), DMCA/abuse contact, account termination, age requirement.
+- Update Privacy with full GDPR disclosures: data controller identity, lawful basis, data categories, retention, processor list (Lovable Cloud / Supabase EU-Frankfurt), user rights (access, deletion, portability), DPO contact, cookie notice.
+- Add a **signup consent checkbox** ("I agree to Terms and Privacy") on `Auth.tsx`, storing `terms_accepted_at` on the profile.
+- Add a **Cookie banner** (consent for any analytics).
+- Add a **"Delete my account" button** in profile settings (GDPR right to erasure) that calls an edge function with service role to delete the auth user + cascade rows.
 
-### 4. Custom domain
-- Cannot purchase/configure automatically. Will provide instructions and the `<presentation-open-publish>` action so the user can connect `settlemate.app` from Project Settings → Domains.
+---
 
-### 5. Disclaimer
-- Add a compact `<Disclaimer>` component shown (a) inside the footer, (b) as a banner at the top of `/visa-wizard`, `/pre-departure`, `/arrival-italy`. Text: "SettleMate provides informational guidance only and is not official legal or immigration advice. Rules, fees, and processing times change — always confirm with official Italian government sources and your local Italian embassy/consulate."
+## 2. Admin role + Admin dashboard
 
-## P1 — Broken functionality
+Foundation for moderation, support, and verification.
 
-### 6. "Watch Introduction" button
-- `IntroVideoModal` currently embeds a Rickroll. Replace with a real placeholder or remove. Plan: remove the button until a real video URL is provided (ask user later). Keep modal code but don't render the trigger.
+- Migration: create `app_role` enum (`admin`, `moderator`, `user`), `user_roles` table, `has_role(uuid, app_role)` SECURITY DEFINER function (per the project's user-roles pattern — never store role on `profiles`).
+- Add `/admin` route guarded by `has_role(auth.uid(), 'admin')`. Sidebar with tabs: **Chat**, **Support**, **Verification**, **Users**.
+- Seed your own user as admin via a one-off SQL insert after the migration.
 
-### 7. Bottom "Start Your Journey" CTA
-- In Dashboard, change handler to `navigate('/visa-wizard')` (or `/home-country` if onboarded user hasn't started Phase 1).
+---
 
-### 8. "Watch Orientation Video" on `/home-country`
-- Inspect and remove that list item (or hide it) until a real video URL exists.
+## 3. Chat moderation
 
-### 9. Visa Wizard step stepper
-- Track `maxStepReached` in state (also persisted to `sessionStorage` keyed by user id to fix the "reverts to Overview" bug — likely caused by `useEffect` prefill resetting `currentStep`).
-- Make step indicators buttons: clickable if `step <= maxStepReached`, otherwise `disabled` with `cursor-not-allowed opacity-50`.
-- Audit the `useEffect` that prefills profile data — ensure it doesn't reset `currentStep`. Use a `hasPrefilled` ref guard.
+Today messages stream into `task_messages` with no operator controls.
 
-### 10. Wizard validation
-- Personal Info step was removed in last turn, but re-audit: ensure each step's `canProceed` validates required fields. Country step: country required. Documents step: at least required docs checked (or allow skip with warning). Show inline error messages via `react-hook-form` + `zod`, or lightweight manual validation with toast + field-level error text.
-- Note: item 10 references Personal Info step which no longer exists. Will still tighten validation on remaining steps and remove any stale reference.
+- Add columns to `task_messages`: `is_hidden boolean default false`, `hidden_by uuid`, `hidden_reason text`, `hidden_at timestamptz`.
+- Add table `message_reports` (reporter_id, message_id, reason, status, created_at) + RLS so any authenticated user can insert, only admins/moderators can read/update.
+- RLS update on `task_messages`: hide `is_hidden = true` messages from normal users; admins see all.
+- UI:
+  - "Report" button on each chat message (opens reason dialog).
+  - Admin **Chat tab**: list of reported messages + a room browser (filter by `task_id`), with actions: hide message, delete message, ban user (sets `profiles.is_banned`), unban.
+  - Add `is_banned boolean` to `profiles`; `send-chat-message` edge function rejects banned users.
+- Optional: word-list / rate-limit tightening in the existing `send-chat-message` function.
 
-### 11. Document checklist UI
-- Audit `BureaucracyDetail.tsx` and the Documents step in `VisaWizard.tsx`. Replace dual circular controls with a single `Checkbox` ("Mark as ready") + chevron for expand.
-- Wire "Uploaded" badge to actually appear only when a file exists in `useDocumentUploads` AND counter logic counts the same source of truth. Single derived state: `isReady = markedReady || hasUpload` (or strictly `markedReady` — confirm with user).
+---
 
-### 12. Verify PDF downloads
-- Test `generatePDF` on Dashboard, `/pre-departure`, `/arrival-italy`. Fix any that throw or don't trigger download.
+## 4. Customer support
 
-## P2 — Content & polish
+No support channel exists today; the footer email isn't enough for a launched product.
 
-### 13. Events dates on `/social-integration`
-- Replace hardcoded "September 2024" with relative phrasing ("Welcome week each semester", "Weekly aperitivos", "Monthly meetups").
+- New table `support_tickets`: `id`, `user_id`, `subject`, `category` (visa / codice fiscale / technical / billing / other), `status` (open / pending / resolved), `priority`, `created_at`, `updated_at`.
+- New table `support_messages`: `ticket_id`, `sender_id`, `sender_role` (user / staff), `body`, `attachments`, `created_at`.
+- User side: **"Help & Support"** page with "New ticket" form + list of their tickets and threaded replies. Realtime updates on the active ticket.
+- Admin **Support tab**: queue of tickets sorted by status/priority, ticket detail with reply box, status changer, assignee.
+- Email notifications via the Lovable auth-email/transactional pipeline:
+  - User gets email on staff reply.
+  - Staff get email on new ticket (single staff inbox alias).
+- Replace the static `SUPPORT_EMAIL` footer link with a link to the in-app ticket form (keep mailto as fallback).
 
-### 14. Expand `/arrival-italy`
-- This contradicts the memory rule "Phase 2 strictly focuses on Codice Fiscale & Residence Permit". I will ask the user before adding SIM/bank/SSN/transport/anagrafica. **Will flag in chat after plan approval.**
+---
 
-### 15. Empty Community Chat
-- Seed `/social-integration` Community tab with 3-4 pinned welcome messages from a "SettleMate Team" system author, OR hide the tab if message count = 0. Default: seed pinned messages.
+## 5. Applicant verification
 
-### 16. Verify official figures
-- Update text to add "(indicative — verify with official sources)" next to €506/month, €116, €30,000, 4-12 weeks. Quick web-check current values; if outdated, update.
+You need to confirm a user is a real, enrolled (or accepted) student before unlocking sensitive features (e.g. community chat, buddy program).
 
-### 17. Homepage roadmap cards
-- Add `cursor-pointer`, hover lift, "View phase →" affordance to `PhaseCard`.
+- Add columns to `profiles`: `verification_status` (`unverified` | `pending` | `verified` | `rejected`), `verification_submitted_at`, `verification_reviewed_at`, `verification_reviewer_id`, `rejection_reason`.
+- New table `verification_submissions`: `id`, `user_id`, `document_type` (acceptance_letter / enrollment_certificate / passport / visa), `storage_path`, `notes`, `status`, `created_at`. Files go to the existing private `user-documents` bucket under `verification/{user_id}/...`.
+- User side: **"Verify your account"** page in onboarding/profile — upload acceptance letter + passport, submit. Status badge visible on profile.
+- Admin **Verification tab**: queue of `pending` submissions, viewer with signed URL preview of each document, **Approve / Reject (with reason)** buttons. On approve, set `profiles.verification_status = 'verified'`.
+- Gate sensitive UI on `verification_status === 'verified'` (configurable: e.g. community chat read-only until verified, or buddy matching only for verified users — you choose the gating level).
+- Email the user on status change.
 
-### 18. Floating chat mobile overlap
-- In `FloatingChat.tsx`, raise `bottom` offset on mobile (`bottom-24 md:bottom-6`) and ensure `z-index` < modal but > content. Add safe-area padding.
+---
 
-### 19. Post-onboarding next step
-- After `Onboarding.tsx` completes, `navigate('/visa-wizard')` instead of `/`. Or land on Dashboard but auto-scroll to a "Recommended next: Start Visa Wizard" highlighted card.
+## 6. Pre-launch checklist (small but blocking)
 
-## Verification
+- Enable **Leaked password protection (HIBP)** in Cloud auth settings.
+- Configure **Google OAuth** provider (currently default-recommended but verify it's enabled).
+- Confirm production **redirect URLs** in auth settings match the custom domain you'll launch on.
+- Set up a **custom domain** in Project Settings → Domains after publishing.
+- Add SEO basics on `Landing.tsx`: title <60 chars, meta description <160 chars, OG image, favicon.
+- Smoke test: signup → onboarding → upload doc → post chat → submit support ticket → submit verification, end-to-end on the published URL.
 
-After each wave: load `/` logged-out and logged-in, walk through wizard steps, click every CTA, generate each PDF, resize preview to 375px to check chat overlap.
+---
 
-## Open questions (will ask after approval)
+## Suggested build order
 
-1. Support email address for footer?
-2. Item 14 — expand Phase 2 with new docs, or keep restricted per existing memory?
-3. Doc "ready" semantics — checkbox only, or auto-mark when uploaded?
-4. Provide a real intro video URL, or keep button removed?
+1. Admin role + `/admin` shell (foundation).
+2. Verification (highest trust impact).
+3. Chat moderation (safety).
+4. Support tickets (ongoing ops).
+5. Legal polish + consent + delete-account.
+6. Pre-launch checklist + publish.
+
+Want me to start with step 1 (admin role + dashboard shell), or tackle a specific area first?
