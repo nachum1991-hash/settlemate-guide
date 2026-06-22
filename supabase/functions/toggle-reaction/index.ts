@@ -63,6 +63,20 @@ serve(async (req) => {
       );
     }
 
+    // Verification gate
+    const serviceClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    const { data: profileRow } = await serviceClient
+      .from('profiles')
+      .select('verified')
+      .eq('id', userId)
+      .maybeSingle();
+    if (!profileRow?.verified) {
+      return new Response(
+        JSON.stringify({ error: 'not_verified' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Check if reaction already exists
     const { data: existingReaction } = await userClient
       .from('message_reactions')
