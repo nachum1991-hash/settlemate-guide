@@ -9,6 +9,11 @@ export interface Profile {
   university: string | null;
   arrival_date: string | null;
   onboarding_completed: boolean;
+  verified: boolean;
+  verification_method: 'email_domain' | 'acceptance_letter' | null;
+  verification_date: string | null;
+  university_email: string | null;
+  university_email_verified_at: string | null;
 }
 
 export const useProfile = () => {
