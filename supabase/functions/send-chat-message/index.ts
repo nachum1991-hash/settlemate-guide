@@ -106,6 +106,19 @@ serve(async (req) => {
     // Create service role client for database operations
     const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Verification gate: only verified users may post
+    const { data: profileRow } = await serviceClient
+      .from('profiles')
+      .select('verified')
+      .eq('id', userId)
+      .maybeSingle();
+    if (!profileRow?.verified) {
+      return new Response(
+        JSON.stringify({ error: 'not_verified', message: 'Verify your student status to join the chat.' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Server-side rate limiting: check recent messages from this user
     const rateLimitCutoff = new Date(Date.now() - RATE_LIMIT_WINDOW_SECONDS * 1000).toISOString();
     

@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useVerification } from '@/hooks/useVerification';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, MessageCircle, Reply, X } from 'lucide-react';
+import { Send, MessageCircle, Reply, X, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageReactions } from './MessageReactions';
@@ -45,6 +47,7 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
   const [loading, setLoading] = useState(false);
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   const { user, supabase: authSupabase } = useAuth();
+  const { verified, loading: verifLoading } = useVerification();
   const { toast } = useToast();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -291,6 +294,23 @@ export const TaskChat = ({ taskId, phase }: TaskChatProps) => {
       <div className="text-center py-8 text-muted-foreground">
         <MessageCircle className="w-12 h-12 mx-auto mb-2 opacity-50" />
         <p>Sign in to join the conversation</p>
+      </div>
+    );
+  }
+
+  if (!verifLoading && !verified) {
+    return (
+      <div className="border rounded-lg bg-card p-6 sm:p-8 text-center space-y-3">
+        <div className="rounded-full bg-primary/10 p-3 inline-flex">
+          <ShieldCheck className="w-6 h-6 text-primary" />
+        </div>
+        <h3 className="font-semibold text-base">Verify to join the chat</h3>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          The community chat is for verified students only. Confirm your university email or upload your acceptance letter — guides and FAQs stay open to everyone.
+        </p>
+        <Button asChild className="min-h-[44px]">
+          <Link to="/verify">Verify your student status</Link>
+        </Button>
       </div>
     );
   }
