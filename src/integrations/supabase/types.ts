@@ -50,6 +50,30 @@ export type Database = {
         }
         Relationships: []
       }
+      email_outbox: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          subject: string
+          to_email: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          subject: string
+          to_email: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          subject?: string
+          to_email?: string
+        }
+        Relationships: []
+      }
       message_reactions: {
         Row: {
           created_at: string
@@ -92,7 +116,12 @@ export type Database = {
           onboarding_completed: boolean
           origin_country: string | null
           university: string | null
+          university_email: string | null
+          university_email_verified_at: string | null
           updated_at: string
+          verification_date: string | null
+          verification_method: string | null
+          verified: boolean
         }
         Insert: {
           arrival_date?: string | null
@@ -103,7 +132,12 @@ export type Database = {
           onboarding_completed?: boolean
           origin_country?: string | null
           university?: string | null
+          university_email?: string | null
+          university_email_verified_at?: string | null
           updated_at?: string
+          verification_date?: string | null
+          verification_method?: string | null
+          verified?: boolean
         }
         Update: {
           arrival_date?: string | null
@@ -114,7 +148,12 @@ export type Database = {
           onboarding_completed?: boolean
           origin_country?: string | null
           university?: string | null
+          university_email?: string | null
+          university_email_verified_at?: string | null
           updated_at?: string
+          verification_date?: string | null
+          verification_method?: string | null
+          verified?: boolean
         }
         Relationships: []
       }
@@ -189,6 +228,33 @@ export type Database = {
           },
         ]
       }
+      university_domains: {
+        Row: {
+          base_domain: string
+          created_at: string
+          id: string
+          notes: string | null
+          tier: number
+          updated_at: string
+        }
+        Insert: {
+          base_domain: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          tier?: number
+          updated_at?: string
+        }
+        Update: {
+          base_domain?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          tier?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_progress: {
         Row: {
           completed: boolean
@@ -243,6 +309,78 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_otps: {
+        Row: {
+          attempts: number
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          salt: string
+          university_email: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          salt: string
+          university_email: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          salt?: string
+          university_email?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      verification_submissions: {
+        Row: {
+          created_at: string
+          file_path: string | null
+          id: string
+          reject_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_path?: string | null
+          id?: string
+          reject_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_path?: string | null
+          id?: string
+          reject_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -263,6 +401,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_verified: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
