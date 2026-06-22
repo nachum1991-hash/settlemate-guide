@@ -23,6 +23,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import About from "./pages/About";
 import Admin from "./pages/Admin";
+import Verify from "./pages/Verify";
 import { AdminRoute } from "./components/AdminRoute";
 
 const queryClient = new QueryClient();
@@ -55,6 +56,7 @@ const App = () => (
               <Route path="/social-integration" element={<OnboardingGate><SocialIntegration /></OnboardingGate>} />
               <Route path="/visa-wizard" element={<OnboardingGate><VisaWizard /></OnboardingGate>} />
               <Route path="/pre-departure" element={<OnboardingGate><PreDepartureChecklist /></OnboardingGate>} />
+              <Route path="/verify" element={<OnboardingGate><Verify /></OnboardingGate>} />
 
               {/* Admin-only */}
               <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />

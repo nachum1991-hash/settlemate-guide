@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ShieldCheck, MessageSquareWarning, LifeBuoy, UserCheck, Users } from 'lucide-react';
+import { VerificationQueue } from '@/components/admin/VerificationQueue';
 
 const Admin = () => {
   const [tab, setTab] = useState('verification');
@@ -44,11 +45,7 @@ const Admin = () => {
           </TabsList>
 
           <TabsContent value="verification" className="mt-6">
-            <PlaceholderPanel
-              title="Applicant verification"
-              description="Review uploaded acceptance letters and IDs, then approve or reject student accounts."
-              status="Coming next"
-            />
+            <VerificationQueue />
           </TabsContent>
 
           <TabsContent value="chat" className="mt-6">
