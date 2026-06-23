@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { X, Download, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/hooks/useProfile";
 
+const SUPPRESSED_PATHS = ["/verify", "/visa-wizard"];
+
 export function InstallPrompt() {
   const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const { user } = useAuth();
   const { profile } = useProfile();
+  const location = useLocation();
   const [showPrompt, setShowPrompt] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
-  const eligible = !user || (profile?.onboarding_completed ?? false);
+  const onSuppressedRoute = SUPPRESSED_PATHS.some((p) => location.pathname.startsWith(p));
+  const eligible = !onSuppressedRoute && (!user || (profile?.onboarding_completed ?? false));
 
   useEffect(() => {
     const hasDismissed = localStorage.getItem("pwa-prompt-dismissed");
@@ -46,7 +51,7 @@ export function InstallPrompt() {
     }
   };
 
-  if (!showPrompt || dismissed || isInstalled) return null;
+  if (!showPrompt || dismissed || isInstalled || onSuppressedRoute) return null;
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-4 duration-300">

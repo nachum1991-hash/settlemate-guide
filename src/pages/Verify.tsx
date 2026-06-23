@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useVerification } from '@/hooks/useVerification';
@@ -28,13 +28,22 @@ const Verify = () => {
   const [uploading, setUploading] = useState(false);
   const [cooldown, setCooldown] = useState(0);
 
-  // Decide initial step
+  // Decide initial step once after loading first resolves.
+  // After that, only auto-advance forward to 'done'; never reset the user backward.
+  const decidedRef = useRef(false);
   useEffect(() => {
     if (loading) return;
-    if (verified) { setStep('done'); return; }
-    if (pendingSubmission) { setStep('done'); return; }
-    if (emailVerifiedAt) { setStep('letter'); setEmail(universityEmail ?? ''); return; }
-    setStep('email');
+    if (!decidedRef.current) {
+      decidedRef.current = true;
+      if (verified) { setStep('done'); return; }
+      if (pendingSubmission) { setStep('done'); return; }
+      if (emailVerifiedAt) { setStep('letter'); setEmail(universityEmail ?? ''); return; }
+      setStep('email');
+      return;
+    }
+    if (verified || pendingSubmission) {
+      setStep('done');
+    }
   }, [loading, verified, pendingSubmission, emailVerifiedAt, universityEmail]);
 
   useEffect(() => {
