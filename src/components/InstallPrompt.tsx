@@ -51,7 +51,7 @@ export function InstallPrompt() {
     }
   };
 
-  if (!showPrompt || dismissed || isInstalled) return null;
+  if (!showPrompt || dismissed || isInstalled || onSuppressedRoute) return null;
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-4 duration-300">
