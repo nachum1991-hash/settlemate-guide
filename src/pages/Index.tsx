@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plane, MapPin, Users } from "lucide-react";
+import { Plane, MapPin, Users, Play } from "lucide-react";
 import PhaseCard from "@/components/PhaseCard";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import IntroVideoModal from "@/components/IntroVideoModal";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [videoOpen, setVideoOpen] = useState(false);
+
+
 
   const handleStartJourney = () => {
     navigate('/visa-wizard');
