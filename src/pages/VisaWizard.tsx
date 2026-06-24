@@ -517,12 +517,11 @@ const VisaWizard = () => {
           <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
           {/* Step indicators - clickable for steps already reached */}
-          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             {[
               { num: 0, label: "Overview" },
-              { num: 1, label: "Country" },
-              { num: 2, label: "Documents" },
-              { num: 3, label: "Timeline" },
+              { num: 1, label: "Documents" },
+              { num: 2, label: "Timeline" },
             ].map(step => {
               const reached = step.num <= maxStepReached;
               const isCurrent = currentStep === step.num;
