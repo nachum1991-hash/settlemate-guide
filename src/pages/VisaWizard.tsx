@@ -472,11 +472,8 @@ const VisaWizard = () => {
   const canProceed = () => {
     switch (currentStep) {
       case 0:
-        return true;
       case 1:
-        return formData.country;
       case 2:
-      case 3:
         return true;
       default:
         return false;
