@@ -405,10 +405,7 @@ const VisaWizard = () => {
   };
   const toggleDocument = (docId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setDocumentStatus(prev => ({
-      ...prev,
-      [docId]: !prev[docId]
-    }));
+    toggleProgress(docId);
   };
   const toggleExpanded = (docId: string) => {
     setExpandedDocument(prev => prev === docId ? null : docId);
