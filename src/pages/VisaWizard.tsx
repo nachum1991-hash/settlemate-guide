@@ -292,7 +292,7 @@ const VisaWizard = () => {
     if (typeof window === "undefined") return 0;
     const stored = sessionStorage.getItem(STEP_STORAGE_KEY);
     const n = stored ? parseInt(stored, 10) : 0;
-    return Number.isFinite(n) && n >= 0 && n <= 3 ? n : 0;
+    return Number.isFinite(n) && n >= 0 && n <= 2 ? n : 0;
   });
   const [maxStepReached, setMaxStepReached] = useState<number>(currentStep);
   const [formData, setFormData] = useState({
@@ -300,16 +300,20 @@ const VisaWizard = () => {
   });
   const hasPrefilled = useRef(false);
 
-  // Prefill country from profile ONCE (set during onboarding). Guarded to never
-  // reset currentStep or overwrite a country the user just picked.
+  // Prefill country from profile (set during onboarding), with fallback to
+  // localStorage-stored country, then "other" if nothing is available.
+  // Guarded to never reset currentStep or overwrite a country the user just picked.
   useEffect(() => {
-    if (!profile || hasPrefilled.current) return;
+    if (hasPrefilled.current) return;
+    // Wait until profile fetch has resolved (profile may be null for signed-out users)
+    if (profile === null && user) return;
     hasPrefilled.current = true;
+    const fallback = getStoredCountry() || "other";
     setFormData((prev) => ({
       ...prev,
-      country: prev.country || profile.origin_country || "",
+      country: prev.country || profile?.origin_country || fallback,
     }));
-  }, [profile]);
+  }, [profile, user]);
 
   // Persist step + max-step-reached
   useEffect(() => {
@@ -317,9 +321,10 @@ const VisaWizard = () => {
     setMaxStepReached((m) => Math.max(m, currentStep));
   }, [currentStep]);
 
-  const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
+  // Persist per-document "Mark as Ready" state in user_progress (scoped to visa-docs phase)
+  const { progress: documentStatus, toggleProgress } = useUserProgress('visa-docs');
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
-  const totalSteps = 4;
+  const totalSteps = 3;
   const progressPercentage = currentStep / (totalSteps - 1) * 100;
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
