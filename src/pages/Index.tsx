@@ -53,6 +53,7 @@ const Index = () => {
               <Button size="lg" variant="outline" className="text-base sm:text-lg px-6 sm:px-8 shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground" onClick={() => setVideoOpen(true)}>
                 <Play className="mr-2 h-4 w-4" />
                 Watch Introduction
+              </Button>
             </div>
           </div>
         </div>
@@ -102,6 +103,7 @@ const Index = () => {
       </section>
 
       <Footer />
+      <IntroVideoModal open={videoOpen} onOpenChange={setVideoOpen} />
     </div>
   );
 };
