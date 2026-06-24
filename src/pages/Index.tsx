@@ -5,7 +5,7 @@ import { Plane, MapPin, Users, Play } from "lucide-react";
 import PhaseCard from "@/components/PhaseCard";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import IntroVideoModal from "@/components/IntroVideoModal";
+import { IntroVideoModal } from "@/components/IntroVideoModal";
 
 const Index = () => {
   const navigate = useNavigate();
