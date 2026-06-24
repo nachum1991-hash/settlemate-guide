@@ -804,7 +804,7 @@ const VisaWizard = () => {
                                       </span>}
                                   </h5>
                                   {!formData.country && <p className="text-xs text-muted-foreground pl-6 italic">
-                                      Select your country in Step 1 to see country-specific links
+                                      Country-specific links will appear once your country is set in your profile
                                     </p>}
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6">
                                     {allLinks.map((link, idx) => <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className={cn("flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors group text-xs", idx < countryLinks.length ? "bg-primary/5 border border-primary/20" : "bg-muted/30")}>
