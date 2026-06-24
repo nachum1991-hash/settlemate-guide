@@ -14,8 +14,9 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
-import { FloatingChat, setStoredCountry } from "@/components/FloatingChat";
+import { FloatingChat, setStoredCountry, getStoredCountry } from "@/components/FloatingChat";
 import { useProfile } from "@/hooks/useProfile";
+import { useUserProgress } from "@/hooks/useUserProgress";
 import { Disclaimer } from "@/components/Disclaimer";
 import { Footer } from "@/components/Footer";
 
@@ -291,7 +292,7 @@ const VisaWizard = () => {
     if (typeof window === "undefined") return 0;
     const stored = sessionStorage.getItem(STEP_STORAGE_KEY);
     const n = stored ? parseInt(stored, 10) : 0;
-    return Number.isFinite(n) && n >= 0 && n <= 3 ? n : 0;
+    return Number.isFinite(n) && n >= 0 && n <= 2 ? n : 0;
   });
   const [maxStepReached, setMaxStepReached] = useState<number>(currentStep);
   const [formData, setFormData] = useState({
@@ -299,16 +300,20 @@ const VisaWizard = () => {
   });
   const hasPrefilled = useRef(false);
 
-  // Prefill country from profile ONCE (set during onboarding). Guarded to never
-  // reset currentStep or overwrite a country the user just picked.
+  // Prefill country from profile (set during onboarding), with fallback to
+  // localStorage-stored country, then "other" if nothing is available.
+  // Guarded to never reset currentStep or overwrite a country the user just picked.
   useEffect(() => {
-    if (!profile || hasPrefilled.current) return;
+    if (hasPrefilled.current) return;
+    // Wait until profile fetch has resolved (profile may be null for signed-out users)
+    if (profile === null && user) return;
     hasPrefilled.current = true;
+    const fallback = getStoredCountry() || "other";
     setFormData((prev) => ({
       ...prev,
-      country: prev.country || profile.origin_country || "",
+      country: prev.country || profile?.origin_country || fallback,
     }));
-  }, [profile]);
+  }, [profile, user]);
 
   // Persist step + max-step-reached
   useEffect(() => {
@@ -316,9 +321,10 @@ const VisaWizard = () => {
     setMaxStepReached((m) => Math.max(m, currentStep));
   }, [currentStep]);
 
-  const [documentStatus, setDocumentStatus] = useState<Record<string, boolean>>({});
+  // Persist per-document "Mark as Ready" state in user_progress (scoped to visa-docs phase)
+  const { progress: documentStatus, toggleProgress } = useUserProgress('visa-docs');
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
-  const totalSteps = 4;
+  const totalSteps = 3;
   const progressPercentage = currentStep / (totalSteps - 1) * 100;
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
@@ -399,10 +405,7 @@ const VisaWizard = () => {
   };
   const toggleDocument = (docId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setDocumentStatus(prev => ({
-      ...prev,
-      [docId]: !prev[docId]
-    }));
+    toggleProgress(docId);
   };
   const toggleExpanded = (docId: string) => {
     setExpandedDocument(prev => prev === docId ? null : docId);
@@ -469,11 +472,8 @@ const VisaWizard = () => {
   const canProceed = () => {
     switch (currentStep) {
       case 0:
-        return true;
       case 1:
-        return formData.country;
       case 2:
-      case 3:
         return true;
       default:
         return false;
@@ -517,12 +517,11 @@ const VisaWizard = () => {
           <Progress value={progressPercentage} className="h-1.5 sm:h-2" />
           
           {/* Step indicators - clickable for steps already reached */}
-          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-4 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:gap-2 sm:overflow-visible mt-4 sm:mt-6 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             {[
               { num: 0, label: "Overview" },
-              { num: 1, label: "Country" },
-              { num: 2, label: "Documents" },
-              { num: 3, label: "Timeline" },
+              { num: 1, label: "Documents" },
+              { num: 2, label: "Timeline" },
             ].map(step => {
               const reached = step.num <= maxStepReached;
               const isCurrent = currentStep === step.num;
@@ -669,90 +668,9 @@ const VisaWizard = () => {
                 </Button>
               </div>}
 
-            {/* Step 1: Country Selection */}
+            {/* Step 1: Document Checklist */}
             {currentStep === 1 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Country of Residence</h2>
-                  <p className="text-muted-foreground">
-                    Select where you'll be applying from - this determines embassy processing times
-                  </p>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="country">Select Your Country</Label>
-                  <Select value={formData.country} onValueChange={value => setFormData({
-                ...formData,
-                country: value
-              })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose your country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map(country => <SelectItem key={country.value} value={country.value}>
-                          {country.label}
-                        </SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {formData.country && selectedCountryData && <>
-                    <Card className="p-6 bg-primary/5 border-primary/20 animate-in fade-in duration-300">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <Calendar className="w-6 h-6 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-foreground mb-1">Processing Time for {selectedCountryData.label}</h3>
-                          <p className="text-2xl font-bold text-primary mb-2">{selectedCountryData.processingWeeks} weeks</p>
-                          <p className="text-sm text-muted-foreground">
-                            This is the typical processing time at the Italian embassy/consulate in {selectedCountryData.label}.
-                            We recommend applying at least 2 months before your intended travel date.
-                          </p>
-                        </div>
-                      </div>
-                    </Card>
-
-                    {/* Embassy Links */}
-                    <Card className="p-6 bg-secondary/5 border-secondary/20">
-                      <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                        <Globe className="w-5 h-5 text-secondary" />
-                        Embassy & Appointment Links
-                      </h3>
-                      <div className="space-y-3">
-                        <a href={selectedCountryData.embassyUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
-                          <ExternalLink className="w-4 h-4 text-secondary" />
-                          <div className="flex-1">
-                            <span className="text-sm font-medium text-foreground group-hover:text-secondary">
-                              Italian Embassy in {selectedCountryData.label}
-                            </span>
-                            <p className="text-xs text-muted-foreground">Official embassy website</p>
-                          </div>
-                        </a>
-                        {selectedCountryData.vfsUrl && <a href={selectedCountryData.vfsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
-                            <ExternalLink className="w-4 h-4 text-secondary" />
-                            <div className="flex-1">
-                              <span className="text-sm font-medium text-foreground group-hover:text-secondary">
-                                VFS Global - Book Appointment
-                              </span>
-                              <p className="text-xs text-muted-foreground">Schedule your visa appointment</p>
-                            </div>
-                          </a>}
-                        <a href="https://prenotaonline.esteri.it/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
-                          <ExternalLink className="w-4 h-4 text-secondary" />
-                          <div className="flex-1">
-                            <span className="text-sm font-medium text-foreground group-hover:text-secondary">
-                              Prenota Online
-                            </span>
-                            <p className="text-xs text-muted-foreground">Alternative appointment booking system</p>
-                          </div>
-                        </a>
-                      </div>
-                    </Card>
-                  </>}
-              </div>}
-
-            {/* Step 2: Document Checklist */}
-            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Document Checklist</h2>
                   <p className="text-muted-foreground">
@@ -886,7 +804,7 @@ const VisaWizard = () => {
                                       </span>}
                                   </h5>
                                   {!formData.country && <p className="text-xs text-muted-foreground pl-6 italic">
-                                      Select your country in Step 1 to see country-specific links
+                                      Country-specific links will appear once your country is set in your profile
                                     </p>}
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-6">
                                     {allLinks.map((link, idx) => <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className={cn("flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors group text-xs", idx < countryLinks.length ? "bg-primary/5 border border-primary/20" : "bg-muted/30")}>
@@ -973,12 +891,13 @@ const VisaWizard = () => {
                   </div>
                 </Card>
 
-                {/* FAQ and Community Section - Step 3 */}
+                {/* FAQ and Community Section - Step 2 */}
                 
               </div>}
 
-            {/* Step 3: Timeline & Next Steps */}
-            {currentStep === 3 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 2: Timeline & Next Steps */}
+            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Your Visa Timeline</h2>
                   <p className="text-muted-foreground">
