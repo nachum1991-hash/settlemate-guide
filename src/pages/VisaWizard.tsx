@@ -14,8 +14,9 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskChat } from "@/components/TaskChat";
 import { TaskFAQ } from "@/components/TaskFAQ";
-import { FloatingChat, setStoredCountry } from "@/components/FloatingChat";
+import { FloatingChat, setStoredCountry, getStoredCountry } from "@/components/FloatingChat";
 import { useProfile } from "@/hooks/useProfile";
+import { useUserProgress } from "@/hooks/useUserProgress";
 import { Disclaimer } from "@/components/Disclaimer";
 import { Footer } from "@/components/Footer";
 
