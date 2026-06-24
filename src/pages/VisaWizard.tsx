@@ -891,12 +891,13 @@ const VisaWizard = () => {
                   </div>
                 </Card>
 
-                {/* FAQ and Community Section - Step 3 */}
+                {/* FAQ and Community Section - Step 2 */}
                 
               </div>}
 
-            {/* Step 3: Timeline & Next Steps */}
-            {currentStep === 3 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+            {/* Step 2: Timeline & Next Steps */}
+            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Your Visa Timeline</h2>
                   <p className="text-muted-foreground">
