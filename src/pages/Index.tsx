@@ -12,51 +12,6 @@ const Index = () => {
     navigate('/visa-wizard');
   };
 
-  const generatePDF = () => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(20);
-    doc.text('SettleMate - Complete Relocation Checklist', 20, 20);
-
-    doc.setFontSize(16);
-    doc.text('Phase 1: From Home Country', 20, 40);
-    doc.setFontSize(12);
-    [
-      '[ ] Complete visa application',
-      '[ ] Book flights',
-      '[ ] Translate documents',
-      '[ ] Arrange airport pickup',
-      '[ ] Prepare emergency contacts',
-    ].forEach((item, i) => doc.text(item, 25, 50 + i * 7));
-
-    doc.setFontSize(16);
-    doc.text('Phase 2: Arrival in Italy', 20, 100);
-    doc.setFontSize(12);
-    [
-      '[ ] Get Codice Fiscale',
-      '[ ] Apply for Residence Permit',
-    ].forEach((item, i) => doc.text(item, 25, 110 + i * 7));
-
-    doc.setFontSize(16);
-    doc.text('Phase 3: Social Integration', 20, 140);
-    doc.setFontSize(12);
-    [
-      '[ ] Join student groups',
-      '[ ] Find a buddy',
-      '[ ] Attend orientation events',
-      '[ ] Explore local community',
-    ].forEach((item, i) => doc.text(item, 25, 150 + i * 7));
-
-    doc.setFontSize(9);
-    doc.text(
-      'Informational only — not legal advice. Always confirm with official Italian sources.',
-      20,
-      200,
-    );
-
-    doc.save('settlemate-checklist.pdf');
-    toast.success('Checklist downloaded successfully!');
-  };
 
   const handlePhaseClick = (phaseId: number) => {
     switch (phaseId) {
