@@ -4,8 +4,6 @@ import { Plane, MapPin, Users } from "lucide-react";
 import PhaseCard from "@/components/PhaseCard";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import jsPDF from 'jspdf';
-import { toast } from "sonner";
 
 const Index = () => {
   const navigate = useNavigate();
