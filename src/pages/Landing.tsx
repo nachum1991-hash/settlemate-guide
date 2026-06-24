@@ -56,9 +56,20 @@ const Landing = () => {
             <Button asChild size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
               <Link to="/auth">I already have an account</Link>
             </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+              onClick={() => setVideoOpen(true)}
+            >
+              <Play className="w-4 h-4 mr-2" />
+              Watch Introduction
+            </Button>
           </div>
         </div>
       </section>
+
+      <IntroVideoModal open={videoOpen} onOpenChange={setVideoOpen} />
 
       {/* 3 Phases */}
       <section className="py-14 sm:py-20 px-4">
