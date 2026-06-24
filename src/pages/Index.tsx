@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Plane, MapPin, Users } from "lucide-react";
+import { Plane, MapPin, Users, Play } from "lucide-react";
 import PhaseCard from "@/components/PhaseCard";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { IntroVideoModal } from "@/components/IntroVideoModal";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [videoOpen, setVideoOpen] = useState(false);
+
+
 
   const handleStartJourney = () => {
     navigate('/visa-wizard');
@@ -44,6 +49,10 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-6 sm:mt-8 px-4">
               <Button size="lg" variant="secondary" className="text-base sm:text-lg px-6 sm:px-8 shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto" onClick={handleStartJourney}>
                 Start Your Journey
+              </Button>
+              <Button size="lg" variant="outline" className="text-base sm:text-lg px-6 sm:px-8 shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground" onClick={() => setVideoOpen(true)}>
+                <Play className="mr-2 h-4 w-4" />
+                Watch Introduction
               </Button>
             </div>
           </div>
@@ -94,6 +103,7 @@ const Index = () => {
       </section>
 
       <Footer />
+      <IntroVideoModal open={videoOpen} onOpenChange={setVideoOpen} />
     </div>
   );
 };
