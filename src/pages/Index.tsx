@@ -89,9 +89,6 @@ const Index = () => {
             <Button size="lg" className="shadow-elevated hover:scale-105 transition-transform w-full sm:w-auto px-8" onClick={handleStartJourney}>
               Start Your Journey
             </Button>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto px-8" onClick={generatePDF}>
-              Download PDF Checklist
-            </Button>
           </div>
         </div>
       </section>
