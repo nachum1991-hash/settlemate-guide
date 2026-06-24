@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Plane, MapPin, Users, CheckCircle2, ShieldCheck, MessageSquare, Loader2 } from "lucide-react";
+import { Plane, MapPin, Users, CheckCircle2, ShieldCheck, MessageSquare, Loader2, Play } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Footer } from "@/components/Footer";
+import { IntroVideoModal } from "@/components/IntroVideoModal";
 
 const Landing = () => {
+  const [videoOpen, setVideoOpen] = useState(false);
   const { user, loading } = useAuth();
 
   if (loading) {
