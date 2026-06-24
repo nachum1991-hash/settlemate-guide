@@ -668,90 +668,9 @@ const VisaWizard = () => {
                 </Button>
               </div>}
 
-            {/* Step 1: Country Selection */}
+            {/* Step 1: Document Checklist */}
             {currentStep === 1 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-                <div>
-                  <h2 className="text-2xl font-bold text-foreground mb-2">Country of Residence</h2>
-                  <p className="text-muted-foreground">
-                    Select where you'll be applying from - this determines embassy processing times
-                  </p>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="country">Select Your Country</Label>
-                  <Select value={formData.country} onValueChange={value => setFormData({
-                ...formData,
-                country: value
-              })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose your country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countries.map(country => <SelectItem key={country.value} value={country.value}>
-                          {country.label}
-                        </SelectItem>)}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {formData.country && selectedCountryData && <>
-                    <Card className="p-6 bg-primary/5 border-primary/20 animate-in fade-in duration-300">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <Calendar className="w-6 h-6 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-foreground mb-1">Processing Time for {selectedCountryData.label}</h3>
-                          <p className="text-2xl font-bold text-primary mb-2">{selectedCountryData.processingWeeks} weeks</p>
-                          <p className="text-sm text-muted-foreground">
-                            This is the typical processing time at the Italian embassy/consulate in {selectedCountryData.label}.
-                            We recommend applying at least 2 months before your intended travel date.
-                          </p>
-                        </div>
-                      </div>
-                    </Card>
-
-                    {/* Embassy Links */}
-                    <Card className="p-6 bg-secondary/5 border-secondary/20">
-                      <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                        <Globe className="w-5 h-5 text-secondary" />
-                        Embassy & Appointment Links
-                      </h3>
-                      <div className="space-y-3">
-                        <a href={selectedCountryData.embassyUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
-                          <ExternalLink className="w-4 h-4 text-secondary" />
-                          <div className="flex-1">
-                            <span className="text-sm font-medium text-foreground group-hover:text-secondary">
-                              Italian Embassy in {selectedCountryData.label}
-                            </span>
-                            <p className="text-xs text-muted-foreground">Official embassy website</p>
-                          </div>
-                        </a>
-                        {selectedCountryData.vfsUrl && <a href={selectedCountryData.vfsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
-                            <ExternalLink className="w-4 h-4 text-secondary" />
-                            <div className="flex-1">
-                              <span className="text-sm font-medium text-foreground group-hover:text-secondary">
-                                VFS Global - Book Appointment
-                              </span>
-                              <p className="text-xs text-muted-foreground">Schedule your visa appointment</p>
-                            </div>
-                          </a>}
-                        <a href="https://prenotaonline.esteri.it/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 bg-background rounded-lg hover:bg-secondary/10 transition-colors group">
-                          <ExternalLink className="w-4 h-4 text-secondary" />
-                          <div className="flex-1">
-                            <span className="text-sm font-medium text-foreground group-hover:text-secondary">
-                              Prenota Online
-                            </span>
-                            <p className="text-xs text-muted-foreground">Alternative appointment booking system</p>
-                          </div>
-                        </a>
-                      </div>
-                    </Card>
-                  </>}
-              </div>}
-
-            {/* Step 2: Document Checklist */}
-            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Document Checklist</h2>
                   <p className="text-muted-foreground">
