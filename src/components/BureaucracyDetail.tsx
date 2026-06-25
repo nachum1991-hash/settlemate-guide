@@ -30,7 +30,7 @@ import type { Step, OfficialResource, Partner } from "./BureaucracyTimeline";
 import { useCity } from "@/contexts/CityContext";
 import { getDocumentsForStep, type ArrivalDocument } from "@/data/arrivalDocuments";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/contexts/AuthContext";
+
 
 // Community groups for each step - verified links to official resources and real Facebook groups
 const communityGroups: Record<string, { name: string; url: string; platform: string }[]> = {
