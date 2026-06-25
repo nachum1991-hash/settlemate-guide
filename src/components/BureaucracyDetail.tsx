@@ -331,7 +331,7 @@ const DocumentCard = ({
 
 const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyDetailProps) => {
   const { selectedCity } = useCity();
-  const { user } = useAuth();
+  
   const groups = communityGroups[step.id] || [];
   
   // Get detailed documents for this step
