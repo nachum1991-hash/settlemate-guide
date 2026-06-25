@@ -295,30 +295,8 @@ const DocumentCard = ({
               </div>
             )}
 
-            {/* Document Upload Section */}
-            <div className="space-y-3">
-              <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <Upload className="w-4 h-4 text-primary" />
-                Your Upload
-              </h5>
-              {isAuthenticated ? (
-                <DocumentUploadComponent
-                  documentId={doc.id}
-                  upload={upload}
-                  isUploading={isUploading}
-                  onUpload={onUpload}
-                  onDelete={onDelete}
-                  onView={onView}
-                  onDownload={onDownload}
-                  onPrint={onPrint}
-                  disabled={false}
-                />
-              ) : (
-                <div className="p-4 bg-muted/30 rounded-xl border border-border/50 text-center">
-                  <p className="text-sm text-muted-foreground">Sign in to upload and track your documents</p>
-                </div>
-              )}
-            </div>
+
+
 
             {/* Mark as Ready Button */}
             <div className="pt-2">
