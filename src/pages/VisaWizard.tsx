@@ -275,15 +275,6 @@ const VisaWizard = () => {
     user,
     supabase
   } = useAuth();
-  const {
-    uploads,
-    uploading,
-    uploadDocument,
-    deleteDocument,
-    getViewUrl,
-    isUploaded,
-    getUpload
-  } = useDocumentUploads('visa');
   const { profile } = useProfile();
   const STEP_STORAGE_KEY = "settlemate-visa-wizard-step";
   const [currentStep, setCurrentStep] = useState<number>(() => {
