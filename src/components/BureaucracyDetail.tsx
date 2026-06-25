@@ -396,15 +396,6 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
                 key={doc.id} 
                 doc={doc} 
                 selectedCity={selectedCity}
-                isUploaded={isUploaded(doc.id)}
-                upload={getUpload(doc.id)}
-                isUploading={uploading === doc.id}
-                onUpload={(file) => handleUpload(doc.id, file)}
-                onDelete={() => handleDelete(doc.id)}
-                onView={() => handleView(doc.id)}
-                onDownload={() => handleDownload(doc.id)}
-                onPrint={() => handlePrint(doc.id)}
-                isAuthenticated={!!user}
                 isReady={documentReadyStatus[doc.id] || false}
                 onToggleReady={() => toggleDocumentReady(doc.id)}
                 isExpanded={expandedDocumentId === doc.id}
