@@ -16,7 +16,6 @@ import {
   X,
   Info,
   CheckCircle,
-  Upload,
   Circle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,8 +29,6 @@ import type { Step, OfficialResource, Partner } from "./BureaucracyTimeline";
 import { useCity } from "@/contexts/CityContext";
 import { getDocumentsForStep, type ArrivalDocument } from "@/data/arrivalDocuments";
 import { cn } from "@/lib/utils";
-import { useDocumentUploads } from "@/hooks/useDocumentUploads";
-import { DocumentUploadComponent } from "./DocumentUpload";
 import { useAuth } from "@/contexts/AuthContext";
 
 // Community groups for each step - verified links to official resources and real Facebook groups
