@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle, ExternalLink, Info, Globe, ChevronDown, ChevronUp, Check, X, AlertTriangle, FileText, Lightbulb, Upload } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Circle, Calendar, AlertCircle, ExternalLink, Info, Globe, ChevronDown, ChevronUp, Check, X, AlertTriangle, FileText, Lightbulb } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDocumentUploads } from "@/hooks/useDocumentUploads";
-import DocumentUploadComponent from "@/components/DocumentUpload";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
