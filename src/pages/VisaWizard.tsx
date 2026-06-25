@@ -319,60 +319,8 @@ const VisaWizard = () => {
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
   const selectedCountryData = countries.find(c => c.value === formData.country);
 
-  // Document upload handlers
-  const handleUpload = async (documentId: string, file: File) => {
-    return await uploadDocument(documentId, file);
-  };
-  const handleDelete = async (documentId: string) => {
-    return await deleteDocument(documentId);
-  };
-  const handleView = async (documentId: string) => {
-    // Open a blank window immediately to avoid popup blocker
-    const newWindow = window.open('about:blank', '_blank');
-    const url = await getViewUrl(documentId);
-    if (url && newWindow) {
-      newWindow.location.href = url;
-    } else if (newWindow) {
-      newWindow.close();
-    }
-  };
-  const handleDownload = async (documentId: string) => {
-    const url = await getViewUrl(documentId);
-    if (url) {
-      const upload = getUpload(documentId);
-      // Fetch the file as a blob and trigger download
-      try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const blobUrl = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = upload?.file_name || 'document';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(blobUrl);
-      } catch (error) {
-        console.error('Download failed:', error);
-      }
-    }
-  };
-  const handlePrint = async (documentId: string) => {
-    // Open a blank window immediately to avoid popup blocker
-    const printWindow = window.open('about:blank', '_blank');
-    const url = await getViewUrl(documentId);
-    if (url && printWindow) {
-      printWindow.location.href = url;
-      // Wait for the content to load before triggering print
-      printWindow.onload = () => {
-        setTimeout(() => {
-          printWindow.print();
-        }, 500);
-      };
-    } else if (printWindow) {
-      printWindow.close();
-    }
-  };
+
+
 
   // Persist country selection to localStorage for other Phase 1 pages
   useEffect(() => {
