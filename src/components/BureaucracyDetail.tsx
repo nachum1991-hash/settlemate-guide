@@ -73,15 +73,6 @@ interface BureaucracyDetailProps {
 interface DocumentCardProps {
   doc: ArrivalDocument;
   selectedCity: string;
-  isUploaded: boolean;
-  upload?: ReturnType<typeof useDocumentUploads>['uploads'][string];
-  isUploading: boolean;
-  onUpload: (file: File) => Promise<boolean>;
-  onDelete: () => Promise<boolean>;
-  onView: () => Promise<void>;
-  onDownload: () => Promise<void>;
-  onPrint: () => Promise<void>;
-  isAuthenticated: boolean;
   isReady: boolean;
   onToggleReady: () => void;
   isExpanded: boolean;
