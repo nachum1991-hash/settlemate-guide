@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { 
   MapPin, 
   FileText, 
@@ -16,7 +17,6 @@ import {
   X,
   Info,
   CheckCircle,
-  Upload,
   Circle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,9 +30,7 @@ import type { Step, OfficialResource, Partner } from "./BureaucracyTimeline";
 import { useCity } from "@/contexts/CityContext";
 import { getDocumentsForStep, type ArrivalDocument } from "@/data/arrivalDocuments";
 import { cn } from "@/lib/utils";
-import { useDocumentUploads } from "@/hooks/useDocumentUploads";
-import { DocumentUploadComponent } from "./DocumentUpload";
-import { useAuth } from "@/contexts/AuthContext";
+
 
 // Community groups for each step - verified links to official resources and real Facebook groups
 const communityGroups: Record<string, { name: string; url: string; platform: string }[]> = {
@@ -75,15 +73,6 @@ interface BureaucracyDetailProps {
 interface DocumentCardProps {
   doc: ArrivalDocument;
   selectedCity: string;
-  isUploaded: boolean;
-  upload?: ReturnType<typeof useDocumentUploads>['uploads'][string];
-  isUploading: boolean;
-  onUpload: (file: File) => Promise<boolean>;
-  onDelete: () => Promise<boolean>;
-  onView: () => Promise<void>;
-  onDownload: () => Promise<void>;
-  onPrint: () => Promise<void>;
-  isAuthenticated: boolean;
   isReady: boolean;
   onToggleReady: () => void;
   isExpanded: boolean;
@@ -93,15 +82,6 @@ interface DocumentCardProps {
 const DocumentCard = ({ 
   doc, 
   selectedCity, 
-  isUploaded, 
-  upload,
-  isUploading,
-  onUpload,
-  onDelete,
-  onView,
-  onDownload,
-  onPrint,
-  isAuthenticated,
   isReady,
   onToggleReady,
   isExpanded,
@@ -133,12 +113,8 @@ const DocumentCard = ({
                 <span className="text-xs px-2 py-0.5 bg-destructive/10 text-destructive rounded-full font-medium whitespace-nowrap">
                   Required
                 </span>
-                {isUploaded && (
-                  <span className="text-xs px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full font-medium whitespace-nowrap flex items-center gap-1">
-                    <Upload className="w-3 h-3" />
-                    Uploaded
-                  </span>
-                )}
+
+
               </div>
               <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">{doc.description}</p>
             </div>
@@ -319,30 +295,8 @@ const DocumentCard = ({
               </div>
             )}
 
-            {/* Document Upload Section */}
-            <div className="space-y-3">
-              <h5 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <Upload className="w-4 h-4 text-primary" />
-                Your Upload
-              </h5>
-              {isAuthenticated ? (
-                <DocumentUploadComponent
-                  documentId={doc.id}
-                  upload={upload}
-                  isUploading={isUploading}
-                  onUpload={onUpload}
-                  onDelete={onDelete}
-                  onView={onView}
-                  onDownload={onDownload}
-                  onPrint={onPrint}
-                  disabled={false}
-                />
-              ) : (
-                <div className="p-4 bg-muted/30 rounded-xl border border-border/50 text-center">
-                  <p className="text-sm text-muted-foreground">Sign in to upload and track your documents</p>
-                </div>
-              )}
-            </div>
+
+
 
             {/* Mark as Ready Button */}
             <div className="pt-2">
@@ -377,7 +331,7 @@ const DocumentCard = ({
 
 const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyDetailProps) => {
   const { selectedCity } = useCity();
-  const { user } = useAuth();
+  
   const groups = communityGroups[step.id] || [];
   
   // Get detailed documents for this step
@@ -397,102 +351,8 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
     }));
   };
   
-  // Document uploads hook
-  const { 
-    uploads, 
-    uploading, 
-    uploadDocument, 
-    deleteDocument, 
-    getViewUrl,
-    isUploaded,
-    getUpload
-  } = useDocumentUploads('arrival');
 
-  const handleUpload = async (documentId: string, file: File) => {
-    return await uploadDocument(documentId, file);
-  };
 
-  const handleDelete = async (documentId: string) => {
-    return await deleteDocument(documentId);
-  };
-
-  const handleView = async (documentId: string) => {
-    // Open window immediately (synchronous with click) to avoid popup blocker
-    const newWindow = window.open('about:blank', '_blank');
-    
-    if (!newWindow) {
-      const { toast } = await import('sonner');
-      toast.error("Popup blocked. Please allow popups for this site.");
-      return;
-    }
-
-    // Show loading state in the new window
-    newWindow.document.write('<html><head><title>Loading...</title></head><body style="font-family: system-ui; padding: 20px;"><p>Loading document...</p></body></html>');
-    
-    const url = await getViewUrl(documentId);
-    if (url) {
-      newWindow.location.href = url;
-    } else {
-      newWindow.close();
-      const { toast } = await import('sonner');
-      toast.error("Couldn't generate view link. Please try again.");
-    }
-  };
-
-  const handleDownload = async (documentId: string) => {
-    const url = await getViewUrl(documentId);
-    if (!url) {
-      const { toast } = await import('sonner');
-      toast.error("Couldn't generate download link. Please try again.");
-      return;
-    }
-
-    try {
-      // Use fetch + blob approach to avoid popup issues
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      
-      const upload = getUpload(documentId);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = upload?.file_name || 'document';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      const { toast } = await import('sonner');
-      toast.error("Couldn't download file. Please try again.");
-    }
-  };
-
-  const handlePrint = async (documentId: string) => {
-    // Open window immediately (synchronous with click) to avoid popup blocker
-    const printWindow = window.open('about:blank', '_blank');
-    
-    if (!printWindow) {
-      const { toast } = await import('sonner');
-      toast.error("Popup blocked. Please allow popups to print documents.");
-      return;
-    }
-
-    printWindow.document.write('<html><head><title>Preparing print...</title></head><body style="font-family: system-ui; padding: 20px;"><p>Preparing document for print...</p></body></html>');
-    
-    const url = await getViewUrl(documentId);
-    if (url) {
-      printWindow.location.href = url;
-      // Wait for load then trigger print
-      printWindow.onload = () => {
-        setTimeout(() => printWindow.print(), 500);
-      };
-    } else {
-      printWindow.close();
-      const { toast } = await import('sonner');
-      toast.error("Couldn't generate print link. Please try again.");
-    }
-  };
 
   return (
     <div className="mt-3 sm:mt-4 space-y-4 sm:space-y-5 animate-in fade-in slide-in-from-top-2 duration-500 overflow-hidden w-full">
@@ -536,15 +396,6 @@ const BureaucracyDetail = ({ step, isCompleted, onToggleComplete }: BureaucracyD
                 key={doc.id} 
                 doc={doc} 
                 selectedCity={selectedCity}
-                isUploaded={isUploaded(doc.id)}
-                upload={getUpload(doc.id)}
-                isUploading={uploading === doc.id}
-                onUpload={(file) => handleUpload(doc.id, file)}
-                onDelete={() => handleDelete(doc.id)}
-                onView={() => handleView(doc.id)}
-                onDownload={() => handleDownload(doc.id)}
-                onPrint={() => handlePrint(doc.id)}
-                isAuthenticated={!!user}
                 isReady={documentReadyStatus[doc.id] || false}
                 onToggleReady={() => toggleDocumentReady(doc.id)}
                 isExpanded={expandedDocumentId === doc.id}
