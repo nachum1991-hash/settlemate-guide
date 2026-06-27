@@ -33,7 +33,7 @@ const countries = [{
   label: "Israel",
   processingWeeks: "4-6",
   embassyUrl: "https://ambtelaviv.esteri.it/",
-  vfsUrl: "https://visa.vfsglobal.com/isr/en/ita",
+  vfsUrl: null,
   passportRenewalUrl: "https://www.gov.il/en/service/biometric_passport",
   appointmentUrl: "https://prenotaonline.esteri.it/Login.aspx?cidsede=100046",
   apostilleInfo: "Required for sponsor letters - get from Ministry of Justice",
