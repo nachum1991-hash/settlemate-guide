@@ -607,8 +607,176 @@ const VisaWizard = () => {
                 </Button>
               </div>}
 
-            {/* Step 1: Document Checklist */}
+            {/* Step 1: Your Country Journey */}
             {currentStep === 1 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
+                    Your visa journey
+                    {selectedCountryData && selectedCountryData.value !== "other" ? ` from ${selectedCountryData.label}` : ""}
+                  </h2>
+                  <p className="text-sm sm:text-base text-muted-foreground">
+                    These details are tailored to where you're applying from. We picked them up from your profile.
+                  </p>
+                </div>
+
+                {/* Country banner */}
+                <Card className="p-4 sm:p-5 bg-primary/5 border-primary/20">
+                  <div className="flex items-start justify-between gap-3 flex-wrap">
+                    <div className="flex items-center gap-3">
+                      <Globe className="w-5 h-5 text-primary" />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Applying from</p>
+                        <p className="font-semibold text-foreground">
+                          {selectedCountryData ? selectedCountryData.label : "Not set"}
+                        </p>
+                      </div>
+                    </div>
+                    {selectedCountryData && (
+                      <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                        Processing: {selectedCountryData.processingWeeks} weeks
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-3">
+                    Not correct? Update your country in your profile from the dashboard.
+                  </p>
+                </Card>
+
+                {!selectedCountryData || selectedCountryData.value === "other" ? (
+                  <Card className="p-6 bg-muted/30">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+                      <div className="space-y-3">
+                        <p className="text-sm text-foreground">
+                          We don't have a tailored journey for this country yet. Use the official Italian diplomatic network to find your nearest embassy or consulate.
+                        </p>
+                        <a
+                          href="https://www.esteri.it/en/ministero/la_rete_diplomatica/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          Find your embassy
+                        </a>
+                      </div>
+                    </div>
+                  </Card>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    {/* Italian Embassy */}
+                    <Card className="p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Globe className="w-4 h-4 text-primary" />
+                        <h3 className="font-semibold text-foreground text-sm sm:text-base">Italian Embassy</h3>
+                      </div>
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-3">
+                        Your primary point of contact for the D-Visa in {selectedCountryData.label}.
+                      </p>
+                      <a
+                        href={selectedCountryData.embassyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        Visit embassy website
+                      </a>
+                    </Card>
+
+                    {/* Appointment booking */}
+                    <Card className="p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Calendar className="w-4 h-4 text-primary" />
+                        <h3 className="font-semibold text-foreground text-sm sm:text-base">Book your appointment</h3>
+                      </div>
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-3">
+                        Slots fill up fast in peak season (June–August). Book as soon as your documents are ready.
+                      </p>
+                      <div className="space-y-1.5">
+                        {selectedCountryData.vfsUrl && (
+                          <a
+                            href={selectedCountryData.vfsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            VFS Global {selectedCountryData.label}
+                          </a>
+                        )}
+                        {selectedCountryData.appointmentUrl && (
+                          <a
+                            href={selectedCountryData.appointmentUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            Direct appointment booking
+                          </a>
+                        )}
+                      </div>
+                    </Card>
+
+                    {/* Apostille */}
+                    <Card className="p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <FileText className="w-4 h-4 text-primary" />
+                        <h3 className="font-semibold text-foreground text-sm sm:text-base">Apostille / legalization</h3>
+                      </div>
+                      <p className="text-xs sm:text-sm text-muted-foreground">
+                        {selectedCountryData.apostilleInfo}
+                      </p>
+                    </Card>
+
+                    {/* Visa fee */}
+                    <Card className="p-4 sm:p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <AlertCircle className="w-4 h-4 text-primary" />
+                        <h3 className="font-semibold text-foreground text-sm sm:text-base">Visa fee payment</h3>
+                      </div>
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-2">
+                        €116 national visa fee (indicative — confirm with your embassy). Non-refundable if denied.
+                      </p>
+                      <p className="text-xs sm:text-sm text-foreground font-medium">
+                        How to pay: {selectedCountryData.paymentMethod}
+                      </p>
+                    </Card>
+
+                    {/* Passport renewal */}
+                    {selectedCountryData.passportRenewalUrl && (
+                      <Card className="p-4 sm:p-5 sm:col-span-2">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Lightbulb className="w-4 h-4 text-primary" />
+                          <h3 className="font-semibold text-foreground text-sm sm:text-base">Passport renewal</h3>
+                        </div>
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-3">
+                          Your passport must stay valid 3+ months after your visa ends. If yours is close to expiry, renew it BEFORE starting the visa process — renewal can take 4–8 weeks.
+                        </p>
+                        <a
+                          href={selectedCountryData.passportRenewalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          {selectedCountryData.label} passport services
+                        </a>
+                      </Card>
+                    )}
+                  </div>
+                )}
+
+                <Button onClick={handleNext} className="w-full" size="lg">
+                  Continue to Documents
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>}
+
+            {/* Step 2: Document Checklist */}
+            {currentStep === 2 && <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
+
 
                 <div>
                   <h2 className="text-2xl font-bold text-foreground mb-2">Document Checklist</h2>
