@@ -281,7 +281,7 @@ const VisaWizard = () => {
     if (typeof window === "undefined") return 0;
     const stored = sessionStorage.getItem(STEP_STORAGE_KEY);
     const n = stored ? parseInt(stored, 10) : 0;
-    return Number.isFinite(n) && n >= 0 && n <= 2 ? n : 0;
+    return Number.isFinite(n) && n >= 0 && n <= 3 ? n : 0;
   });
   const [maxStepReached, setMaxStepReached] = useState<number>(currentStep);
   const [formData, setFormData] = useState({
