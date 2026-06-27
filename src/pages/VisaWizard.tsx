@@ -313,7 +313,7 @@ const VisaWizard = () => {
   // Persist per-document "Mark as Ready" state in user_progress (scoped to visa-docs phase)
   const { progress: documentStatus, toggleProgress } = useUserProgress('visa-docs');
   const [expandedDocument, setExpandedDocument] = useState<string | null>(null);
-  const totalSteps = 3;
+  const totalSteps = 4;
   const progressPercentage = currentStep / (totalSteps - 1) * 100;
   const documents = baseDocuments;
   const completedDocs = Object.values(documentStatus).filter(Boolean).length;
