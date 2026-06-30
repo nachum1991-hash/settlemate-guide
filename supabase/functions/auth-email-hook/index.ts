@@ -17,12 +17,12 @@ const corsHeaders = {
 }
 
 const EMAIL_SUBJECTS: Record<string, string> = {
-  signup: 'Confirm your email',
-  invite: "You've been invited",
-  magiclink: 'Your login link',
-  recovery: 'Reset your password',
-  email_change: 'Confirm your new email',
-  reauthentication: 'Your verification code',
+  signup: 'SettleMate — Confirm your email',
+  invite: "SettleMate — You're invited",
+  magiclink: 'SettleMate — Your sign-in link',
+  recovery: 'SettleMate — Reset your password',
+  email_change: 'SettleMate — Confirm your new email',
+  reauthentication: 'SettleMate — Your verification code',
 }
 
 // Template mapping
@@ -36,7 +36,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "settlemate-guide"
+const SITE_NAME = "SettleMate"
 const SENDER_DOMAIN = "notify.getsettlemate.app"
 const ROOT_DOMAIN = "getsettlemate.app"
 const FROM_DOMAIN = "getsettlemate.app" // Domain shown in From address (may be root or sender subdomain)
