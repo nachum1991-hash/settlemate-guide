@@ -63,7 +63,7 @@ serve(async (req) => {
       );
     }
 
-    // Verification gate
+    // Verification + ban gate
     const serviceClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
     const { data: profileRow } = await serviceClient
       .from('profiles')
@@ -73,6 +73,14 @@ serve(async (req) => {
     if (!profileRow?.verified) {
       return new Response(
         JSON.stringify({ error: 'not_verified' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    const { data: banRow } = await serviceClient
+      .from('chat_bans').select('user_id').eq('user_id', userId).maybeSingle();
+    if (banRow) {
+      return new Response(
+        JSON.stringify({ error: 'banned' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
