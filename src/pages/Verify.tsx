@@ -52,6 +52,32 @@ const Verify = () => {
   const [idFile, setIdFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  const OTP_STORAGE_KEY = 'settlemate-verify-otp';
+  const OTP_TTL_MS = 10 * 60 * 1000;
+
+  const clearSavedOtp = () => {
+    try {
+      localStorage.removeItem(OTP_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+  };
+
+  const saveOtpState = (savedEmail: string) => {
+    try {
+      localStorage.setItem(
+        OTP_STORAGE_KEY,
+        JSON.stringify({
+          step: 'code',
+          email: savedEmail,
+          expiresAt: Date.now() + OTP_TTL_MS,
+        }),
+      );
+    } catch {
+      // ignore
+    }
+  };
+
   // Decide initial step once; afterwards only auto-advance to 'done'.
   const decidedRef = useRef(false);
   useEffect(() => {
@@ -59,8 +85,34 @@ const Verify = () => {
     if (!decidedRef.current) {
       decidedRef.current = true;
       if (verified || pendingSubmission) {
+        clearSavedOtp();
         setStep('done');
         return;
+      }
+      // Try to restore an in-flight OTP entry so a reload doesn't drop the user
+      // back to the chooser after they leave to grab the code from email.
+      try {
+        const raw = localStorage.getItem(OTP_STORAGE_KEY);
+        if (raw) {
+          const saved = JSON.parse(raw) as {
+            step?: string;
+            email?: string;
+            expiresAt?: number;
+          };
+          if (
+            saved?.step === 'code' &&
+            typeof saved.email === 'string' &&
+            typeof saved.expiresAt === 'number' &&
+            saved.expiresAt > Date.now()
+          ) {
+            setEmail(saved.email);
+            setStep('code');
+            return;
+          }
+          clearSavedOtp();
+        }
+      } catch {
+        clearSavedOtp();
       }
       if (emailVerifiedAt) {
         setEmail(universityEmail ?? '');
@@ -68,7 +120,10 @@ const Verify = () => {
       setStep('chooser');
       return;
     }
-    if (verified || pendingSubmission) setStep('done');
+    if (verified || pendingSubmission) {
+      clearSavedOtp();
+      setStep('done');
+    }
   }, [loading, verified, pendingSubmission, emailVerifiedAt, universityEmail]);
 
   useEffect(() => {
