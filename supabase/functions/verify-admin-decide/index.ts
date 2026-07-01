@@ -45,9 +45,12 @@ serve(async (req) => {
     if (loadErr || !sub) return json({ error: 'not_found' }, 404);
     if (sub.status !== 'pending') return json({ error: 'already_decided' }, 409);
 
-    // 1) Delete the file FIRST (GDPR: do not keep letters at rest)
-    if (sub.file_path) {
-      const { error: rmErr } = await sb.storage.from('user-documents').remove([sub.file_path]);
+    // 1) GDPR: delete BOTH files (letter + ID) FIRST
+    const toRemove = [sub.file_path, sub.id_file_path].filter(
+      (p: unknown): p is string => typeof p === 'string' && p.length > 0,
+    );
+    if (toRemove.length > 0) {
+      const { error: rmErr } = await sb.storage.from('user-documents').remove(toRemove);
       if (rmErr) {
         console.error('storage remove failed', rmErr);
         return json({ error: 'storage_delete_failed' }, 500);
@@ -78,6 +81,7 @@ serve(async (req) => {
         reviewed_at: new Date().toISOString(),
         reject_reason: decision === 'reject' ? (reject_reason || null) : null,
         file_path: null,
+        id_file_path: null,
       })
       .eq('id', submission_id);
 
