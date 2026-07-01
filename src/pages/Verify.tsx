@@ -382,6 +382,7 @@ const Verify = () => {
                   <Button
                     onClick={() => {
                       setNotAllowlisted(false);
+                      clearSavedOtp();
                       setStep('documents');
                     }}
                     className="w-full min-h-[44px]"
