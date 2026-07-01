@@ -1,0 +1,1 @@
+ALTER TABLE public.verification_submissions ADD COLUMN IF NOT EXISTS id_file_path text;

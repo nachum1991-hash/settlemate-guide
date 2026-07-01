@@ -533,6 +533,7 @@ export type Database = {
           created_at: string
           file_path: string | null
           id: string
+          id_file_path: string | null
           reject_reason: string | null
           reviewed_at: string | null
           reviewed_by: string | null
@@ -544,6 +545,7 @@ export type Database = {
           created_at?: string
           file_path?: string | null
           id?: string
+          id_file_path?: string | null
           reject_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -555,6 +557,7 @@ export type Database = {
           created_at?: string
           file_path?: string | null
           id?: string
+          id_file_path?: string | null
           reject_reason?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
