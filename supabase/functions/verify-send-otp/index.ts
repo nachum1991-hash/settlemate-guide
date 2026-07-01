@@ -148,6 +148,43 @@ serve(async (req) => {
       return json({ error: 'internal' }, 500);
     }
 
+    // Ensure an unsubscribe token exists for this recipient (required by the
+    // Lovable email API for transactional sends). Reuse if present.
+    let unsubscribeToken: string | null = null;
+    {
+      const { data: existingTok } = await sb
+        .from('email_unsubscribe_tokens')
+        .select('token')
+        .eq('email', email)
+        .maybeSingle();
+      if (existingTok?.token) {
+        unsubscribeToken = existingTok.token;
+      } else {
+        const newTok = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+        const { data: inserted, error: tokErr } = await sb
+          .from('email_unsubscribe_tokens')
+          .insert({ email, token: newTok })
+          .select('token')
+          .maybeSingle();
+        if (tokErr || !inserted?.token) {
+          // Race: another insert won. Re-read.
+          const { data: retryTok } = await sb
+            .from('email_unsubscribe_tokens')
+            .select('token')
+            .eq('email', email)
+            .maybeSingle();
+          unsubscribeToken = retryTok?.token ?? null;
+        } else {
+          unsubscribeToken = inserted.token;
+        }
+      }
+    }
+
+    if (!unsubscribeToken) {
+      console.error('failed to resolve unsubscribe token', { email });
+      return json({ error: 'internal' }, 500);
+    }
+
     // Enqueue email via the same queue path the auth hook uses.
     const { html, text } = renderOtpEmail(code);
     const messageId = crypto.randomUUID();
