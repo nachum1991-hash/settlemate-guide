@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      chat_bans: {
+        Row: {
+          banned_by: string | null
+          created_at: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          banned_by?: string | null
+          created_at?: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          banned_by?: string | null
+          created_at?: string
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_memberships: {
+        Row: {
+          first_entered_at: string
+          phase: string
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          first_entered_at?: string
+          phase: string
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          first_entered_at?: string
+          phase?: string
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_settings: {
+        Row: {
+          phase: string
+          pinned_message: string | null
+          task_id: string
+          updated_at: string
+          updated_by: string | null
+          welcome_message: string | null
+        }
+        Insert: {
+          phase: string
+          pinned_message?: string | null
+          task_id: string
+          updated_at?: string
+          updated_by?: string | null
+          welcome_message?: string | null
+        }
+        Update: {
+          phase?: string
+          pinned_message?: string | null
+          task_id?: string
+          updated_at?: string
+          updated_by?: string | null
+          welcome_message?: string | null
+        }
+        Relationships: []
+      }
       document_uploads: {
         Row: {
           document_id: string
@@ -304,6 +373,7 @@ export type Database = {
       task_messages: {
         Row: {
           created_at: string
+          edited_at: string | null
           id: string
           message: string
           phase: string
@@ -313,6 +383,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          edited_at?: string | null
           id?: string
           message: string
           phase: string
@@ -322,6 +393,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          edited_at?: string | null
           id?: string
           message?: string
           phase?: string
@@ -498,6 +570,10 @@ export type Database = {
     }
     Functions: {
       can_read_chat_room: { Args: { _task_id: string }; Returns: boolean }
+      chat_first_entered_at: {
+        Args: { _phase: string; _task_id: string; _user_id: string }
+        Returns: string
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -511,6 +587,7 @@ export type Database = {
         Returns: {
           avatar_url: string
           full_name: string
+          university: string
         }[]
       }
       has_role: {
@@ -520,7 +597,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_chat_banned: { Args: { _user_id: string }; Returns: boolean }
       is_verified: { Args: { _user_id: string }; Returns: boolean }
+      join_chat_channel: {
+        Args: { _phase: string; _task_id: string }
+        Returns: {
+          first_entered_at: string
+          was_new: boolean
+        }[]
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
