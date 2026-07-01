@@ -439,7 +439,13 @@ const Verify = () => {
                 {confirming ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Confirm code'}
               </Button>
               <div className="flex items-center justify-between text-sm">
-                <button className="text-muted-foreground underline" onClick={() => setStep('email')}>
+                <button
+                  className="text-muted-foreground underline"
+                  onClick={() => {
+                    clearSavedOtp();
+                    setStep('email');
+                  }}
+                >
                   Change email
                 </button>
                 <button
