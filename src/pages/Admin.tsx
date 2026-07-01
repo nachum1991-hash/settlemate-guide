@@ -50,11 +50,7 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="chat" className="mt-6">
-            <PlaceholderPanel
-              title="Chat moderation"
-              description="See reported messages, hide or delete content, and ban abusive accounts from community rooms."
-              status="Planned"
-            />
+            <ChatModerationPanel />
           </TabsContent>
 
           <TabsContent value="support" className="mt-6">
