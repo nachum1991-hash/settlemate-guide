@@ -1,40 +1,90 @@
 
-# Status
+# Step 3 — Frontend build (plus one backend addition)
 
-**Step 1 — Migration: DONE** ✅
+## Backend addition first
 
-The schema migration has been applied:
-- `chat_memberships`, `chat_bans`, `chat_settings` created with RLS and grants.
-- `task_messages.edited_at` column added.
-- `task_messages` RLS fully rewritten:
-  - SELECT: verified + not banned + `created_at >= chat_first_entered_at(uid, task_id, phase)`.
-  - INSERT: verified + not banned + own `user_id` + membership row exists.
-  - UPDATE: none (edits go through edge function via service role).
-  - DELETE: `has_role(uid, 'admin')` only.
-- `message_reactions` RLS refreshed with banned check.
-- Helpers: `is_chat_banned`, `chat_first_entered_at`, `join_chat_channel` (upsert-and-return-was_new RPC).
-- `get_profile_display_info` now also returns `university`.
-- `task_messages` set to `REPLICA IDENTITY FULL` and confirmed in `supabase_realtime` publication (so UPDATE/DELETE payloads carry the full row).
-- All existing rows deleted from `task_messages` and `message_reactions`.
+**New edge function `delete-own-message`**
+- Verify JWT, parse `{ message_id }`.
+- Service-role load message → require `msg.user_id === caller.id` (else 403).
+- Delete `message_reactions` for that message, then delete the row.
+- Return `{ success: true, id }`.
 
-Linter warnings surfaced were on pre-existing helpers, not on the new ones (all new definers set `search_path = public`). No action needed.
+No new migration. RLS DELETE policy stays admin-only; owner deletes go through this function via service role.
 
 ---
 
-# Step 2 — Edge Functions (awaiting build mode)
+## `src/components/TaskChat.tsx` — rewrite
 
-Files to write / update:
+**On mount (after `verified === true`, once per (taskId, phase)):**
+1. Detect ban: query `chat_bans` for current user. If a row exists → render "You've been removed from this chat" notice, hide composer + list. Skip everything else.
+2. Call `supabase.rpc('join_chat_channel', { _task_id: taskId, _phase: phase })`. Store `first_entered_at` and `was_new` in refs.
+3. Fetch `chat_settings` for `(task_id, phase)`. Store `welcome_message` and `pinned_message`.
+4. If `was_new && welcome_message` → open a shadcn `Dialog` once (guarded by a ref so remounts inside the session don't retrigger).
+5. Fetch messages (RLS auto-filters to `>= first_entered_at`). Load reactions and sender info as today, using the extended `get_profile_display_info` (now returns `full_name, avatar_url, university`).
 
-1. **`send-chat-message`** (update): remove HTML pre-escaping, add ban check, add membership check, keep verification + rate limit + reply validation.
-2. **`edit-chat-message`** (new): owner-only, 15-minute window, sets `edited_at`, service role updates the row.
-3. **`admin-delete-message`** (new): checks `user_roles.role = 'admin'`, deletes reactions then the message row.
-4. **`admin-ban-user`** (new): admin-only upsert into `chat_bans` with `banned_by = admin.id`, optional `reason`. Rejects self-ban.
-5. **`admin-unban-user`** (new): admin-only delete from `chat_bans`.
-6. **`upsert-chat-settings`** (new): admin-only upsert of welcome/pinned by `(task_id, phase)`.
-7. **`toggle-reaction`** (update): add ban check alongside existing verification check.
+**Sender display helper** (module-level):
+```ts
+formatSender(fullName, universitySlug) → "Sara Levi · Politecnico di Milano" | "Sara Levi"
+```
+- Map `universitySlug` via existing `universities` array from `@/data/onboardingOptions` to its label.
+- Applied on the author line **and** in `replyToMessage` previews.
+- Store `university` alongside `full_name` in `profileMap`, `Message.profiles`, and `replyToMessage.profiles`.
 
-All functions follow the existing pattern (JWT verified in code, service role for privileged ops, CORS). No `supabase/config.toml` changes needed — default `verify_jwt = false` at platform is fine since we validate in code, same as every other function in this project.
+**Message model additions:** `edited_at: string | null`, `university: string | null` inside `profiles`.
 
-After these are written I'll **stop** — no `TaskChat.tsx` or `Admin.tsx` changes — so you can smoke-test the backend (curl-invoke `edit-chat-message`, `admin-delete-message`, `admin-ban-user`, `upsert-chat-settings`, and confirm the RLS SELECT gate blocks pre-membership rows).
+**Message row actions** (icon buttons revealed on hover, plus a `DropdownMenu` for mobile):
+- Author + within 15 min of `created_at`: **Edit** → swaps message body for inline `Textarea` + Save/Cancel → calls `edit-chat-message` with `{ message_id, new_message }`.
+- Author, any time: **Delete** → confirm dialog → `delete-own-message`.
+- `useIsAdmin()`: **Delete (admin)** on any message → `admin-delete-message`; **Ban this user** on any message (except own) → confirm dialog → `admin-ban-user` with `{ target_user_id: msg.user_id }`.
+- Show `(edited)` muted tag next to timestamp when `edited_at != null`.
 
-Please switch to build mode to proceed with step 2.
+**Realtime** — replace the current INSERT-only subscription with INSERT + UPDATE + DELETE on `task_messages`, filtered by `task_id`. Also keep a `phase` client-side filter:
+- INSERT: fetch that single message's sender (via `get_profile_display_info`) + its reactions rows, hydrate to `Message`, append. This fixes the "Anonymous User / no reactions" flash for freshly-arrived remote messages.
+- UPDATE: replace in-place by `id`, preserving `reactions` from prior state (payload doesn't include reactions).
+- DELETE: filter out by `id`.
+- Keep reactions realtime as today (unchanged) — reaction updates already re-render via `handleReactionToggle` optimistic + `toggle-reaction` invocation.
+
+**Pinned banner**: if `pinned_message` present, render a sticky `<div>` between the header and `ScrollArea` with a `Pin` icon, muted background, wrapping text.
+
+**Composer**: unchanged, still calls `send-chat-message`. Handle new error codes surfaced from the backend (`not_a_member`, `banned`, `not_verified`) with the existing toast. `banned` → also set local `isBanned` state so the ban notice takes over.
+
+---
+
+## `src/pages/Admin.tsx` — Chat Moderation tab
+
+Replace the "chat" tab placeholder with a new component `<ChatModerationPanel />` (new file `src/components/admin/ChatModerationPanel.tsx`) containing two sections in stacked `Card`s:
+
+### 1. Bans list
+- Query `chat_bans` joined with `profiles` (via `get_profile_display_info` per row, keeping RLS-safe access) to show:
+  - Full name of banned user + short user_id.
+  - `banned_by` (resolve same way).
+  - `reason` (or "—").
+  - `created_at` relative time.
+  - **Unban** button → confirm dialog → `admin-unban-user`, then refetch.
+- Empty state: "No active bans."
+
+### 2. Channel settings editor
+- Two `Input`s for `task_id` and `phase` (free text with helper: "e.g. `visa-israel` / `phase-1`"). Rationale: task IDs are dynamic across countries/cities; a picker would go stale. This matches how the app already routes chat channels.
+- A **Load** button fetches existing `chat_settings` row for that pair and populates the two `Textarea`s (`welcome_message`, `pinned_message`).
+- A **Save** button calls `upsert-chat-settings`.
+- Clear helper text: "Welcome shows once, the first time a user opens this channel. Pinned shows as a banner above the messages."
+
+Styling matches existing admin panels (`Card border-2 shadow-elevated`, DM Sans, primary color for CTAs).
+
+---
+
+## Technical notes (for you, not the plan body)
+
+- All 5 new/updated frontend calls (`join_chat_channel`, `edit-chat-message`, `delete-own-message`, `admin-delete-message`, `admin-ban-user`, `admin-unban-user`, `upsert-chat-settings`, `chat_settings` SELECT, `chat_bans` SELECT) match the RLS / role checks we shipped in steps 1 & 2.
+- Supabase types are regenerated after migrations, so `join_chat_channel` and `chat_settings`/`chat_bans` are typed for the client already.
+- The `MessageReactions` component keeps working — its prop shape is unchanged.
+- After I finish, I'll pause. No `preview_ui--publish`, no viewport changes.
+
+---
+
+## Files touched
+
+- **New:** `supabase/functions/delete-own-message/index.ts`
+- **New:** `src/components/admin/ChatModerationPanel.tsx`
+- **Rewrite:** `src/components/TaskChat.tsx`
+- **Edit:** `src/pages/Admin.tsx` (swap chat placeholder for `<ChatModerationPanel />`)
