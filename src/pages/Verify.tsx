@@ -184,6 +184,7 @@ const Verify = () => {
       return;
     }
     await refetch();
+    clearSavedOtp();
     if (data.verified) {
       toast({ title: 'Verified', description: 'You can now join the community chat.' });
       setStep('done');
