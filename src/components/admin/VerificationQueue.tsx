@@ -53,9 +53,12 @@ export const VerificationQueue = () => {
 
   useEffect(() => { load(); }, []);
 
-  const viewLetter = async (s: Submission) => {
-    if (!s.file_path) return;
-    const { data, error } = await supabase.storage.from('user-documents').createSignedUrl(s.file_path, 60);
+  const openFile = async (path: string | null, label: string) => {
+    if (!path) {
+      toast({ title: `No ${label} on file`, variant: 'destructive' });
+      return;
+    }
+    const { data, error } = await supabase.storage.from('user-documents').createSignedUrl(path, 60);
     if (error || !data?.signedUrl) {
       toast({ title: 'Could not open file', description: error?.message || 'Try again.', variant: 'destructive' });
       return;
