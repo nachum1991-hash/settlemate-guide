@@ -232,8 +232,11 @@ const Auth = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
+                    minLength={1}
+                    maxLength={60}
                   />
                 </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
                   <Input
