@@ -166,11 +166,16 @@ const Onboarding = () => {
                     mode="single"
                     selected={arrivalDate}
                     onSelect={setArrivalDate}
+                    defaultMonth={arrivalDate ?? new Date()}
+                    captionLayout="dropdown-buttons"
+                    fromYear={new Date().getFullYear()}
+                    toYear={new Date().getFullYear() + 3}
                     disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                     initialFocus
                     className={cn('p-3 pointer-events-auto')}
                   />
                 </PopoverContent>
+
               </Popover>
             </div>
           )}
