@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+
 import {
   Select,
   SelectContent,
@@ -36,13 +38,17 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
   const { setSelectedCity } = useCity();
   const { toast } = useToast();
 
+  const [fullName, setFullName] = useState('');
   const [country, setCountry] = useState('');
   const [university, setUniversity] = useState('');
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(undefined);
   const [saving, setSaving] = useState(false);
 
+  const currentYear = new Date().getFullYear();
+
   useEffect(() => {
     if (profile && open) {
+      setFullName(profile.full_name ?? '');
       setCountry(profile.origin_country ?? '');
       setUniversity(profile.university ?? '');
       setArrivalDate(profile.arrival_date ? new Date(profile.arrival_date) : undefined);
@@ -50,8 +56,14 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
   }, [profile, open]);
 
   const handleSave = async () => {
+    const trimmedName = fullName.trim();
+    if (!trimmedName) {
+      toast({ title: 'Please enter your name', variant: 'destructive' });
+      return;
+    }
     setSaving(true);
     const { error } = await updateProfile({
+      full_name: trimmedName,
       origin_country: country || null,
       university: university || null,
       arrival_date: arrivalDate ? format(arrivalDate, 'yyyy-MM-dd') : null,
@@ -67,6 +79,7 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
     onOpenChange(false);
   };
 
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -76,6 +89,20 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
+            <Label htmlFor="edit-fullname">Display name</Label>
+            <Input
+              id="edit-fullname"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              maxLength={60}
+              placeholder="Your name"
+            />
+            <p className="text-xs text-muted-foreground">
+              This is the name shown on your chat messages.
+            </p>
+          </div>
+          <div className="space-y-2">
+
             <Label>Country of origin</Label>
             <Select value={country} onValueChange={setCountry}>
               <SelectTrigger>
@@ -125,10 +152,15 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
                   mode="single"
                   selected={arrivalDate}
                   onSelect={setArrivalDate}
+                  defaultMonth={arrivalDate ?? new Date()}
+                  captionLayout="dropdown-buttons"
+                  fromYear={currentYear}
+                  toYear={currentYear + 3}
                   initialFocus
                   className={cn('p-3 pointer-events-auto')}
                 />
               </PopoverContent>
+
             </Popover>
           </div>
         </div>

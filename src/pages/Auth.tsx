@@ -37,7 +37,13 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!fullName.trim()) {
+      toast({ title: 'Please enter your name', variant: 'destructive' });
+      return;
+    }
     setLoading(true);
+
+
 
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -226,8 +232,11 @@ const Auth = () => {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
+                    minLength={1}
+                    maxLength={60}
                   />
                 </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
                   <Input
