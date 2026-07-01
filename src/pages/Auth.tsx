@@ -37,7 +37,13 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!fullName.trim()) {
+      toast({ title: 'Please enter your name', variant: 'destructive' });
+      return;
+    }
     setLoading(true);
+
+
 
     const { data, error } = await supabase.auth.signUp({
       email,
