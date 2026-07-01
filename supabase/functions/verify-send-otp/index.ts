@@ -86,6 +86,17 @@ serve(async (req) => {
 
     const sb = createClient(supabaseUrl, serviceKey);
 
+    // Allowlist gate: only send codes to recognized university domains.
+    const domain = email.split('@')[1] ?? '';
+    const { data: domains } = await sb.from('university_domains').select('base_domain');
+    const isAllowlisted = (domains ?? []).some((d: { base_domain: string }) => {
+      const base = (d.base_domain || '').toLowerCase();
+      return !!base && (domain === base || domain.endsWith('.' + base));
+    });
+    if (!isAllowlisted) {
+      return json({ error: 'not_allowlisted' }, 400);
+    }
+
     // Already verified by someone else?
     const { data: existing } = await sb
       .from('profiles')
