@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ShieldCheck, MessageSquareWarning, LifeBuoy, UserCheck, Users } from 'lucide-react';
 import { VerificationQueue } from '@/components/admin/VerificationQueue';
+import { ChatModerationPanel } from '@/components/admin/ChatModerationPanel';
 
 const Admin = () => {
   const [tab, setTab] = useState('verification');
@@ -49,11 +50,7 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="chat" className="mt-6">
-            <PlaceholderPanel
-              title="Chat moderation"
-              description="See reported messages, hide or delete content, and ban abusive accounts from community rooms."
-              status="Planned"
-            />
+            <ChatModerationPanel />
           </TabsContent>
 
           <TabsContent value="support" className="mt-6">
