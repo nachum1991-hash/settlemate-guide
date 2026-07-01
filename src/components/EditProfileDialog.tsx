@@ -36,13 +36,17 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
   const { setSelectedCity } = useCity();
   const { toast } = useToast();
 
+  const [fullName, setFullName] = useState('');
   const [country, setCountry] = useState('');
   const [university, setUniversity] = useState('');
   const [arrivalDate, setArrivalDate] = useState<Date | undefined>(undefined);
   const [saving, setSaving] = useState(false);
 
+  const currentYear = new Date().getFullYear();
+
   useEffect(() => {
     if (profile && open) {
+      setFullName(profile.full_name ?? '');
       setCountry(profile.origin_country ?? '');
       setUniversity(profile.university ?? '');
       setArrivalDate(profile.arrival_date ? new Date(profile.arrival_date) : undefined);
@@ -50,8 +54,14 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
   }, [profile, open]);
 
   const handleSave = async () => {
+    const trimmedName = fullName.trim();
+    if (!trimmedName) {
+      toast({ title: 'Please enter your name', variant: 'destructive' });
+      return;
+    }
     setSaving(true);
     const { error } = await updateProfile({
+      full_name: trimmedName,
       origin_country: country || null,
       university: university || null,
       arrival_date: arrivalDate ? format(arrivalDate, 'yyyy-MM-dd') : null,
@@ -66,6 +76,7 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
     toast({ title: 'Profile updated' });
     onOpenChange(false);
   };
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
