@@ -110,9 +110,14 @@ export const VerificationQueue = () => {
               <p className="text-sm text-muted-foreground break-words">{s.profile?.university_email || '(no university email on file)'}</p>
               <p className="text-xs text-muted-foreground mt-1">Submitted {formatDistanceToNow(new Date(s.created_at), { addSuffix: true })}</p>
             </div>
-            <Button variant="outline" onClick={() => viewLetter(s)} className="min-h-[44px]">
-              <ExternalLink className="h-4 w-4 mr-2" /> View letter
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button variant="outline" onClick={() => openFile(s.file_path, 'acceptance letter')} className="min-h-[44px]">
+                <ExternalLink className="h-4 w-4 mr-2" /> View acceptance letter
+              </Button>
+              <Button variant="outline" onClick={() => openFile(s.id_file_path, 'photo ID')} className="min-h-[44px]">
+                <ExternalLink className="h-4 w-4 mr-2" /> View photo ID
+              </Button>
+            </div>
           </div>
 
           <Textarea
