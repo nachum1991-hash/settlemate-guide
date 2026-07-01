@@ -52,6 +52,32 @@ const Verify = () => {
   const [idFile, setIdFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  const OTP_STORAGE_KEY = 'settlemate-verify-otp';
+  const OTP_TTL_MS = 10 * 60 * 1000;
+
+  const clearSavedOtp = () => {
+    try {
+      localStorage.removeItem(OTP_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+  };
+
+  const saveOtpState = (savedEmail: string) => {
+    try {
+      localStorage.setItem(
+        OTP_STORAGE_KEY,
+        JSON.stringify({
+          step: 'code',
+          email: savedEmail,
+          expiresAt: Date.now() + OTP_TTL_MS,
+        }),
+      );
+    } catch {
+      // ignore
+    }
+  };
+
   // Decide initial step once; afterwards only auto-advance to 'done'.
   const decidedRef = useRef(false);
   useEffect(() => {
@@ -59,8 +85,34 @@ const Verify = () => {
     if (!decidedRef.current) {
       decidedRef.current = true;
       if (verified || pendingSubmission) {
+        clearSavedOtp();
         setStep('done');
         return;
+      }
+      // Try to restore an in-flight OTP entry so a reload doesn't drop the user
+      // back to the chooser after they leave to grab the code from email.
+      try {
+        const raw = localStorage.getItem(OTP_STORAGE_KEY);
+        if (raw) {
+          const saved = JSON.parse(raw) as {
+            step?: string;
+            email?: string;
+            expiresAt?: number;
+          };
+          if (
+            saved?.step === 'code' &&
+            typeof saved.email === 'string' &&
+            typeof saved.expiresAt === 'number' &&
+            saved.expiresAt > Date.now()
+          ) {
+            setEmail(saved.email);
+            setStep('code');
+            return;
+          }
+          clearSavedOtp();
+        }
+      } catch {
+        clearSavedOtp();
       }
       if (emailVerifiedAt) {
         setEmail(universityEmail ?? '');
@@ -68,7 +120,10 @@ const Verify = () => {
       setStep('chooser');
       return;
     }
-    if (verified || pendingSubmission) setStep('done');
+    if (verified || pendingSubmission) {
+      clearSavedOtp();
+      setStep('done');
+    }
   }, [loading, verified, pendingSubmission, emailVerifiedAt, universityEmail]);
 
   useEffect(() => {
@@ -105,6 +160,7 @@ const Verify = () => {
     }
     toast({ title: 'Code sent', description: `We sent a 6-digit code to ${email}.` });
     setCooldown(30);
+    saveOtpState(email.trim().toLowerCase());
     setStep('code');
   };
 
@@ -128,6 +184,7 @@ const Verify = () => {
       return;
     }
     await refetch();
+    clearSavedOtp();
     if (data.verified) {
       toast({ title: 'Verified', description: 'You can now join the community chat.' });
       setStep('done');
@@ -262,7 +319,10 @@ const Verify = () => {
 
               <button
                 type="button"
-                onClick={() => setStep('documents')}
+                onClick={() => {
+                  clearSavedOtp();
+                  setStep('documents');
+                }}
                 className="w-full text-left rounded-2xl border-2 border-border hover:border-primary/60 hover:bg-primary/5 transition-colors p-4 sm:p-5 flex items-start gap-4 min-h-[44px]"
               >
                 <div className="rounded-xl bg-secondary/10 p-3 flex-shrink-0">
@@ -322,6 +382,7 @@ const Verify = () => {
                   <Button
                     onClick={() => {
                       setNotAllowlisted(false);
+                      clearSavedOtp();
                       setStep('documents');
                     }}
                     className="w-full min-h-[44px]"
@@ -378,7 +439,13 @@ const Verify = () => {
                 {confirming ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Confirm code'}
               </Button>
               <div className="flex items-center justify-between text-sm">
-                <button className="text-muted-foreground underline" onClick={() => setStep('email')}>
+                <button
+                  className="text-muted-foreground underline"
+                  onClick={() => {
+                    clearSavedOtp();
+                    setStep('email');
+                  }}
+                >
                   Change email
                 </button>
                 <button
