@@ -209,6 +209,7 @@ serve(async (req) => {
         purpose: 'transactional',
         label: 'verification-otp',
         idempotency_key: `verify-otp-${otpRow.id}`,
+        unsubscribe_token: unsubscribeToken,
         queued_at: new Date().toISOString(),
       },
     });
