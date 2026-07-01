@@ -319,7 +319,10 @@ const Verify = () => {
 
               <button
                 type="button"
-                onClick={() => setStep('documents')}
+                onClick={() => {
+                  clearSavedOtp();
+                  setStep('documents');
+                }}
                 className="w-full text-left rounded-2xl border-2 border-border hover:border-primary/60 hover:bg-primary/5 transition-colors p-4 sm:p-5 flex items-start gap-4 min-h-[44px]"
               >
                 <div className="rounded-xl bg-secondary/10 p-3 flex-shrink-0">
