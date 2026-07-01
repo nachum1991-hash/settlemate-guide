@@ -152,10 +152,15 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
                   mode="single"
                   selected={arrivalDate}
                   onSelect={setArrivalDate}
+                  defaultMonth={arrivalDate ?? new Date()}
+                  captionLayout="dropdown-buttons"
+                  fromYear={currentYear}
+                  toYear={currentYear + 3}
                   initialFocus
                   className={cn('p-3 pointer-events-auto')}
                 />
               </PopoverContent>
+
             </Popover>
           </div>
         </div>
