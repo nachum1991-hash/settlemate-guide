@@ -87,6 +87,20 @@ export const EditProfileDialog = ({ open, onOpenChange }: Props) => {
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
+            <Label htmlFor="edit-fullname">Display name</Label>
+            <Input
+              id="edit-fullname"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              maxLength={60}
+              placeholder="Your name"
+            />
+            <p className="text-xs text-muted-foreground">
+              This is the name shown on your chat messages.
+            </p>
+          </div>
+          <div className="space-y-2">
+
             <Label>Country of origin</Label>
             <Select value={country} onValueChange={setCountry}>
               <SelectTrigger>
