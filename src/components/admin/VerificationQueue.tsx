@@ -12,6 +12,7 @@ interface Submission {
   id: string;
   user_id: string;
   file_path: string | null;
+  id_file_path: string | null;
   created_at: string;
   status: string;
   profile?: { full_name: string | null; university_email: string | null };
