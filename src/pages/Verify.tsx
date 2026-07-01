@@ -160,6 +160,7 @@ const Verify = () => {
     }
     toast({ title: 'Code sent', description: `We sent a 6-digit code to ${email}.` });
     setCooldown(30);
+    saveOtpState(email.trim().toLowerCase());
     setStep('code');
   };
 
