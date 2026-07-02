@@ -400,7 +400,7 @@ export const residencePermitDocuments: ArrivalDocument[] = [
         'Waiting too long to enroll in SSN (do it early!)',
         'Not having the policy document in Italian or English'
       ],
-      howToObtain: 'Option 1: Use your existing private insurance (check Italy coverage). Option 2: Enroll in Italian SSN at your local ASL office - costs around €150/year for students and provides full coverage.',
+      howToObtain: 'Option 1: Use your existing private insurance (check Italy coverage). Option 2: Enroll in Italian SSN at your local ASL office - costs €700/year for students (flat rate since 2024, set yearly in the budget law — confirm current amount) and provides full coverage.',
       officialLinks: [
         {
           label: 'Ministry of Health - SSN Info',
