@@ -85,7 +85,7 @@ const countries = [{
   embassyUrl: "https://ambbrasilia.esteri.it/",
   vfsUrl: null,
   passportRenewalUrl: "https://www.gov.br/pt-br/servicos/obter-passaporte-comum-para-brasileiro",
-  appointmentUrl: "https://prenotaonline.esteri.it/",
+  appointmentUrl: "https://prenotami.esteri.it/",
   apostilleInfo: "Required - get from local cartório (notary office)",
   paymentMethod: "Bank transfer (check embassy website for details)"
 }, {
