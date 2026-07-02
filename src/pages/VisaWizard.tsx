@@ -193,10 +193,10 @@ const baseDocuments: VisaDocument[] = [{
   image: insuranceImg,
   details: {
     acceptanceRules: {
-      valid: ["Minimum €30,000 coverage", "Covers ENTIRE visa period (entry to expiry)", "Valid in Italy and all Schengen countries"],
-      invalid: ["Travel insurance without medical coverage", "Dates don't match visa period exactly"]
+      valid: ["Minimum €30,000 coverage", "Coverage for at least the first 3 months of your stay is the Tel Aviv embassy's stated minimum; coverage for the full visa period is safest and required by some consulates.", "Valid in Italy and all Schengen countries"],
+      invalid: ["Travel insurance without medical coverage", "Dates don't match visa period requirements"]
     },
-    commonMistakes: ["Coverage dates not matching visa dates exactly"],
+    commonMistakes: ["Coverage dates not matching visa dates as required by your consulate"],
     officialLinks: [{
       label: "SWISSCARE",
       url: "https://www.swisscare.com/",
