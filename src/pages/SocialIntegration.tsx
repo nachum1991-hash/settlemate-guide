@@ -120,7 +120,7 @@ const SocialIntegration = () => {
                             >
                               <MessageCircle className="w-4 h-4" />
                               <span>{group.name}</span>
-                              <span className="text-xs text-primary/70">({group.members})</span>
+                              {group.members && <span className="text-xs text-primary/70">({group.members})</span>}
                               <ExternalLink className="w-3 h-3" />
                             </a>
                           ))}
@@ -439,7 +439,7 @@ const SocialIntegration = () => {
                       </a>
                     )}
                     <a
-                      href={`https://www.meetup.com/cities/it/${cityInfo.name.toLowerCase()}/`}
+                      href={`https://www.meetup.com/find/?location=it--${cityInfo.name}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-4 bg-muted/50 border border-border rounded-lg hover:bg-muted transition-colors group"

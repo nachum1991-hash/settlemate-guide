@@ -111,7 +111,7 @@ const BureaucracyTimeline = () => {
       icon: Fingerprint,
       color: "accent",
       duration: "2-4 weeks",
-      description: "Essential permit - start this within 8 days of arrival",
+      description: "Essential permit - start this within 8 working days of arrival",
       details: {
         location: `Poste Italiane (Sportello Amico) → ${currentCityData.questura.name}`,
         documents: [
@@ -126,14 +126,14 @@ const BureaucracyTimeline = () => {
         ],
         process: [
           "Buy Yellow Kit at post office",
-          "Pay: €70.46 (permit card) + €31 (postal) + €16 (marca) + €30 (service fee)",
+          "Pay at the post office: €16 marca da bollo + €30.46 permit card (PSE) + €30 postal fee + €40 study contributo = €116.46 total",
           "Submit kit at Sportello Amico - receive barcode receipt",
           "Wait for Questura appointment (via SMS)",
           `Attend fingerprinting at ${currentCityData.questura.address}`,
           "Track status at portaleimmigrazione.it"
         ],
-        cost: "€147.46 total",
-        tips: "Start immediately - you must apply within 8 days! Bring copies of everything.",
+        cost: "€116.46 total (study permit, up to 1 year)",
+        tips: "Start immediately - you must apply within 8 working days! Bring copies of everything.",
         officialResources: [
           {
             name: "Portale Immigrazione",
@@ -154,8 +154,8 @@ const BureaucracyTimeline = () => {
         partners: [
           {
             name: "Poste Italiane",
-            url: "https://www.poste.it/sportello-amico.html",
-            description: "Submit your Yellow Kit here",
+            url: "https://www.poste.it/cerca-mappe-app/?vieni-in-poste&services=103",
+            description: "Find a Sportello Amico post office and submit your Yellow Kit",
             category: "Post Office"
           }
         ]

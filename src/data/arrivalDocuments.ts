@@ -44,7 +44,7 @@ const cityResources = {
     universities: [
       { name: 'Politecnico di Milano - Segreteria', url: 'https://www.polimi.it/studenti/contatti', description: 'Student services and certificates' },
       { name: 'Università degli Studi di Milano', url: 'https://www.unimi.it/it/studiare/frequentare-un-corso-di-laurea/iscriversi/segreterie-studenti', description: 'Enrollment certificates' },
-      { name: 'Bocconi Student Services', url: 'https://www.unibocconi.it/wps/wcm/connect/bocconi/sitopubblico_it/albero+di+navigazione/home/corsi+di+studio/studenti+iscritti/', description: 'Student desk services' }
+      { name: 'Bocconi Student Services', url: 'https://www.unibocconi.it/it/studenti-iscritti', description: 'Student desk services' }
     ]
   },
   roma: {
@@ -204,7 +204,7 @@ export const residencePermitDocuments: ArrivalDocument[] = [
         'Not filling out all required sections',
         'Confusing Modulo 1 with other forms in the kit'
       ],
-      howToObtain: 'Go to any Italian post office (Poste Italiane) and ask for the "Kit per Permesso di Soggiorno" or "Kit Giallo". It costs around €30-40 and includes all necessary forms and a prepaid envelope.',
+      howToObtain: 'Go to any Italian post office (Poste Italiane) and ask for the "Kit per Permesso di Soggiorno" or "Kit Giallo". The kit itself is free; you pay ~€30 postal fee when you submit it at the Sportello Amico desk. It includes all necessary forms and instructions.',
       officialLinks: [
         {
           label: 'Poste Italiane Kit Info',
