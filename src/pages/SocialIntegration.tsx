@@ -1,24 +1,18 @@
-import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Users, 
   MessageCircle, 
   Calendar, 
   ExternalLink, 
-  UserPlus,
   Globe,
   GraduationCap,
   Flag,
-  Heart,
   MapPin,
   Clock,
-  CheckCircle2,
   MessagesSquare
 } from "lucide-react";
 import CitySelector from "@/components/CitySelector";
@@ -38,20 +32,6 @@ const nationalityGroups = [
 
 const SocialIntegration = () => {
   const { selectedCity, cityInfo } = useCity();
-  const [buddyForm, setBuddyForm] = useState({
-    name: "",
-    email: "",
-    university: "",
-    program: "",
-    languages: "",
-    interests: ""
-  });
-  const [buddySubmitted, setBuddySubmitted] = useState(false);
-
-  const handleBuddySubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setBuddySubmitted(true);
-  };
 
   const universityGroups = universityGroupsByCity[selectedCity] || [];
   const upcomingEvents = eventsByCity[selectedCity] || [];
@@ -78,14 +58,10 @@ const SocialIntegration = () => {
             <CitySelector />
             
             <Tabs defaultValue="groups" className="w-full mt-6">
-              <TabsList className="grid w-full grid-cols-4 mb-6">
+              <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger value="groups" className="text-xs sm:text-sm">
                   <MessageCircle className="w-4 h-4 mr-1 sm:mr-2" />
                   <span className="hidden sm:inline">Groups</span>
-                </TabsTrigger>
-                <TabsTrigger value="buddy" className="text-xs sm:text-sm">
-                  <UserPlus className="w-4 h-4 mr-1 sm:mr-2" />
-                  <span className="hidden sm:inline">Find a Buddy</span>
                 </TabsTrigger>
                 <TabsTrigger value="events" className="text-xs sm:text-sm">
                   <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
@@ -200,105 +176,6 @@ const SocialIntegration = () => {
                 </div>
               </TabsContent>
 
-              {/* Buddy Tab */}
-              <TabsContent value="buddy" className="space-y-6">
-                <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Heart className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">Find Your Study Buddy</h3>
-                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                    Get matched with another student who shares your interests, program, or language. 
-                    Navigate your Italian adventure together!
-                  </p>
-                </div>
-
-                {buddySubmitted ? (
-                  <Card className="p-6 bg-success/5 border-success/30 text-center">
-                    <CheckCircle2 className="w-12 h-12 text-success mx-auto mb-4" />
-                    <h4 className="font-semibold text-foreground mb-2">You're on the list!</h4>
-                    <p className="text-sm text-muted-foreground">
-                      We'll match you with compatible buddies and send introductions to your email within 48 hours.
-                    </p>
-                  </Card>
-                ) : (
-                  <Card className="p-6">
-                    <form onSubmit={handleBuddySubmit} className="space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="buddy-name">Full Name</Label>
-                          <Input
-                            id="buddy-name"
-                            placeholder="Your name"
-                            value={buddyForm.name}
-                            onChange={(e) => setBuddyForm({ ...buddyForm, name: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="buddy-email">Email</Label>
-                          <Input
-                            id="buddy-email"
-                            type="email"
-                            placeholder="your@email.com"
-                            value={buddyForm.email}
-                            onChange={(e) => setBuddyForm({ ...buddyForm, email: e.target.value })}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="buddy-university">University</Label>
-                          <Input
-                            id="buddy-university"
-                            placeholder="e.g., Politecnico di Milano"
-                            value={buddyForm.university}
-                            onChange={(e) => setBuddyForm({ ...buddyForm, university: e.target.value })}
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="buddy-program">Program/Major</Label>
-                          <Input
-                            id="buddy-program"
-                            placeholder="e.g., Computer Engineering"
-                            value={buddyForm.program}
-                            onChange={(e) => setBuddyForm({ ...buddyForm, program: e.target.value })}
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="buddy-languages">Languages You Speak</Label>
-                        <Input
-                          id="buddy-languages"
-                          placeholder="e.g., English, Hebrew, some Italian"
-                          value={buddyForm.languages}
-                          onChange={(e) => setBuddyForm({ ...buddyForm, languages: e.target.value })}
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="buddy-interests">Interests & Hobbies</Label>
-                        <Input
-                          id="buddy-interests"
-                          placeholder="e.g., hiking, music, cooking, photography"
-                          value={buddyForm.interests}
-                          onChange={(e) => setBuddyForm({ ...buddyForm, interests: e.target.value })}
-                        />
-                      </div>
-
-                      <Button type="submit" className="w-full" size="lg">
-                        <UserPlus className="w-4 h-4 mr-2" />
-                        Find My Buddy
-                      </Button>
-                    </form>
-                  </Card>
-                )}
-              </TabsContent>
 
               {/* Events Tab */}
               <TabsContent value="events" className="space-y-6">
