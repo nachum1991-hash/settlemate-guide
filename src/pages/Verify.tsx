@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   ChevronRight,
   AlertCircle,
+  Info,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
