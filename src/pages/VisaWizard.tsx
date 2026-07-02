@@ -211,17 +211,17 @@ const baseDocuments: VisaDocument[] = [{
 }, {
   id: "financial",
   name: "Proof of Financial Means",
-  description: "Bank statements showing €506/month or sponsorship letter",
+  description: "Bank statements showing sufficient funds or sponsorship letter",
   required: true,
   image: financialImg,
   details: {
-    keyInfo: "Approximately €6,079.45/year (€506.62/month × 12) per recent published rates. Amounts are indicative — confirm current minimum on the official MAECI visa portal.",
+    keyInfo: "Reference amount: the Italian Embassy in Tel Aviv requires at least €848.25/month (€10,179.85 per academic year) for AY 2026-27, evaluated within your family's overall financial stability. Other embassies may publish different amounts — always confirm on your embassy's own study-visa page; updated yearly.",
     acceptanceRules: {
       valid: ["Bank statements from last 3-6 months showing consistent balance", "Scholarship letter covering full amount", "Sponsor bank statement WITH notarized sponsorship letter"],
       invalid: ["Banking app screenshots", "Sponsor letter without bank proof"]
     },
     commonMistakes: ["Sponsor letter not notarized/apostilled"],
-    tips: ["€506.62/month is MINIMUM - showing more improves your application"]
+    tips: ["€848.25/month is the published reference minimum (Tel Aviv, 2026-27) - showing more, and a stable overall financial picture, improves your application"]
   }
 }, {
   id: "accommodation",
