@@ -57,14 +57,10 @@ const SocialIntegration = () => {
             <CitySelector />
             
             <Tabs defaultValue="groups" className="w-full mt-6">
-              <TabsList className="grid w-full grid-cols-4 mb-6">
+              <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger value="groups" className="text-xs sm:text-sm">
                   <MessageCircle className="w-4 h-4 mr-1 sm:mr-2" />
                   <span className="hidden sm:inline">Groups</span>
-                </TabsTrigger>
-                <TabsTrigger value="buddy" className="text-xs sm:text-sm">
-                  <UserPlus className="w-4 h-4 mr-1 sm:mr-2" />
-                  <span className="hidden sm:inline">Find a Buddy</span>
                 </TabsTrigger>
                 <TabsTrigger value="events" className="text-xs sm:text-sm">
                   <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
