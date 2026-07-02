@@ -138,23 +138,23 @@ export const universityGroupsByCity: Record<City, Array<{
     {
       university: "Politecnico di Milano",
       groups: [
-        { name: "PoliNetwork Groups Hub", url: "https://linktr.ee/polinetwork", platform: "Multi-platform", members: "15k+" },
-        { name: "ESN Polimi", url: "https://milanopolitecnico.esn.it/", platform: "Website", members: "5k+" },
-        { name: "Polimi International", url: "https://www.facebook.com/groups/polimiinternational", platform: "Facebook", members: "12k+" }
+        { name: "PoliNetwork Groups Hub", url: "https://linktr.ee/polinetwork", platform: "Multi-platform", members: "" },
+        { name: "ESN Polimi", url: "https://milanopolitecnico.esn.it/", platform: "Website", members: "" },
+        { name: "Polimi International", url: "https://www.facebook.com/groups/polimiinternational", platform: "Facebook", members: "" }
       ]
     },
     {
       university: "University of Milano",
       groups: [
-        { name: "ESN Milano Statale", url: "https://milanostatale.esn.it/", platform: "Website", members: "4k+" },
-        { name: "UniMi International Students", url: "https://www.facebook.com/groups/unimiinternational", platform: "Facebook", members: "8k+" }
+        { name: "ESN Milano Statale", url: "https://milanostatale.esn.it/", platform: "Website", members: "" },
+        { name: "UniMi International Students", url: "https://www.facebook.com/groups/unimiinternational", platform: "Facebook", members: "" }
       ]
     },
     {
       university: "Bocconi University",
       groups: [
-        { name: "ESN Bocconi", url: "https://bocconi.esn.it/", platform: "Website", members: "3k+" },
-        { name: "Bocconi Students", url: "https://www.facebook.com/groups/bocconistudents", platform: "Facebook", members: "6k+" }
+        { name: "ESN Bocconi", url: "https://bocconi.esn.it/", platform: "Website", members: "" },
+        { name: "Bocconi Students", url: "https://www.facebook.com/groups/bocconistudents", platform: "Facebook", members: "" }
       ]
     }
   ],
@@ -162,21 +162,21 @@ export const universityGroupsByCity: Record<City, Array<{
     {
       university: "Sapienza Università di Roma",
       groups: [
-        { name: "Sapienza Students Network", url: "https://sapienzastudents.net/", platform: "Multi-platform", members: "10k+" },
-        { name: "ESN Roma ASE (Sapienza)", url: "https://romaase.esn.it/", platform: "Website", members: "5k+" },
-        { name: "Sapienza International", url: "https://www.facebook.com/groups/sapienzainternational", platform: "Facebook", members: "15k+" }
+        { name: "Sapienza Students Network", url: "https://sapienzastudents.net/", platform: "Multi-platform", members: "" },
+        { name: "ESN Roma ASE (Sapienza)", url: "https://romaase.esn.it/", platform: "Website", members: "" },
+        { name: "Sapienza International", url: "https://www.facebook.com/groups/sapienzainternational", platform: "Facebook", members: "" }
       ]
     },
     {
       university: "LUISS Guido Carli",
       groups: [
-        { name: "ESN Roma LUISS", url: "https://romaluiss.esn.it/", platform: "Website", members: "2k+" }
+        { name: "ESN Roma LUISS", url: "https://romaluiss.esn.it/", platform: "Website", members: "" }
       ]
     },
     {
       university: "Roma Tre",
       groups: [
-        { name: "ESN Roma Tre", url: "https://romatre.esn.it/", platform: "Website", members: "3k+" }
+        { name: "ESN Roma Tre", url: "https://romatre.esn.it/", platform: "Website", members: "" }
       ]
     }
   ],
@@ -184,15 +184,15 @@ export const universityGroupsByCity: Record<City, Array<{
     {
       university: "Politecnico di Torino",
       groups: [
-        { name: "ESN Torino (PoliTo)", url: "https://torino.esn.it/", platform: "Website", members: "4k+" },
-        { name: "PoliTo International Students", url: "https://www.facebook.com/groups/politointernational", platform: "Facebook", members: "7k+" }
+        { name: "ESN Torino (PoliTo)", url: "https://torino.esn.it/", platform: "Website", members: "" },
+        { name: "PoliTo International Students", url: "https://www.facebook.com/groups/politointernational", platform: "Facebook", members: "" }
       ]
     },
     {
       university: "Università di Torino",
       groups: [
-        { name: "ESN Torino", url: "https://torino.esn.it/", platform: "Website", members: "3k+" },
-        { name: "UniTo International", url: "https://www.facebook.com/groups/unitointernational", platform: "Facebook", members: "5k+" }
+        { name: "ESN Torino", url: "https://torino.esn.it/", platform: "Website", members: "" },
+        { name: "UniTo International", url: "https://www.facebook.com/groups/unitointernational", platform: "Facebook", members: "" }
       ]
     }
   ],
@@ -200,8 +200,8 @@ export const universityGroupsByCity: Record<City, Array<{
     {
       university: "Università di Pavia",
       groups: [
-        { name: "ESN Pavia", url: "https://pavia.esn.it/", platform: "Website", members: "2k+" },
-        { name: "UniPV International Students", url: "https://www.facebook.com/groups/unipvinternational", platform: "Facebook", members: "4k+" }
+        { name: "ESN Pavia", url: "https://pavia.esn.it/", platform: "Website", members: "" },
+        { name: "UniPV International Students", url: "https://www.facebook.com/groups/unipvinternational", platform: "Facebook", members: "" }
       ]
     }
   ]
