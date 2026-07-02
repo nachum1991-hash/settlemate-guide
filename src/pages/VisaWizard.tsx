@@ -737,7 +737,7 @@ const VisaWizard = () => {
                         <h3 className="font-semibold text-foreground text-sm sm:text-base">Visa fee payment</h3>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground mb-2">
-                        €116 national visa fee (indicative — confirm with your embassy). Non-refundable if denied.
+                        Study-visa fee ≈ €50, paid in local currency (Israel ₪183 / India ₹5,264 + ₹631 VFS fee — indicative, confirm with your embassy/VFS). Non-refundable if denied.
                       </p>
                       <p className="text-xs sm:text-sm text-foreground font-medium">
                         How to pay: {selectedCountryData.paymentMethod}
