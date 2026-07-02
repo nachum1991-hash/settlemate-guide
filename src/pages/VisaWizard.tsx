@@ -105,7 +105,7 @@ const countries = [{
   embassyUrl: "https://www.esteri.it/en/ministero/la_rete_diplomatica/",
   vfsUrl: null,
   passportRenewalUrl: null,
-  appointmentUrl: "https://prenotaonline.esteri.it/",
+  appointmentUrl: "https://prenotami.esteri.it/",
   apostilleInfo: "Check with your local authorities for apostille requirements",
   paymentMethod: "Check with your local embassy for payment methods"
 }];
