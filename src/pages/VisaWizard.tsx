@@ -257,11 +257,11 @@ const baseDocuments: VisaDocument[] = [{
 }, {
   id: "fee",
   name: "Visa Fee Payment",
-  description: "€116 national visa fee (payment method varies by embassy)",
+  description: "Study (Type D) visa fee: Israel ₪183 (≈ €50) cash at the embassy; India ₹5,264 (≈ €50) + ₹631 (≈ €7) VFS service fee",
   required: true,
   image: paymentImg,
   details: {
-    keyInfo: "€116 for National (D) visa is the commonly published fee — NON-REFUNDABLE even if denied. Amount is indicative; confirm current fee with your embassy.",
+    keyInfo: "The study (Type D) visa fee is ≈ €50, paid in local currency — Israel: ₪183 cash at the embassy; India: ₹5,264 plus ₹631 VFS service fee at the VFS centre. NON-REFUNDABLE even if denied. Local amounts track exchange rates and update periodically — confirm the current fee before your appointment.",
     commonMistakes: ["Bringing only card when embassy requires cash (or vice versa)", "VFS centers have additional service fees (€20-30)"],
     officialLinks: [{
       label: "Find Your Embassy",
