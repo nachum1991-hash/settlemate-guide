@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   ChevronRight,
   AlertCircle,
+  Info,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -456,6 +457,12 @@ const Verify = () => {
                   {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}
                 </button>
               </div>
+              <p className="flex items-start gap-2 text-xs text-muted-foreground">
+                <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                <span>
+                  Didn't get the code? Check your spam or junk folder — university mail filters often put it there. Adding no-reply@getsettlemate.app to your safe senders helps.
+                </span>
+              </p>
             </div>
           ) : step === 'documents' ? (
             <div className="space-y-5">
