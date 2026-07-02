@@ -42,12 +42,12 @@ const countries = [{
   value: "india",
   label: "India",
   processingWeeks: "6-8",
-  embassyUrl: "https://ambdelhi.esteri.it/",
+  embassyUrl: "https://ambnewdelhi.esteri.it/",
   vfsUrl: "https://visa.vfsglobal.com/ind/en/ita",
   passportRenewalUrl: "https://www.passportindia.gov.in/",
   appointmentUrl: "https://visa.vfsglobal.com/ind/en/ita/book-an-appointment",
   apostilleInfo: "Required - get from MEA (Ministry of External Affairs)",
-  paymentMethod: "Cash or demand draft at VFS center"
+  paymentMethod: "Paid in rupees at the VFS centre: ₹5,264 (≈ €50) visa fee + ₹631 (≈ €7) VFS service fee — confirm current amounts"
 }, {
   value: "iran",
   label: "Iran",
