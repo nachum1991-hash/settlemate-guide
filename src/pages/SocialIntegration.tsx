@@ -1,24 +1,17 @@
-import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Users, 
   MessageCircle, 
   Calendar, 
   ExternalLink, 
-  UserPlus,
   Globe,
   GraduationCap,
   Flag,
-  Heart,
   MapPin,
   Clock,
-  CheckCircle2,
   MessagesSquare
 } from "lucide-react";
 import CitySelector from "@/components/CitySelector";
@@ -38,20 +31,6 @@ const nationalityGroups = [
 
 const SocialIntegration = () => {
   const { selectedCity, cityInfo } = useCity();
-  const [buddyForm, setBuddyForm] = useState({
-    name: "",
-    email: "",
-    university: "",
-    program: "",
-    languages: "",
-    interests: ""
-  });
-  const [buddySubmitted, setBuddySubmitted] = useState(false);
-
-  const handleBuddySubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setBuddySubmitted(true);
-  };
 
   const universityGroups = universityGroupsByCity[selectedCity] || [];
   const upcomingEvents = eventsByCity[selectedCity] || [];
