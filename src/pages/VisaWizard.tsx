@@ -35,9 +35,9 @@ const countries = [{
   embassyUrl: "https://ambtelaviv.esteri.it/",
   vfsUrl: null,
   passportRenewalUrl: "https://www.gov.il/en/service/biometric_passport",
-  appointmentUrl: "https://prenotaonline.esteri.it/Login.aspx?cidsede=100046",
-  apostilleInfo: "Required for sponsor letters - get from Ministry of Justice",
-  paymentMethod: "Credit card or bank transfer at embassy"
+  appointmentUrl: "https://prenotami.esteri.it/",
+  apostilleInfo: "Required on your Bagrut/diploma (with Italian translation) for pre-enrolment. Public documents: Israeli Ministry of Foreign Affairs (Jerusalem); notarized translations: Magistrates' Court.",
+  paymentMethod: "Cash at the embassy: ₪183 (≈ €50) — confirm current amount before your appointment"
 }, {
   value: "india",
   label: "India",
