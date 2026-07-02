@@ -55,7 +55,7 @@ const countries = [{
   embassyUrl: "https://ambtehran.esteri.it/",
   vfsUrl: null,
   passportRenewalUrl: "https://epolice.ir/",
-  appointmentUrl: "https://prenotaonline.esteri.it/",
+  appointmentUrl: "https://prenotami.esteri.it/",
   apostilleInfo: "Required - get from Ministry of Foreign Affairs",
   paymentMethod: "Check with embassy for current payment methods"
 }, {
