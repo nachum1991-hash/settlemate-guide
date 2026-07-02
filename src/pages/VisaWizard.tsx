@@ -35,19 +35,19 @@ const countries = [{
   embassyUrl: "https://ambtelaviv.esteri.it/",
   vfsUrl: null,
   passportRenewalUrl: "https://www.gov.il/en/service/biometric_passport",
-  appointmentUrl: "https://prenotaonline.esteri.it/Login.aspx?cidsede=100046",
-  apostilleInfo: "Required for sponsor letters - get from Ministry of Justice",
-  paymentMethod: "Credit card or bank transfer at embassy"
+  appointmentUrl: "https://prenotami.esteri.it/",
+  apostilleInfo: "Required on your Bagrut/diploma (with Italian translation) for pre-enrolment. Public documents: Israeli Ministry of Foreign Affairs (Jerusalem); notarized translations: Magistrates' Court.",
+  paymentMethod: "Cash at the embassy: ₪183 (≈ €50) — confirm current amount before your appointment"
 }, {
   value: "india",
   label: "India",
   processingWeeks: "6-8",
-  embassyUrl: "https://ambdelhi.esteri.it/",
+  embassyUrl: "https://ambnewdelhi.esteri.it/",
   vfsUrl: "https://visa.vfsglobal.com/ind/en/ita",
   passportRenewalUrl: "https://www.passportindia.gov.in/",
   appointmentUrl: "https://visa.vfsglobal.com/ind/en/ita/book-an-appointment",
   apostilleInfo: "Required - get from MEA (Ministry of External Affairs)",
-  paymentMethod: "Cash or demand draft at VFS center"
+  paymentMethod: "Paid in rupees at the VFS centre: ₹5,264 (≈ €50) visa fee + ₹631 (≈ €7) VFS service fee — confirm current amounts"
 }, {
   value: "iran",
   label: "Iran",
@@ -55,7 +55,7 @@ const countries = [{
   embassyUrl: "https://ambtehran.esteri.it/",
   vfsUrl: null,
   passportRenewalUrl: "https://epolice.ir/",
-  appointmentUrl: "https://prenotaonline.esteri.it/",
+  appointmentUrl: "https://prenotami.esteri.it/",
   apostilleInfo: "Required - get from Ministry of Foreign Affairs",
   paymentMethod: "Check with embassy for current payment methods"
 }, {
@@ -85,7 +85,7 @@ const countries = [{
   embassyUrl: "https://ambbrasilia.esteri.it/",
   vfsUrl: null,
   passportRenewalUrl: "https://www.gov.br/pt-br/servicos/obter-passaporte-comum-para-brasileiro",
-  appointmentUrl: "https://prenotaonline.esteri.it/",
+  appointmentUrl: "https://prenotami.esteri.it/",
   apostilleInfo: "Required - get from local cartório (notary office)",
   paymentMethod: "Bank transfer (check embassy website for details)"
 }, {
@@ -105,7 +105,7 @@ const countries = [{
   embassyUrl: "https://www.esteri.it/en/ministero/la_rete_diplomatica/",
   vfsUrl: null,
   passportRenewalUrl: null,
-  appointmentUrl: "https://prenotaonline.esteri.it/",
+  appointmentUrl: "https://prenotami.esteri.it/",
   apostilleInfo: "Check with your local authorities for apostille requirements",
   paymentMethod: "Check with your local embassy for payment methods"
 }];
@@ -193,10 +193,10 @@ const baseDocuments: VisaDocument[] = [{
   image: insuranceImg,
   details: {
     acceptanceRules: {
-      valid: ["Minimum €30,000 coverage", "Covers ENTIRE visa period (entry to expiry)", "Valid in Italy and all Schengen countries"],
-      invalid: ["Travel insurance without medical coverage", "Dates don't match visa period exactly"]
+      valid: ["Minimum €30,000 coverage", "Coverage for at least the first 3 months of your stay is the Tel Aviv embassy's stated minimum; coverage for the full visa period is safest and required by some consulates.", "Valid in Italy and all Schengen countries"],
+      invalid: ["Travel insurance without medical coverage", "Dates don't match visa period requirements"]
     },
-    commonMistakes: ["Coverage dates not matching visa dates exactly"],
+    commonMistakes: ["Coverage dates not matching visa dates as required by your consulate"],
     officialLinks: [{
       label: "SWISSCARE",
       url: "https://www.swisscare.com/",
@@ -211,17 +211,17 @@ const baseDocuments: VisaDocument[] = [{
 }, {
   id: "financial",
   name: "Proof of Financial Means",
-  description: "Bank statements showing €506/month or sponsorship letter",
+  description: "Bank statements showing sufficient funds or sponsorship letter",
   required: true,
   image: financialImg,
   details: {
-    keyInfo: "Approximately €6,079.45/year (€506.62/month × 12) per recent published rates. Amounts are indicative — confirm current minimum on the official MAECI visa portal.",
+    keyInfo: "Reference amount: the Italian Embassy in Tel Aviv requires at least €848.25/month (€10,179.85 per academic year) for AY 2026-27, evaluated within your family's overall financial stability. Other embassies may publish different amounts — always confirm on your embassy's own study-visa page; updated yearly.",
     acceptanceRules: {
       valid: ["Bank statements from last 3-6 months showing consistent balance", "Scholarship letter covering full amount", "Sponsor bank statement WITH notarized sponsorship letter"],
       invalid: ["Banking app screenshots", "Sponsor letter without bank proof"]
     },
     commonMistakes: ["Sponsor letter not notarized/apostilled"],
-    tips: ["€506.62/month is MINIMUM - showing more improves your application"]
+    tips: ["€848.25/month is the published reference minimum (Tel Aviv, 2026-27) - showing more, and a stable overall financial picture, improves your application"]
   }
 }, {
   id: "accommodation",
@@ -257,11 +257,11 @@ const baseDocuments: VisaDocument[] = [{
 }, {
   id: "fee",
   name: "Visa Fee Payment",
-  description: "€116 national visa fee (payment method varies by embassy)",
+  description: "Study (Type D) visa fee: Israel ₪183 (≈ €50) cash at the embassy; India ₹5,264 (≈ €50) + ₹631 (≈ €7) VFS service fee",
   required: true,
   image: paymentImg,
   details: {
-    keyInfo: "€116 for National (D) visa is the commonly published fee — NON-REFUNDABLE even if denied. Amount is indicative; confirm current fee with your embassy.",
+    keyInfo: "The study (Type D) visa fee is ≈ €50, paid in local currency — Israel: ₪183 cash at the embassy; India: ₹5,264 plus ₹631 VFS service fee at the VFS centre. NON-REFUNDABLE even if denied. Local amounts track exchange rates and update periodically — confirm the current fee before your appointment.",
     commonMistakes: ["Bringing only card when embassy requires cash (or vice versa)", "VFS centers have additional service fees (€20-30)"],
     officialLinks: [{
       label: "Find Your Embassy",
@@ -737,7 +737,7 @@ const VisaWizard = () => {
                         <h3 className="font-semibold text-foreground text-sm sm:text-base">Visa fee payment</h3>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground mb-2">
-                        €116 national visa fee (indicative — confirm with your embassy). Non-refundable if denied.
+                        Study-visa fee ≈ €50, paid in local currency (Israel ₪183 / India ₹5,264 + ₹631 VFS fee — indicative, confirm with your embassy/VFS). Non-refundable if denied.
                       </p>
                       <p className="text-xs sm:text-sm text-foreground font-medium">
                         How to pay: {selectedCountryData.paymentMethod}
